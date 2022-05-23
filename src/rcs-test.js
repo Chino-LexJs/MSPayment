@@ -17,7 +17,9 @@ function end() {
 
 socket.setEncoding("utf8");
 socket.connect({ port: port_PIDEAKY, host: host }, () => {
-  socket.write("Mensaje de RCS");
+  socket.write(
+    ":010000010000000000                         0002022051413452247761546956500000000005000A0000!"
+  );
 });
 socket.on("error", error);
 socket.on("end", end);

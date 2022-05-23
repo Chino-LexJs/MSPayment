@@ -11,6 +11,9 @@ const host = "0.0.0.0";
 const server = new Server();
 var socket = new Socket();
 
+var messageToProsa =
+  "0210B23A80012EA080180000000014000004650000000000005000051413452204084713452205140514051403917170000000000000000=00001041831585332600TARE000001      0000000000                            MX484012B917PRO1-000013            P0391704TARE067MOVIA4776154695                                                    ^C";
+
 server.on("connection", (socket) => {
   console.log(
     `New connection from ${socket.remoteAddress} : ${socket.remotePort}`
@@ -20,10 +23,11 @@ server.on("connection", (socket) => {
   socket.on(
     "data",
     (message) => {
+      console.log("Mensaje recibido:");
       console.log(message);
       // sendMessagePIDEAKY(message);
-      socket.write(message);
-      console.log("Mensaje enviado");
+      socket.write(messageToProsa);
+      // console.log("Mensaje enviado");
     },
     "uft8"
   );

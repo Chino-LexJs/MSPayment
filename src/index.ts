@@ -1,3 +1,7 @@
+import { MTI0200 } from "./lib/MTI_0200";
+import { fields } from "./util/fields";
+import { util_unpack, util_unpack_0210 } from "./util/util_unpack";
+
 const { Server, Socket } = require("net");
 
 const port = 3000;
@@ -16,7 +20,15 @@ server.on("connection", (socket: any) => {
   );
   socket.setEncoding("utf8");
   socket.on("data", (message: string) => {
-    console.log(message);
+    let dataUnpack: { [key: string]: string } = util_unpack(message);
+    console.log(dataUnpack);
+    let mti0200 = new MTI0200(dataUnpack, "0200");
+    // console.log(fields);
+    // console.log(message.length);
+    // console.log(dataUnpack);
+    // console.log(mti0200.getMessage());
+    console.log(mti0200.getFields());
+    socketMovistar.write(mti0200.getMessage(), "utf8");
   });
   socket.on("close", () => {
     console.log(`Comunicacion finalizada con RCS`);
@@ -32,7 +44,9 @@ function connectMovistar() {
   socketMovistar.connect(to_PROSA);
   socketMovistar.setEncoding("utf8");
   socketMovistar.on("data", async (message: string) => {
+    console.log("Mensaje de MOVISTAR:");
     console.log(message);
+    let newFieldes: { [key: string]: string } = util_unpack_0210(message);
   });
   socketMovistar.on("close", () => {
     console.log(`Comunicacion con MOVISTAR finalizada`);
