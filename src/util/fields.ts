@@ -21,7 +21,7 @@ export const fields: {
   RetailerData: [48, "ans", 47, false, "info"], // antes long de 30
   TransactionCurrencyCode: [49, "n", 3, false, "info"],
   TerminalData: [60, "ans", 15, false, "info"], // antes long de 19
-  CardIssuerCaterogyResponseCodeData: [61, "ans", 16, false, "info"], // antes long de 22
+  CardIssuerAndAuthorizer: [61, "ans", 16, false, "info"], // antes long de 22
   ReceivingIntitutionIDCode: [100, "n", 11, false, "info"],
   AccountIdentification1: [102, "ans", 12, false, "info"], // antes long de 28
   PosPreauthorizationChargebackData: [126, "ans", 20, false, "info"], // long real 100, se usa 20 para pureba

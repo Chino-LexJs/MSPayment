@@ -30,8 +30,8 @@ let fields: {
 };
 export function util_unpack(message: string): { [key: string]: string } {
   const unpack = {
-    ACTION: message.substr(3, 1), // :01
-    ACCOUNT_ID: message.substr(3, 6),
+    ACTION: message.substr(3, 1), // 0
+    ACCOUNT_ID: message.substr(2, 6),
     POS_ID: message.substr(9, 10),
     POS_NAME: message.substr(19, 22),
     POS_STATE: message.substr(41, 3),
@@ -42,7 +42,7 @@ export function util_unpack(message: string): { [key: string]: string } {
     PROCESSING_CODE: message.substr(71, 6),
     AMOUNT: message.substr(77, 10),
     PRODUCT_GROUP: message.substr(87, 1),
-    PRODUCT_NR: message.substr(88, 1),
+    PRODUCT_NR: message.substr(88, 4),
     RESPONSE_CODE: "99",
     AUTORIZATION_NR: "-1",
   };
@@ -75,11 +75,30 @@ export function util_unpack_0210(message: string): { [key: string]: string } {
   let init = 20;
   for (const key in fields) {
     if (arrayOfCampos.includes(Number(fields[key][0]))) {
-      let longitud = fields[key][2];
+      let longitud: number = longitudParam(key, message, init);
       newFields[key] = message.substr(init, Number(longitud));
       init += Number(longitud);
     }
   }
   console.log(newFields);
   return newFields;
+}
+
+function longitudParam(key: string, message: string, init: number): number {
+  switch (key) {
+    case "AcquiringInstitutionIdentificationCode":
+      return Number(message.substr(init, 2)) + 2;
+    case "Track2Data":
+      return Number(message.substr(init, 2)) + 2;
+    case "CardIssuerCaterogyResponseCodeData":
+      return Number(message.substr(init, 3)) + 3;
+    case "ReceivingIntitutionIDCode":
+      return Number(message.substr(init, 2)) + 2;
+    case "AccountIdentification1":
+      return Number(message.substr(init, 2)) + 2;
+    case "PosPreauthorizationChargebackData":
+      return Number(message.substr(init, 3)) + 3;
+    default:
+      return Number(fields[key][2]);
+  }
 }

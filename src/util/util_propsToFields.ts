@@ -68,6 +68,17 @@ function SettlementDate(): string {
     DD = date.getDate().toString().padStart(2, "0");
   return "".concat(MM, DD);
 }
+function additionalData(
+  productNr: string,
+  dnb: string,
+  productGroup: string
+): string {
+  if (productNr === "0000") {
+    return "067MOVI" + productGroup + dnb + "^C".padStart(6, " ");
+  } else {
+    return "067MOVI" + productGroup + dnb + productNr + "^C".padStart(6, " ");
+  }
+}
 export function propsToFields(dataElements: { [key: string]: string }): {
   [key: string]: string;
 } {
@@ -84,8 +95,8 @@ export function propsToFields(dataElements: { [key: string]: string }): {
     LocalTransactionDate: dateTime.date,
     SettlementDate: SettlementDate(), // REVISAR
     CaptureDate: SettlementDate(), // REVISAR
-    AcquiringInstitutionIdentificationCode: "03917".padStart(11),
-    Track2Data: "170000000000000000=".padStart(37),
+    AcquiringInstitutionIdentificationCode: "03917",
+    Track2Data: "170000000000000000=",
     RetrievalReferenceNumber: "".padStart(12, "0A"), // PROVIENE DE LA BASE DA DATOS
     CardAcceptorTerminalID: "TARE%.6d        ",
     CardAcceptorNameLocation: "".concat(
@@ -98,12 +109,15 @@ export function propsToFields(dataElements: { [key: string]: string }): {
     TransactionCurrencyCode: "484",
     TerminalData: "012B917PRO1-%.3d",
     CardIssuerCaterogyResponseCodeData: "013            P",
-    ReceivingIntitutionIDCode: "03917      ", // se relleno con espacios para tener long de 11
-    AccountIdentification1: dataElements.ACCOUNT_ID.toString().padStart(
-      12,
-      "0"
-    ), // se relleno con espacios para tener long de 12,
-    PosPreauthorizationChargebackData: "                    ", // se relleno con espacios para tener long de 20
+    ReceivingIntitutionIDCode: "03917",
+    AccountIdentification1:
+      dataElements.ACCOUNT_ID.length.toString().padStart(2, "0") +
+      dataElements.ACCOUNT_ID,
+    PosPreauthorizationChargebackData: additionalData(
+      dataElements.PRODUCT_NR,
+      dataElements.DNB,
+      dataElements.PRODUCT_GROUP
+    ),
   };
   return messageUnpack;
 }
