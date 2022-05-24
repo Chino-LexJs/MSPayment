@@ -1,19 +1,18 @@
 import { pool } from "./db";
 
-export async function saveRequest(
+export async function saveMessage(
   date: Date,
   time: Date,
   type: number,
   messagedate: Date,
   messagetime: Date,
   tracenr: number,
-  message: string,
-  mti: string
+  message: string
 ): Promise<any> {
   try {
     let res: any = await pool.query(
-      "INSERT INTO request (date, time, type, messagedate, messagetime, tracenr, message, mti) VALUES (?,?,?,?,?,?,?,?)",
-      [date, time, type, messagedate, messagetime, tracenr, message, mti]
+      "INSERT INTO message (date, time, type, messagedate, messagetime, tracenr, message) VALUES (?,?,?,?,?,?,?)",
+      [date, time, type, messagedate, messagetime, tracenr, message]
     );
     return res[0].insertId;
   } catch (error) {

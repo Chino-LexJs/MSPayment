@@ -1,3 +1,4 @@
+import { saveMessage } from "./db/saveMessage";
 import { saveRequest } from "./db/saveRequest";
 import { MTI0200 } from "./lib/MTI_0200";
 import { MTI0210 } from "./lib/MTI_0210";
@@ -92,7 +93,28 @@ function connectMovistar() {
     console.log("Mensaje de MOVISTAR:");
     console.log(message);
     let newFieldes: { [key: string]: string } = util_unpack_0210(message);
+
     let mti0210 = new MTI0210(newFieldes, "0210");
+    let values = {
+      date: new Date(), // HARDCODEADO
+      time: new Date(), // HARDCODEADO
+      type: Number(newFieldes.MTI),
+      messagedate: new Date(), // HARDCODEADO
+      messagetime: new Date(), // HARDCODEADO
+      tracenr: Number(newFieldes.SystemsTraceAuditNumber),
+      message: mti0210.getMessage(),
+    };
+    let id_message = await saveMessage(
+      values.date,
+      values.time,
+      values.type,
+      values.messagedate,
+      values.messagetime,
+      values.tracenr,
+      values.message
+    );
+    console.log("ID del message");
+    console.log(id_message);
     console.log(mti0210.getMessage());
   });
   socketMovistar.on("close", () => {
