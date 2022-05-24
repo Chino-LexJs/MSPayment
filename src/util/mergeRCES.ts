@@ -27,13 +27,10 @@ export function mergeRCES_0210(
 ) {
   const MANDATORIO = 3,
     INFO = 4;
-  dataElements.SYSTEMS_TRANCE = "000056"; // Esto es el ID de folio de la base de datos
-  let paramsToFields: { [key: string]: string } =
-    propsToFields_0210(dataElements);
   for (let key in fields) {
-    if (Object.keys(paramsToFields).includes(key)) {
+    if (Object.keys(dataElements).includes(key)) {
       fields[key][MANDATORIO] = true;
-      fields[key][INFO] = paramsToFields[key];
+      fields[key][INFO] = dataElements[key];
     }
   }
 }

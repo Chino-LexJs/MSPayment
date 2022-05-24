@@ -1,4 +1,5 @@
 import { MTI0200 } from "./lib/MTI_0200";
+import { MTI0210 } from "./lib/MTI_0210";
 import { fields } from "./util/fields";
 import { util_unpack, util_unpack_0210 } from "./util/util_unpack";
 
@@ -47,6 +48,8 @@ function connectMovistar() {
     console.log("Mensaje de MOVISTAR:");
     console.log(message);
     let newFieldes: { [key: string]: string } = util_unpack_0210(message);
+    let mti0210 = new MTI0210(newFieldes, "0210");
+    console.log(mti0210.getMessage());
   });
   socketMovistar.on("close", () => {
     console.log(`Comunicacion con MOVISTAR finalizada`);

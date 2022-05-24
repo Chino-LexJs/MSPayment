@@ -10,13 +10,13 @@ export class MTI0210 extends ISO8583 {
   }
   constructor(dataElements: { [keys: string]: string }, mti: string) {
     super(dataElements, mti);
-    this.header = "ISO026000050";
+    this.header = "ISO001300055";
     this.mti = mti;
   }
 
   private bitmap: string = "";
   public getBitmap(): string {
-    let DEs: number[] = numberOfDataElements(this.fields); // DEs sin condicionales
+    let DEs: number[] = numberOfDataElements(this.fieldsIso); // DEs sin condicionales
     let json_bitmap = util_hexa_bin_Bitmap(DEs);
     this.bitmap = json_bitmap.hexaPB;
     return this.bitmap;
@@ -24,22 +24,33 @@ export class MTI0210 extends ISO8583 {
 
   private secondaryBitmap: string = "";
   public getScondaryBitmap(): string {
-    let DEs: number[] = numberOfDataElements(this.fields); // DEs sin condicionales
+    let DEs: number[] = numberOfDataElements(this.fieldsIso); // DEs sin condicionales
     let json_bitmap = util_hexa_bin_Bitmap(DEs);
     this.secondaryBitmap = json_bitmap.hexaSB;
     return this.secondaryBitmap;
   }
   getMessage(): string {
     let msg = "";
-    msg = msg.concat(this.header, this.mti, this.getBitmap());
-    (this.fields.SecundaryBitmap[4] = this.getScondaryBitmap()),
-      (this.fields.SecundaryBitmap[3] = true);
-    const keys = Object.keys(this.fields);
-    for (let i = 0; i < keys.length; i++) {
-      if (this.fields[keys[i]][3]) {
-        msg = msg.concat(this.fields[keys[i]][4].toString());
-      }
-    }
+    this.fieldsIso.SecundaryBitmap[4] = this.getScondaryBitmap();
+    this.fieldsIso.SecundaryBitmap[3] = true;
+    const keys = Object.keys(this.fieldsIso);
+    msg = msg.concat(
+      String.fromCharCode(2),
+      this.fieldsIso.AccountIdentification1[4].toString(),
+      this.fieldsIso.CardAcceptorNameLocation[4].toString().substr(0, 10),
+      this.fieldsIso.LocalTransactionTime[4].toString(),
+      this.fieldsIso.LocalTransactionDate[4].toString().substr(8, 10),
+      this.fieldsIso.TransactionAmount[4].toString().substr(2, 10),
+      this.fieldsIso.PosPreauthorizationChargebackData[4]
+        .toString()
+        .substr(7, 1),
+      "0000", // PRODUCT_NR no viene de MOVISTAR PREGUNTAR POR QUE?
+      this.fieldsIso.ResponseCode[4].toString(),
+      this.fieldsIso.AuthorizationIdentificationResponse[4].toString(),
+      "0123456789", // ID PREGUNTAR QUE ES
+      "00", // ERROR si hay algun error se notifica mediante este parametro
+      String.fromCharCode(3)
+    );
     return msg;
   }
   getMti(): string {
@@ -48,6 +59,6 @@ export class MTI0210 extends ISO8583 {
   getFields(): {
     [keys: string]: (string | number | boolean)[];
   } {
-    return this.fields;
+    return this.fieldsIso;
   }
 }

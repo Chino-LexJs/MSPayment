@@ -45,12 +45,14 @@ export abstract class ISO8583 {
     AcquiringInstitutionIdentificationCode: [32, "n", 11, false, "info"], // Este campo debe der asignado por Telefónica Movistar Valor fijo del campo “03XXX”
     Track2Data: [35, "ans", 37, false, "info"],
     RetrievalReferenceNumber: [37, "arn", 12, false, "info"],
+    AuthorizationIdentificationResponse: [38, "an", 6, false, "info"],
+    ResponseCode: [39, "an", 2, false, "info"],
     CardAcceptorTerminalID: [41, "ans", 16, false, "info"],
     CardAcceptorNameLocation: [43, "ans", 40, false, "info"],
     RetailerData: [48, "ans", 47, false, "info"], // antes long de 30
     TransactionCurrencyCode: [49, "n", 3, false, "info"],
     TerminalData: [60, "ans", 15, false, "info"], // antes long de 19
-    CardIssuerCaterogyResponseCodeData: [61, "ans", 16, false, "info"], // antes long de 22
+    CardIssuerAndAuthorizer: [61, "ans", 16, false, "info"], // antes long de 22
     ReceivingIntitutionIDCode: [100, "n", 11, false, "info"],
     AccountIdentification1: [102, "ans", 12, false, "info"], // antes long de 28
     PosPreauthorizationChargebackData: [126, "ans", 20, false, "info"], // long real 100, se usa 20 para pureba

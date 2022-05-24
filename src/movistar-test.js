@@ -27,7 +27,7 @@ server.on("connection", (socket) => {
       console.log("Mensaje recibido:");
       console.log(message);
       // sendMessagePIDEAKY(message);
-      socket.write(messageToProsa02);
+      socket.write(messageToProsa);
       // console.log("Mensaje enviado");
     },
     "uft8"

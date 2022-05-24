@@ -10,7 +10,7 @@ export class MTI0200 extends ISO8583 {
   }
   constructor(dataElements: { [keys: string]: string }, mti: string) {
     super(dataElements, mti);
-    this.header = "ISO026000050";
+    this.header = "ISO001300055";
     this.mti = "0200";
   }
   /**
