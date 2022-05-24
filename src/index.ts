@@ -7,7 +7,7 @@ const { Server, Socket } = require("net");
 
 const port = 3000;
 const host = "0.0.0.0";
-const to_PROSA = {
+const to_MOVISTAR = {
   host: "localhost",
   port: 8000,
 };
@@ -72,10 +72,6 @@ server.on("connection", (socket: any) => {
     console.log("id de la solicitud");
     console.log(id_request);
     let mti0200 = new MTI0200(dataUnpack, "0200");
-    // console.log(fields);
-    // console.log(message.length);
-    // console.log(dataUnpack);
-    // console.log(mti0200.getMessage());
     console.log(mti0200.getFields());
     socketMovistar.write(mti0200.getMessage(), "utf8");
   });
@@ -90,7 +86,7 @@ server.on("connection", (socket: any) => {
 
 function connectMovistar() {
   socketMovistar = new Socket();
-  socketMovistar.connect(to_PROSA);
+  socketMovistar.connect(to_MOVISTAR);
   socketMovistar.setEncoding("utf8");
   socketMovistar.on("data", async (message: string) => {
     console.log("Mensaje de MOVISTAR:");

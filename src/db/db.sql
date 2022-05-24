@@ -46,10 +46,6 @@ CREATE TABLE message(
     messagetime TIME NOT NULL,
     tracenr INT(10) NOT NULL,
     message VARCHAR(512) NOT NULL,
-    mti VARCHAR(255) NOT NULL,
-    origen ENUM('pideaky', 'terminal', 'prosa') NOT NULL,
-    destino ENUM('pideaky', 'terminal', 'prosa') NOT NULL,
-    contenido JSON NOT NULL,
     PRIMARY KEY(id)
 ) ENGINE = INNODB;
 
