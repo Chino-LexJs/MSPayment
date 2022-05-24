@@ -121,42 +121,4 @@ export function propsToFields(dataElements: { [key: string]: string }): {
   };
   return messageUnpack;
 }
-export function propsToFields_0210(dataElements: { [key: string]: string }): {
-  [key: string]: string;
-} {
-  let dateTime = transactionDateTime(
-    dataElements.POS_DATE,
-    dataElements.POS_TIME
-  );
-  let messageUnpack = {
-    ProcessingCode: dataElements.PROCESSING_CODE,
-    TransactionAmount: amount(dataElements.AMOUNT.split(".").join("")),
-    TransmissionDateTime: TransmissionDateTime(),
-    SystemsTraceAuditNumber: systemsTrace(dataElements.SYSTEMS_TRANCE),
-    LocalTransactionTime: dateTime.time,
-    LocalTransactionDate: dateTime.date,
-    SettlementDate: SettlementDate(), // REVISAR
-    CaptureDate: SettlementDate(), // REVISAR
-    AcquiringInstitutionIdentificationCode: "03917".padStart(11),
-    Track2Data: "170000000000000000=".padStart(37),
-    RetrievalReferenceNumber: "".padStart(12, "0A"), // PROVIENE DE LA BASE DA DATOS
-    CardAcceptorTerminalID: "TARE%.6d        ",
-    CardAcceptorNameLocation: "".concat(
-      dataElements.POS_NAME,
-      dataElements.POS_ID,
-      dataElements.POS_STATE,
-      "MX" // POS COUNTRY
-    ),
-    RetailerData: "044A00000000000           300   48400000000000",
-    TransactionCurrencyCode: "484",
-    TerminalData: "012B917PRO1-%.3d",
-    CardIssuerCaterogyResponseCodeData: "013            P",
-    ReceivingIntitutionIDCode: "03917      ", // se relleno con espacios para tener long de 11
-    AccountIdentification1: dataElements.ACCOUNT_ID.toString().padStart(
-      12,
-      "0"
-    ), // se relleno con espacios para tener long de 12,
-    PosPreauthorizationChargebackData: "                    ", // se relleno con espacios para tener long de 20
-  };
-  return messageUnpack;
-}
+

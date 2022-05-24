@@ -1,5 +1,4 @@
-import { propsToFields, propsToFields_0210 } from "./util_propsToFields";
-import { fields } from "../util/fields";
+import { propsToFields } from "./util_propsToFields";
 
 export function mergeRCES(
   dataElements: { [key: string]: string },
