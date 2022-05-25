@@ -3,12 +3,12 @@ import { getReverses } from "./db/getReverses";
 import { saveMessage } from "./db/saveMessage";
 import { saveRequest } from "./db/saveRequest";
 import { addRetrie } from "./db/addRetrie";
+import { saveReverse } from "./db/saveReverse";
+import { getMessageById } from "./db/getMessageById";
 import { MTI0200 } from "./lib/MTI_0200";
 import { MTI0210 } from "./lib/MTI_0210";
 import { util_unpack, util_unpack_0210 } from "./util/util_unpack";
 import { MTI0420 } from "./lib/MTI_0420";
-import { saveReverse } from "./db/saveReverse";
-import { getMessageById } from "./db/getMessageById";
 
 const { Server, Socket } = require("net");
 
@@ -137,7 +137,7 @@ function connectMovistar() {
     console.log(message);
     let newFieldes: { [key: string]: string } = util_unpack_0210(message);
     let mti0210 = new MTI0210(newFieldes, "0210");
-    let res: any = getMessage(mti0210.getTrancenr());
+    let res: any = await getMessage(mti0210.getTrancenr());
     console.log("Mensaje 0200 de la base de datos:");
     console.log(res);
     if (MAYOR_A_55) {
@@ -178,7 +178,7 @@ function connectMovistar() {
         referencenr: 123,
         retries: 1,
       };
-      let id_reverse = saveReverse(
+      let id_reverse = await saveReverse(
         values.date,
         values.time,
         values.request_id,
