@@ -26,9 +26,20 @@ server.on("connection", (socket) => {
     (message) => {
       console.log("Mensaje recibido:");
       console.log(message);
+      // console.log(message.substr(122, 12));
       // sendMessagePIDEAKY(message);
-      socket.write(messageToProsa);
-      // console.log("Mensaje enviado");
+      // console.log(messageToProsa.substr(0, 112));
+      // console.log(messageToProsa.substr(112, 12));
+      // console.log(messageToProsa.substr(124));
+      if (message.substr(0, 3) === "ISO") {
+        messageToProsa = "".concat(
+          messageToProsa.substr(0, 112),
+          message.substr(122, 12),
+          messageToProsa.substr(124)
+        );
+        socket.write(messageToProsa);
+        console.log("Mensaje enviado");
+      }
     },
     "uft8"
   );

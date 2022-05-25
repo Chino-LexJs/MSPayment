@@ -4,8 +4,8 @@ import {
 } from "../util/util_hexa_bin";
 import { ISO8583 } from "../lib/iso8583";
 
-export class MTI0210 extends ISO8583 {
-  then(arg0: (msj0210: any) => void) {
+export class MTI0420 extends ISO8583 {
+  then(arg0: (msj0420: any) => void) {
     throw new Error("Method not implemented.");
   }
   constructor(dataElements: { [keys: string]: string }, mti: string) {
@@ -63,5 +63,8 @@ export class MTI0210 extends ISO8583 {
   }
   getTrancenr(): number {
     return Number(this.fieldsIso.RetrievalReferenceNumber[4]);
+  }
+  getResponseCode(): number {
+    return Number(this.fieldsIso.ResponseCode[4]);
   }
 }

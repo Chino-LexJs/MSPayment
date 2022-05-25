@@ -43,16 +43,6 @@ function amount(amountMessage: string): string {
     return amountMessage;
   }
 }
-function systemsTrace(systemsTraceNumber: string): string {
-  if (systemsTraceNumber.length === 6) {
-    return systemsTraceNumber;
-  } else {
-    while (systemsTraceNumber.length < 6) {
-      systemsTraceNumber = "0" + systemsTraceNumber;
-    }
-    return systemsTraceNumber;
-  }
-}
 function TransmissionDateTime(): string {
   let day = new Date(),
     MM = day.getMonth().toString().padStart(2, "0"),
@@ -90,14 +80,14 @@ export function propsToFields(dataElements: { [key: string]: string }): {
     ProcessingCode: dataElements.PROCESSING_CODE,
     TransactionAmount: amount(dataElements.AMOUNT.split(".").join("")),
     TransmissionDateTime: TransmissionDateTime(),
-    SystemsTraceAuditNumber: systemsTrace(dataElements.SYSTEMS_TRANCE),
+    SystemsTraceAuditNumber: dataElements.SYSTEMS_TRANCE.padStart(6, "0"),
     LocalTransactionTime: dateTime.time,
     LocalTransactionDate: dateTime.date,
     SettlementDate: SettlementDate(), // REVISAR
     CaptureDate: SettlementDate(), // REVISAR
     AcquiringInstitutionIdentificationCode: "03917",
     Track2Data: "170000000000000000=",
-    RetrievalReferenceNumber: "".padStart(12, "0A"), // PROVIENE DE LA BASE DA DATOS
+    RetrievalReferenceNumber: dataElements.SYSTEMS_TRANCE.padStart(12, "0"),
     CardAcceptorTerminalID: "TARE%.6d        ",
     CardAcceptorNameLocation: "".concat(
       dataElements.POS_NAME,
@@ -121,4 +111,3 @@ export function propsToFields(dataElements: { [key: string]: string }): {
   };
   return messageUnpack;
 }
-

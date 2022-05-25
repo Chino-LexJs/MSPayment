@@ -17,6 +17,13 @@ _El presente proyecto corre con la version v14.17.1 de node_
 npm install
 ```
 
+_Tener en mysql una db llamada movistartest_
+
+```shell
+
+node .\src\movistar-test.js
+```
+
 _Primero correr servidor MOVISTAR_
 
 ```shell
