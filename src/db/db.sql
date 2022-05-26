@@ -5,11 +5,11 @@ create database movistartest;
 -- show databases; Muestra las bases de datos creadas
 -- use movistartest; Para conectarse a la base de datos movistartest
 -- show columns from `table_name`; Para mostrar los parametros de cada tabla
+DROP TABLE IF EXISTS reverse;
+
 DROP TABLE IF EXISTS request;
 
 DROP TABLE IF EXISTS message;
-
-DROP TABLE IF EXISTS reverse;
 
 CREATE TABLE request(
     id INT AUTO_INCREMENT NOT NULL,

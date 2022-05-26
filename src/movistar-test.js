@@ -24,7 +24,7 @@ server.on("connection", (socket) => {
     (message) => {
       console.log("Mensaje recibido:");
       console.log(message);
-      if (message.substr(0, 3) === "ISO") {
+      if (message.substr(0, 16) === "ISO0013000550200") {
         messageToProsa = "".concat(
           messageToProsa.substr(0, 112),
           message.substr(122, 12),
@@ -34,7 +34,7 @@ server.on("connection", (socket) => {
           socket.write(messageToProsa);
           console.log("Mensaje enviado");
         }
-        setTimeout(sendMessage, 10000);
+        setTimeout(sendMessage, 21000);
       }
     },
     "uft8"

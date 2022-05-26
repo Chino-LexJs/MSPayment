@@ -55,8 +55,7 @@ export function merge_0420(
     "0200", // 4 bytes
     dataElements_0210.RetrievalReferenceNumber, // 12 bytes
     dataElements_0210.LocalTransactionDate, // 4 bytes
-    dataElements_0210.LocalTransactionTime,
-    toString().padStart(8, "0"), // 8 bytes
+    dataElements_0210.LocalTransactionTime.toString().padStart(8, "0"), // 8 bytes
     dataElements_0210.CaptureDate, // 4 bytes
     "".padStart(10, " ") // 10 bytes
   );
