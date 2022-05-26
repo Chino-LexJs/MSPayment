@@ -23,10 +23,11 @@ let fields: {
   RetailerData: [48, "ans", 47, false, "info"], // antes long de 30
   TransactionCurrencyCode: [49, "n", 3, false, "info"],
   TerminalData: [60, "ans", 15, false, "info"], // antes long de 19
-  CardIssuerCaterogyResponseCodeData: [61, "ans", 16, false, "info"], // antes long de 22
+  CardIssuerAndAuthorizer: [61, "ans", 16, false, "info"], // antes long de 22
+  OriginalDataElements: [90, "n", 42, false, "info"],
   ReceivingIntitutionIDCode: [100, "n", 11, false, "info"],
   AccountIdentification1: [102, "ans", 12, false, "info"], // antes long de 28
-  PosPreauthorizationChargebackData: [126, "ans", 100, false, "info"], // long real 100, se usa 20 para pureba
+  PosPreauthorizationChargebackData: [126, "ans", 20, false, "info"], // long real 100, se usa 20 para pureba
 };
 export function util_unpack(message: string): { [key: string]: string } {
   const unpack = {
@@ -50,7 +51,9 @@ export function util_unpack(message: string): { [key: string]: string } {
   return unpack;
 }
 
-export function util_unpack_0210(message: string): { [key: string]: string } {
+export function util_unpack_0210_0430(message: string): {
+  [key: string]: string;
+} {
   let newFields: { [key: string]: string } = {};
   newFields.MTI = message.substr(0, 4);
   let primaryBitmap = message.substr(4, 16);

@@ -8,7 +8,10 @@ import { getMessageById } from "./db/getMessageById";
 import { MTI0200 } from "./lib/MTI_0200";
 import { MTI0210 } from "./lib/MTI_0210";
 import { MTI0420 } from "./lib/MTI_0420";
-import { util_unpack, util_unpack_0210 } from "./util/util_unpack";
+import { util_unpack, util_unpack_0210_0430 } from "./util/util_unpack";
+import { MTI0430 } from "./lib/MTI_0430";
+import { getReverseByRequestId } from "./db/getReverseById";
+import { setIsoMessage0430 } from "./db/setIsoMessage0430";
 
 // Constantes
 const { Server, Socket } = require("net");
@@ -48,6 +51,147 @@ async function loopReverses() {
     await addRetrie(Number(reverse.id), Number(reverse.retries) + 1);
   });
 }
+async function message0210(message: string) {
+  let newFieldes: { [key: string]: string } = util_unpack_0210_0430(message); // se desempaqueta el msj de Movistar en un json para crear instancia de clase 0210
+  let mti0210 = new MTI0210(newFieldes, "0210");
+  /**
+   * getMessage(trancenr) busca el mensaje 0200 que se envio a Movistar
+   * res es el mensaje guardado en la base de datos de tipo 0200
+   */
+  let res: any = await getMessage(mti0210.getTrancenr());
+  let jsonDate = {
+    year: new Date(res.date).getFullYear(),
+    month: new Date(res.date).getMonth(),
+    day: new Date(res.date).getDate(),
+    hour: res.time.slice(0, 2),
+    minutes: res.time.slice(3, 5),
+    seconds: res.time.slice(6),
+  };
+  /**
+   * difDates contiene la diferencia de tiempo en segundos entre la hora en que se envio el msj 0200 a Movistar y la hora de respuesta 0210
+   */
+  let difDates = Math.round(
+    (new Date().getTime() -
+      new Date(
+        jsonDate.year,
+        jsonDate.month,
+        jsonDate.day,
+        jsonDate.hour,
+        jsonDate.minutes,
+        jsonDate.seconds
+      ).getTime()) /
+      1000
+  );
+  if (difDates > TIEMPO_RESPUESTA_MOVISTAR) {
+    // se envia msj 0420 y se genera un elemento reverso en la tabla de reversos de la DB
+    let fields0420: { [key: string]: string } = {};
+    let fields0210 = mti0210.getFields();
+    // Los parametros que se envian en el msj 0420 son similares al 0200 por lo que se copian los valores
+    for (const key in fields0210) {
+      if (fields0210[key][3]) {
+        fields0420[key] = fields0210[key][4].toString();
+      }
+    }
+    let mti0420 = new MTI0420(fields0420, "0420");
+    socketMovistar.write(mti0420.getMessage(), "utf8");
+    let valuesMessage = {
+      date: new Date(), // HARDCODEADO
+      time: new Date(), // HARDCODEADO
+      type: Number(mti0420.getMti()),
+      messagedate: new Date(), // HARDCODEADO
+      messagetime: new Date(), // HARDCODEADO
+      tracenr: Number(mti0420.getTrancenr()),
+      message: mti0420.getMessage(),
+    };
+    let id_mti0420 = await saveMessage(
+      valuesMessage.date,
+      valuesMessage.time,
+      valuesMessage.type,
+      valuesMessage.messagedate,
+      valuesMessage.messagetime,
+      valuesMessage.tracenr,
+      valuesMessage.message
+    );
+    let values = {
+      date: new Date(),
+      time: new Date(),
+      request_id: mti0210.getTrancenr(),
+      isomessage420_id: id_mti0420,
+      responsecode: mti0420.getResponseCode(),
+      referencenr: 123,
+      retries: 1,
+    };
+    await saveReverse(
+      values.date,
+      values.time,
+      values.request_id,
+      values.isomessage420_id,
+      values.responsecode,
+      values.referencenr,
+      values.retries
+    );
+  } else {
+    // se guarda msj 0210, se genera un msj 0210 para RCES y se envia msj a RCES
+    let values = {
+      date: new Date(), // HARDCODEADO
+      time: new Date(), // HARDCODEADO
+      type: Number(mti0210.getMti()),
+      messagedate: new Date(), // HARDCODEADO
+      messagetime: new Date(), // HARDCODEADO
+      tracenr: Number(newFieldes.SystemsTraceAuditNumber),
+      message: mti0210.getMessage(),
+    };
+    await saveMessage(
+      values.date,
+      values.time,
+      values.type,
+      values.messagedate,
+      values.messagetime,
+      values.tracenr,
+      values.message
+    );
+    /**
+     * Se busca entre las distintas conexiones que se establecieron con RCES y se envia la respuesta 0210 a la conexion correspondiente
+     */
+    rcesClients.forEach((client: any) => {
+      if (client.trancenr === Number(mti0210.getTrancenr())) {
+        client.socket.write(mti0210.getMessage(), "utf8");
+        client.socket.end();
+        console.log("MENSAJE ENVIADO A RCES");
+        console.log(mti0210.getMessage());
+      }
+    });
+  }
+}
+async function message0430(message: string) {
+  let newFieldes: { [key: string]: string } = util_unpack_0210_0430(message);
+  let mti0430 = new MTI0430(newFieldes, "0210");
+  // se guarda msj 0210, se genera un msj 0210 para RCES y se envia msj a RCES
+  let reverse = await getReverseByRequestId(mti0430.getTrancenr());
+
+  if (reverse != undefined && reverse.isomessage430_id == null) {
+    let values = {
+      date: new Date(), // HARDCODEADO
+      time: new Date(), // HARDCODEADO
+      type: Number(mti0430.getMti()),
+      messagedate: new Date(), // HARDCODEADO
+      messagetime: new Date(), // HARDCODEADO
+      tracenr: Number(newFieldes.SystemsTraceAuditNumber),
+      message: mti0430.getMessage(),
+    };
+    let id_message0430 = await saveMessage(
+      values.date,
+      values.time,
+      values.type,
+      values.messagedate,
+      values.messagetime,
+      values.tracenr,
+      values.message
+    );
+    setIsoMessage0430(reverse.id, id_message0430);
+  }
+}
+
 /**
  * Funcion que genera conexion socket con Movistar
  */
@@ -58,113 +202,16 @@ function connectMovistar() {
   socketMovistar.on("data", async (message: string) => {
     console.log("Mensaje de MOVISTAR:");
     console.log(message);
-    let newFieldes: { [key: string]: string } = util_unpack_0210(message); // se desempaqueta el msj de Movistar en un json para crear instancia de clase 0210
-    let mti0210 = new MTI0210(newFieldes, "0210");
-    console.log(newFieldes);
-    console.log(mti0210.getFields());
-    let res: any = await getMessage(mti0210.getTrancenr());
-    let jsonDate = {
-      year: new Date(res.date).getFullYear(),
-      month: new Date(res.date).getMonth(),
-      day: new Date(res.date).getDate(),
-      hour: res.time.slice(0, 2),
-      minutes: res.time.slice(3, 5),
-      seconds: res.time.slice(6),
-    };
-    /**
-     * difDates contiene la diferencia de tiempo en segundos entre la hora en que se envio el msj 0200 a Movistar y la hora de respuesta 0210
-     */
-    let difDates = Math.round(
-      (new Date().getTime() -
-        new Date(
-          jsonDate.year,
-          jsonDate.month,
-          jsonDate.day,
-          jsonDate.hour,
-          jsonDate.minutes,
-          jsonDate.seconds
-        ).getTime()) /
-        1000
-    );
-    if (difDates > TIEMPO_RESPUESTA_MOVISTAR) {
-      // se envia msj 0420 y se genera un elemento reverso en la tabla de reversos de la DB
-      let fields0420: { [key: string]: string } = {}
-      let fields0210 = mti0210.getFields();
-      // Los parametros que se envian en el msj 0420 son similares al 0200 por lo que se copian los valores
-      for (const key in fields0210) {
-        if (fields0210[key][3]) {
-          fields0420[key] = fields0210[key][4].toString();
-        }
-      }
-      let mti0420 = new MTI0420(fields0420, "0420");
-      socketMovistar.write(mti0420.getMessage(), "utf8");
-      let valuesMessage = {
-        date: new Date(), // HARDCODEADO
-        time: new Date(), // HARDCODEADO
-        type: Number(mti0420.getMti()),
-        messagedate: new Date(), // HARDCODEADO
-        messagetime: new Date(), // HARDCODEADO
-        tracenr: Number(mti0420.getTrancenr()),
-        message: mti0420.getMessage(),
-      };
-      let id_mti0420 = await saveMessage(
-        valuesMessage.date,
-        valuesMessage.time,
-        valuesMessage.type,
-        valuesMessage.messagedate,
-        valuesMessage.messagetime,
-        valuesMessage.tracenr,
-        valuesMessage.message
-      );
-      let values = {
-        date: new Date(),
-        time: new Date(),
-        request_id: mti0210.getTrancenr(),
-        isomessage420_id: id_mti0420,
-        responsecode: mti0420.getResponseCode(),
-        referencenr: 123,
-        retries: 1,
-      };
-      await saveReverse(
-        values.date,
-        values.time,
-        values.request_id,
-        values.isomessage420_id,
-        values.responsecode,
-        values.referencenr,
-        values.retries
-      );
-    } else {
-      // se guarda msj 0210, se genera un msj 0210 para RCES y se envia msj a RCES
-      let values = {
-        date: new Date(), // HARDCODEADO
-        time: new Date(), // HARDCODEADO
-        type: Number(mti0210.getMti()),
-        messagedate: new Date(), // HARDCODEADO
-        messagetime: new Date(), // HARDCODEADO
-        tracenr: Number(newFieldes.SystemsTraceAuditNumber),
-        message: mti0210.getMessage(),
-      };
-      await saveMessage(
-        values.date,
-        values.time,
-        values.type,
-        values.messagedate,
-        values.messagetime,
-        values.tracenr,
-        values.message
-      );
-      /**
-       * Se busca entre las distintas conexiones que se establecieron con RCES y se envia la respuesta 0210 a la conexion correspondiente
-       */
-      rcesClients.forEach((client: any) => {
-        if (client.trancenr === Number(mti0210.getTrancenr())) {
-          client.socket.write(mti0210.getMessage(), "utf8");
-          client.socket.end();
-          console.log("MENSAJE ENVIADO A RCES");
-          console.log(mti0210.getMessage());
-        }
-      });
+    let mtiMessage = message.substr(0, 4);
+    switch (mtiMessage) {
+      case "0210":
+        message0210(message);
+        break;
+      case "0430":
+        message0430(message);
+        break;
+      default:
+        break;
     }
   });
   socketMovistar.on("close", () => {

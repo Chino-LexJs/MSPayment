@@ -13,7 +13,7 @@
 
 import { getConstantValue } from "typescript";
 import { fields } from "../util/fields";
-import { merge, merge_0210, merge_0420 } from "../util/mergeRCES";
+import { merge, merge_0210_0430, merge_0420 } from "../util/mergeRCES";
 
 export abstract class ISO8583 {
   header: string = "";
@@ -65,10 +65,13 @@ export abstract class ISO8583 {
         merge(dataElements, this.fieldsIso);
         break;
       case "0210":
-        merge_0210(dataElements, this.fieldsIso);
+        merge_0210_0430(dataElements, this.fieldsIso);
         break;
       case "0420":
         merge_0420(dataElements, this.fieldsIso);
+        break;
+      case "0430":
+        merge_0210_0430(dataElements, this.fieldsIso);
         break;
       default:
         merge(dataElements, this.fieldsIso);
