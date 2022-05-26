@@ -18,17 +18,27 @@ const to_MOVISTAR = {
   host: "localhost",
   port: 8000,
 };
-let socketMovistar: any;
+let socketMovistar: any; // variable que contiene la conexion socket con Movistar
+/**
+ * Arreglo que guarda las distintas conexiones sockets de RCES de la siguiente forma
+ * {
+ *    socket: es la conexion socket de RCES
+ *    trancenr: es el id de Request de RCES
+ * }
+ */
 let rcesClients: any[] = [];
 
 const server = new Server();
 
 /**
- * Funcion que sirve para enviar msj reversos a MOVISTAR cada 55 segundos
+ * Funcion que sirve para enviar msj reversos a MOVISTAR, segun el tiempo que se describa en la funcion setIinterval()
  */
 async function loopReverses() {
   console.log("Buscando Reverses");
   let reverses = await getReverses(); // mensajes reversos con isomessage430_id IS NULL [{reverse1}, {reverse2}...]
+  console.log(
+    `Se encontraron: ${reverses.length} mensajes reversos sin respuesta 0430`
+  );
   reverses.forEach(async (reverse: { [key: string]: string | number }) => {
     let mti0420: any = await getMessageById(Number(reverse.isomessage420_id));
     socketMovistar.write(mti0420.message.toString(), "utf8");
@@ -41,11 +51,9 @@ server.on("connection", (socket: any) => {
     `New connection from ${socket.remoteAddress} : ${socket.remotePort}`
   );
   socket.setEncoding("utf8");
-
   socket.on("data", async (message: string) => {
     let dataUnpack: { [key: string]: string } = util_unpack(message);
-    // console.log(dataUnpack);
-    let values = {
+    let valuesRequest = {
       date_request: new Date(), // HARDCODEADO
       time_request: new Date(), // HARDCODEADO
       ip: 12, // HARDCODEADO
@@ -69,27 +77,27 @@ server.on("connection", (socket: any) => {
       reverse_id: 12, // HARDCODEADO
     };
     let id_request = await saveRequest(
-      values.date_request,
-      values.time_request,
-      values.ip,
-      values.account_id,
-      values.pos_id,
-      values.pos_name,
-      values.pos_state,
-      values.postimezona,
-      values.posdate,
-      values.postime,
-      values.dnb,
-      values.amount,
-      values.productgroup,
-      values.product_nr,
-      values.responsedate,
-      values.responsetime,
-      values.responsecode,
-      values.authorizationnr,
-      values.error,
-      values.action,
-      values.reverse_id
+      valuesRequest.date_request,
+      valuesRequest.time_request,
+      valuesRequest.ip,
+      valuesRequest.account_id,
+      valuesRequest.pos_id,
+      valuesRequest.pos_name,
+      valuesRequest.pos_state,
+      valuesRequest.postimezona,
+      valuesRequest.posdate,
+      valuesRequest.postime,
+      valuesRequest.dnb,
+      valuesRequest.amount,
+      valuesRequest.productgroup,
+      valuesRequest.product_nr,
+      valuesRequest.responsedate,
+      valuesRequest.responsetime,
+      valuesRequest.responsecode,
+      valuesRequest.authorizationnr,
+      valuesRequest.error,
+      valuesRequest.action,
+      valuesRequest.reverse_id
     );
     rcesClients.push({
       socket: socket,
@@ -115,11 +123,14 @@ server.on("connection", (socket: any) => {
     );
     dataUnpack.SYSTEMS_TRANCE = id_request.toString();
     let mti0200 = new MTI0200(dataUnpack, "0200");
-    // console.log(mti0200.getFields());
     socketMovistar.write(mti0200.getMessage(), "utf8");
   });
   socket.on("close", () => {
     console.log(`Comunicacion finalizada con RCS`);
+    rcesClients.forEach((client) => {
+      let index = rcesClients.indexOf(client);
+      rcesClients.splice(index, 1);
+    });
   });
   // Don't forget to catch error, for your own sake.
   socket.on("error", function (err: Error) {
@@ -127,6 +138,9 @@ server.on("connection", (socket: any) => {
   });
 });
 
+/**
+ * Funcion que genera conexion socket con Movistar
+ */
 function connectMovistar() {
   socketMovistar = new Socket();
   socketMovistar.connect(to_MOVISTAR);
@@ -134,11 +148,9 @@ function connectMovistar() {
   socketMovistar.on("data", async (message: string) => {
     console.log("Mensaje de MOVISTAR:");
     console.log(message);
-    let newFieldes: { [key: string]: string } = util_unpack_0210(message);
+    let newFieldes: { [key: string]: string } = util_unpack_0210(message); // se desempaqueta el msj de Movistar en un json para crear instancia de clase 0210
     let mti0210 = new MTI0210(newFieldes, "0210");
     let res: any = await getMessage(mti0210.getTrancenr());
-    // console.log("Mensaje 0200 de la base de datos:");
-    // console.log(res);
     let jsonDate = {
       year: new Date(res.date).getFullYear(),
       month: new Date(res.date).getMonth(),
@@ -147,6 +159,9 @@ function connectMovistar() {
       minutes: res.time.slice(3, 5),
       seconds: res.time.slice(6),
     };
+    /**
+     * difDates contiene la diferencia de tiempo en segundos entre la hora en que se envio el msj 0200 a Movistar y la hora de respuesta 0210
+     */
     let difDates = Math.round(
       (new Date().getTime() -
         new Date(
@@ -163,13 +178,14 @@ function connectMovistar() {
       // se envia msj 0420 y se genera un elemento reverso en la tabla de reversos de la DB
       let fields0420: { [key: string]: string } = {};
       let fields0210 = mti0210.getFields();
+      // Los parametros que se envian en el msj 0420 son similares al 0200 por lo que se copian los valores
       for (const key in fields0210) {
         if (fields0210[key][3]) {
           fields0420[key] = fields0210[key][4].toString();
         }
       }
       let mti0420 = new MTI0420(fields0420, "0420");
-      // socketMovistar.write(mti0420.getMessage(), "utf8");
+      socketMovistar.write(mti0420.getMessage(), "utf8");
       let valuesMessage = {
         date: new Date(), // HARDCODEADO
         time: new Date(), // HARDCODEADO
@@ -197,7 +213,7 @@ function connectMovistar() {
         referencenr: 123,
         retries: 1,
       };
-      let id_reverse = await saveReverse(
+      await saveReverse(
         values.date,
         values.time,
         values.request_id,
@@ -211,13 +227,13 @@ function connectMovistar() {
       let values = {
         date: new Date(), // HARDCODEADO
         time: new Date(), // HARDCODEADO
-        type: Number(newFieldes.MTI),
+        type: Number(mti0210.getMti()),
         messagedate: new Date(), // HARDCODEADO
         messagetime: new Date(), // HARDCODEADO
         tracenr: Number(newFieldes.SystemsTraceAuditNumber),
         message: mti0210.getMessage(),
       };
-      let id_message = await saveMessage(
+      await saveMessage(
         values.date,
         values.time,
         values.type,
@@ -226,12 +242,13 @@ function connectMovistar() {
         values.tracenr,
         values.message
       );
-      // console.log("ID del message");
-      // console.log(id_message);
-
+      /**
+       * Se busca entre las distintas conexiones que se establecieron con RCES y se envia la respuesta 0210 a la conexion correspondiente
+       */
       rcesClients.forEach((client: any) => {
         if (client.trancenr === Number(mti0210.getTrancenr())) {
           client.socket.write(mti0210.getMessage(), "utf8");
+          client.socket.end();
           console.log("MENSAJE ENVIADO A RCES");
           console.log(mti0210.getMessage());
         }
@@ -240,6 +257,7 @@ function connectMovistar() {
   });
   socketMovistar.on("close", () => {
     console.log(`Comunicacion con MOVISTAR finalizada`);
+    connectMovistar(); // Siempre debe intentar conectarse a Movistar
   });
   socketMovistar.on("error", (err: Error): void => {
     console.log(err);

@@ -31,26 +31,15 @@ export class MTI0420 extends ISO8583 {
   }
   getMessage(): string {
     let msg = "";
+    msg = msg.concat(this.header, this.mti, this.getBitmap());
     this.fieldsIso.SecundaryBitmap[4] = this.getScondaryBitmap();
     this.fieldsIso.SecundaryBitmap[3] = true;
     const keys = Object.keys(this.fieldsIso);
-    msg = msg.concat(
-      String.fromCharCode(2),
-      this.fieldsIso.AccountIdentification1[4].toString(),
-      this.fieldsIso.CardAcceptorNameLocation[4].toString().substr(0, 10),
-      this.fieldsIso.LocalTransactionTime[4].toString(),
-      this.fieldsIso.LocalTransactionDate[4].toString().substr(8, 10),
-      this.fieldsIso.TransactionAmount[4].toString().substr(2, 10),
-      this.fieldsIso.PosPreauthorizationChargebackData[4]
-        .toString()
-        .substr(7, 1),
-      "0000", // PRODUCT_NR no viene de MOVISTAR PREGUNTAR POR QUE?
-      this.fieldsIso.ResponseCode[4].toString(),
-      this.fieldsIso.AuthorizationIdentificationResponse[4].toString(),
-      "0123456789", // ID PREGUNTAR QUE ES
-      "00", // ERROR si hay algun error se notifica mediante este parametro
-      String.fromCharCode(3)
-    );
+    for (let i = 0; i < keys.length; i++) {
+      if (this.fieldsIso[keys[i]][3]) {
+        msg = msg.concat(this.fieldsIso[keys[i]][4].toString());
+      }
+    }
     return msg;
   }
   getMti(): string {
