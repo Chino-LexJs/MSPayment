@@ -22,7 +22,6 @@ let socketMovistar: any;
 let rcesClients: any[] = [];
 
 const server = new Server();
-const MAYOR_A_55 = false;
 
 /**
  * Funcion que sirve para enviar msj reversos a MOVISTAR cada 55 segundos
@@ -30,7 +29,6 @@ const MAYOR_A_55 = false;
 async function loopReverses() {
   console.log("Buscando Reverses");
   let reverses = await getReverses(); // mensajes reversos con isomessage430_id IS NULL [{reverse1}, {reverse2}...]
-  console.log(reverses);
   reverses.forEach(async (reverse: { [key: string]: string | number }) => {
     let mti0420: any = await getMessageById(Number(reverse.isomessage420_id));
     socketMovistar.write(mti0420.message.toString(), "utf8");
@@ -46,7 +44,7 @@ server.on("connection", (socket: any) => {
 
   socket.on("data", async (message: string) => {
     let dataUnpack: { [key: string]: string } = util_unpack(message);
-    console.log(dataUnpack);
+    // console.log(dataUnpack);
     let values = {
       date_request: new Date(), // HARDCODEADO
       time_request: new Date(), // HARDCODEADO
@@ -97,8 +95,6 @@ server.on("connection", (socket: any) => {
       socket: socket,
       trancenr: id_request,
     });
-    console.log("id de la solicitud");
-    console.log(id_request); // id_request => DE 37 y => DE 11
     let valuesMessage = {
       date: new Date(), // HARDCODEADO
       time: new Date(), // HARDCODEADO
@@ -119,7 +115,7 @@ server.on("connection", (socket: any) => {
     );
     dataUnpack.SYSTEMS_TRANCE = id_request.toString();
     let mti0200 = new MTI0200(dataUnpack, "0200");
-    console.log(mti0200.getFields());
+    // console.log(mti0200.getFields());
     socketMovistar.write(mti0200.getMessage(), "utf8");
   });
   socket.on("close", () => {
@@ -141,9 +137,29 @@ function connectMovistar() {
     let newFieldes: { [key: string]: string } = util_unpack_0210(message);
     let mti0210 = new MTI0210(newFieldes, "0210");
     let res: any = await getMessage(mti0210.getTrancenr());
-    console.log("Mensaje 0200 de la base de datos:");
-    console.log(res);
-    if (MAYOR_A_55) {
+    // console.log("Mensaje 0200 de la base de datos:");
+    // console.log(res);
+    let jsonDate = {
+      year: new Date(res.date).getFullYear(),
+      month: new Date(res.date).getMonth(),
+      day: new Date(res.date).getDate(),
+      hour: res.time.slice(0, 2),
+      minutes: res.time.slice(3, 5),
+      seconds: res.time.slice(6),
+    };
+    let difDates = Math.round(
+      (new Date().getTime() -
+        new Date(
+          jsonDate.year,
+          jsonDate.month,
+          jsonDate.day,
+          jsonDate.hour,
+          jsonDate.minutes,
+          jsonDate.seconds
+        ).getTime()) /
+        1000
+    );
+    if (difDates > 55) {
       // se envia msj 0420 y se genera un elemento reverso en la tabla de reversos de la DB
       let fields0420: { [key: string]: string } = {};
       let fields0210 = mti0210.getFields();
@@ -210,13 +226,14 @@ function connectMovistar() {
         values.tracenr,
         values.message
       );
-      console.log("ID del message");
-      console.log(id_message);
-      console.log(mti0210.getMessage());
+      // console.log("ID del message");
+      // console.log(id_message);
+
       rcesClients.forEach((client: any) => {
         if (client.trancenr === Number(mti0210.getTrancenr())) {
           client.socket.write(mti0210.getMessage(), "utf8");
           console.log("MENSAJE ENVIADO A RCES");
+          console.log(mti0210.getMessage());
         }
       });
     }
@@ -230,6 +247,6 @@ function connectMovistar() {
 }
 server.listen({ port, host }, async () => {
   console.log(`Server on port: ${server.address().port}`);
-  // setInterval(loopReverses, 10000);
+  setInterval(loopReverses, 10000);
   connectMovistar();
 });

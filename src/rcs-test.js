@@ -22,6 +22,7 @@ socket.connect({ port: port_PIDEAKY, host: host }, () => {
     ":010000010000000000                         0002022051413452247761546956500000000005000A0000!"
   );
   socket.on("data", (data) => {
+    console.log("Mensaje recibido:");
     console.log(data);
     socket.end();
   });

@@ -54,8 +54,6 @@ export function util_unpack_0210(message: string): { [key: string]: string } {
   let newFields: { [key: string]: string } = {};
   newFields.MTI = message.substr(0, 4);
   let primaryBitmap = message.substr(4, 16);
-  console.log("Primary bitmap");
-  console.log(primaryBitmap);
   let arrayOfCampos = [];
   let array = hex2bin(primaryBitmap);
   for (let i = 0; i < array.length; i++) {
@@ -71,7 +69,6 @@ export function util_unpack_0210(message: string): { [key: string]: string } {
       }
     }
   }
-  console.log(arrayOfCampos);
   let init = 20;
   for (const key in fields) {
     if (arrayOfCampos.includes(Number(fields[key][0]))) {
@@ -80,7 +77,6 @@ export function util_unpack_0210(message: string): { [key: string]: string } {
       init += Number(longitud);
     }
   }
-  console.log(newFields);
   return newFields;
 }
 
