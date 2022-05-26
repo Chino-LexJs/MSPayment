@@ -19,10 +19,10 @@ const to_MOVISTAR = {
   port: 8000,
 };
 let socketMovistar: any;
-let socketRCES: any;
+let rcesClients: any[] = [];
 
 const server = new Server();
-const MAYOR_A_55 = true;
+const MAYOR_A_55 = false;
 
 /**
  * Funcion que sirve para enviar msj reversos a MOVISTAR cada 55 segundos
@@ -45,7 +45,6 @@ server.on("connection", (socket: any) => {
   socket.setEncoding("utf8");
 
   socket.on("data", async (message: string) => {
-    socketRCES = socket;
     let dataUnpack: { [key: string]: string } = util_unpack(message);
     console.log(dataUnpack);
     let values = {
@@ -94,6 +93,10 @@ server.on("connection", (socket: any) => {
       values.action,
       values.reverse_id
     );
+    rcesClients.push({
+      socket: socket,
+      trancenr: id_request,
+    });
     console.log("id de la solicitud");
     console.log(id_request); // id_request => DE 37 y => DE 11
     let valuesMessage = {
@@ -210,7 +213,12 @@ function connectMovistar() {
       console.log("ID del message");
       console.log(id_message);
       console.log(mti0210.getMessage());
-      socketRCES.write(mti0210.getMessage(), "utf8");
+      rcesClients.forEach((client: any) => {
+        if (client.trancenr === Number(mti0210.getTrancenr())) {
+          client.socket.write(mti0210.getMessage(), "utf8");
+          console.log("MENSAJE ENVIADO A RCES");
+        }
+      });
     }
   });
   socketMovistar.on("close", () => {
@@ -222,6 +230,6 @@ function connectMovistar() {
 }
 server.listen({ port, host }, async () => {
   console.log(`Server on port: ${server.address().port}`);
-  setInterval(loopReverses, 10000);
+  // setInterval(loopReverses, 10000);
   connectMovistar();
 });
