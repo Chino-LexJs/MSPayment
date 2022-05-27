@@ -13,7 +13,7 @@
 
 import { getConstantValue } from "typescript";
 import { fields } from "../util/fields";
-import { merge, merge_0210_0430, merge_0420 } from "../util/mergeRCES";
+import { merge_0200, merge_0210_0430, merge_0420 } from "../util/mergeRCES";
 
 export abstract class ISO8583 {
   header: string = "";
@@ -59,10 +59,15 @@ export abstract class ISO8583 {
     PosPreauthorizationChargebackData: [126, "ans", 20, false, "info"], // long real 100, se usa 20 para pureba
   };
 
+  /**
+   *
+   * @param dataElements Objeto con los Data Elements correspondientes de cada sub clase
+   * @param mti Tipo de Mensaje, sirve para diferenciar el estado y comportamiento de cada sub clase
+   */
   constructor(dataElements: { [keys: string]: string }, mti: string) {
     switch (mti) {
       case "0200":
-        merge(dataElements, this.fieldsIso);
+        merge_0200(dataElements, this.fieldsIso);
         break;
       case "0210":
         merge_0210_0430(dataElements, this.fieldsIso);
@@ -74,7 +79,7 @@ export abstract class ISO8583 {
         merge_0210_0430(dataElements, this.fieldsIso);
         break;
       default:
-        merge(dataElements, this.fieldsIso);
+        merge_0200(dataElements, this.fieldsIso);
         break;
     }
   }

@@ -1,6 +1,6 @@
 import { propsToFields } from "./util_propsToFields";
 
-export function merge(
+export function merge_0200(
   dataElements: { [key: string]: string },
   fields_param: {
     [keys: string]: (string | number | boolean)[];

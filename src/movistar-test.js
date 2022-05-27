@@ -9,7 +9,6 @@ const port = 8000;
 const host = "0.0.0.0";
 
 const server = new Server();
-var socket = new Socket();
 
 var message_0200 =
   "0210B23A80012EA080180000000014000004650000000000005000051413452204084713452205140514051403917170000000000000000=00001041831585332600TARE000001      0000000000                            MX484012B917PRO1-000013            P0391704TARE067MOVIA4776154695                                                    ^C";
@@ -29,14 +28,14 @@ server.on("connection", (socket) => {
       if (message.substr(0, 16) === "ISO0013000550200") {
         message_0200 = "".concat(
           message_0200.substr(0, 112),
-          message.substr(122, 12),
+          message.substr(124, 12),
           message_0200.substr(124)
         );
         function sendMessage() {
           socket.write(message_0200);
           console.log("Mensaje enviado");
         }
-        setTimeout(sendMessage, 21000);
+        setTimeout(sendMessage, 5000);
       }
       if (message.substr(0, 16) === "ISO0013000550420") {
         message_0430 = "".concat(

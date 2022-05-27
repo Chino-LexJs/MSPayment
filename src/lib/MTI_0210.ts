@@ -29,6 +29,12 @@ export class MTI0210 extends ISO8583 {
     this.secondaryBitmap = json_bitmap.hexaSB;
     return this.secondaryBitmap;
   }
+  /**
+   * El getMessage de la clase 0210 no retorna un string en formato ISO8583 como las demas clases
+   * Este getMessage retorna una trama de forma ISO-0210-RCES
+   * Ya que un msj 0210 de Movistar solo se retorna al sistema RCES y se almacena en la base de datos
+   * @returns trama con formato ISO-0210-RCES
+   */
   getMessage(): string {
     let msg = "";
     this.fieldsIso.SecundaryBitmap[4] = this.getScondaryBitmap();

@@ -1,5 +1,9 @@
-import { util_hexa_bin_Bitmap, hex2bin } from "../util/util_hexa_bin";
-
+import { hex2bin } from "../util/util_hexa_bin";
+/**
+ * Variable fields es la misma (y tiene que ser la misma en formato y campos) que la de la clase iso8583 (lib)
+ * NOTA:  se quiso dejar un solo archivo fields que comparta todo el server,
+ *        pero JS pasa variables complejas como referencia y no como valor
+ */
 let fields: {
   [keys: string]: (string | number | boolean)[];
 } = {
@@ -51,30 +55,37 @@ export function util_unpack(message: string): { [key: string]: string } {
   return unpack;
 }
 
+/**
+ * Funcion que sirve para desempaquetar los msj 0210 y 0430 de Movistar
+ * @param message Cadena de caracteres que forman el msj 0210 o 0430 em en formato ISO 8583
+ * @returns Json con formato fields que contenga los data elements enviados en el message
+ */
 export function util_unpack_0210_0430(message: string): {
   [key: string]: string;
 } {
   let newFields: { [key: string]: string } = {};
   newFields.MTI = message.substr(0, 4);
   let primaryBitmap = message.substr(4, 16);
-  let arrayOfCampos = [];
-  let array = hex2bin(primaryBitmap);
-  for (let i = 0; i < array.length; i++) {
-    if (array[i] === "1") {
+  let arrayOfCampos = []; // arreglo de numeros para almacenar los subcampos de los data elements  ej: [1,3,4, ... 126]
+  let primaryBitmapBinary = hex2bin(primaryBitmap);
+  for (let i = 0; i < primaryBitmapBinary.length; i++) {
+    if (primaryBitmapBinary[i] === "1") {
       arrayOfCampos.push(i + 1);
     }
   }
-  if (array[0] === "1") {
-    array = hex2bin(message.substr(20, 16)); // secondary bit map.
-    for (let i = 0; i < array.length; i++) {
-      if (array[i] === "1") {
+  // P-1 Secondary Bit Map
+  if (primaryBitmapBinary[0] === "1") {
+    let secondaryBitmapBinary = hex2bin(message.substr(20, 16));
+    for (let i = 0; i < secondaryBitmapBinary.length; i++) {
+      if (secondaryBitmapBinary[i] === "1") {
         arrayOfCampos.push(i + 65);
       }
     }
   }
-  let init = 20;
+  let init = 20; // inicio de los data elements del message
+  const SUB_CAMPO_DATA_ELEMENT = 0; // sub campo numerico ej: P-1 => 1, P-3 => 3
   for (const key in fields) {
-    if (arrayOfCampos.includes(Number(fields[key][0]))) {
+    if (arrayOfCampos.includes(Number(fields[key][SUB_CAMPO_DATA_ELEMENT]))) {
       let longitud: number = longitudParam(key, message, init);
       newFields[key] = message.substr(init, Number(longitud));
       init += Number(longitud);
@@ -83,6 +94,15 @@ export function util_unpack_0210_0430(message: string): {
   return newFields;
 }
 
+/**
+ *  Definir longitud del data element en en el mensaje 0210 y 0430 de movistar, ya que
+ *  algunos parametros tienen longitud variable dada por los primeros carateres
+ *  del data element
+ * @param key Nombre de data element en Fields
+ * @param message Mensaje 0210 o 0430 de Movistar
+ * @param init Inicio del data element en message
+ * @returns Longitud del data element en nessage
+ */
 function longitudParam(key: string, message: string, init: number): number {
   switch (key) {
     case "AcquiringInstitutionIdentificationCode":

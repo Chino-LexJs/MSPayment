@@ -11,26 +11,12 @@ export class MTI0200 extends ISO8583 {
   constructor(dataElements: { [keys: string]: string }, mti: string) {
     super(dataElements, mti);
     this.header = "ISO001300055";
-    this.mti = "0200";
+    this.mti = mti;
   }
-  /**
-   *
-   * bitmap binary con condicionales:
-   * 1011001000111000110001001000000100101000111000011000010000011110
-   *
-   * bitmap hexadecimal con condicionales:
-   * B238C48128E1841E
-   *
-   * bitmap binary sin condicionales:
-   * 1011001000111000110001000000000100101000101000011000000000011010
-   *
-   * bitmap hexadecimal sin condicionales:
-   * B238C40128A1801A
-   */
 
   private bitmap: string = "";
   public getBitmap(): string {
-    let DEs: number[] = numberOfDataElements(this.fieldsIso); // DEs sin condicionales
+    let DEs: number[] = numberOfDataElements(this.fieldsIso);
     let json_bitmap = util_hexa_bin_Bitmap(DEs);
     this.bitmap = json_bitmap.hexaPB;
     return this.bitmap;
@@ -38,19 +24,20 @@ export class MTI0200 extends ISO8583 {
 
   private secondaryBitmap: string = "";
   public getScondaryBitmap(): string {
-    let DEs: number[] = numberOfDataElements(this.fieldsIso); // DEs sin condicionales
+    let DEs: number[] = numberOfDataElements(this.fieldsIso);
     let json_bitmap = util_hexa_bin_Bitmap(DEs);
     this.secondaryBitmap = json_bitmap.hexaSB;
     return this.secondaryBitmap;
   }
   getMessage(): string {
+    const SE_USA = 3;
     let msg = "";
     msg = msg.concat(this.header, this.mti, this.getBitmap());
     this.fieldsIso.SecundaryBitmap[4] = this.getScondaryBitmap();
-    this.fieldsIso.SecundaryBitmap[3] = true;
+    this.fieldsIso.SecundaryBitmap[SE_USA] = true;
     const keys = Object.keys(this.fieldsIso);
     for (let i = 0; i < keys.length; i++) {
-      if (this.fieldsIso[keys[i]][3]) {
+      if (this.fieldsIso[keys[i]][SE_USA]) {
         msg = msg.concat(this.fieldsIso[keys[i]][4].toString());
       }
     }

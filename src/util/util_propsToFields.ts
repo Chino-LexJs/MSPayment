@@ -50,7 +50,7 @@ function TransmissionDateTime(): string {
     hh = day.getHours().toString().padStart(2, "0"),
     mm = day.getMinutes().toString().padStart(2, "0"),
     ss = day.getSeconds().toString().padStart(2, "0");
-  return "".concat(MM, DD, hh, ss);
+  return "".concat(MM, DD, hh, mm, ss);
 }
 function SettlementDate(): string {
   let date = new Date(),
@@ -87,7 +87,10 @@ export function propsToFields(dataElements: { [key: string]: string }): {
     CaptureDate: SettlementDate(), // REVISAR
     AcquiringInstitutionIdentificationCode: "03917",
     Track2Data: "170000000000000000=",
-    RetrievalReferenceNumber: dataElements.SYSTEMS_TRANCE.padStart(12, "0"),
+    RetrievalReferenceNumber: dataElements.RETRIEVAL_REFERENCE_NUMBER.padStart(
+      12,
+      "0"
+    ),
     CardAcceptorTerminalID: "TARE%.6d        ",
     CardAcceptorNameLocation: "".concat(
       dataElements.POS_NAME,
