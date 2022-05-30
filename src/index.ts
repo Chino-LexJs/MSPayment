@@ -33,17 +33,16 @@ let socketMovistar: any; // variable que contiene la conexion socket unica con M
  *    trancenr: es el id de Request de RCES (P-11 y P-37)
  * }
  */
-let rcesClients: any[] = [];
+let rcesClients = new Map();
 
 // Funciones
 /**
  * Funcion que sirve para enviar msj reversos a MOVISTAR, segun el tiempo que se describa en la funcion setIinterval()
  */
 async function loopReverses() {
-  console.log("\nBuscando Reverses");
   let reverses = await getReverses(); // mensajes reversos con isomessage430_id IS NULL [{reverse1}, {reverse2}...]
   console.log(
-    `\nSe encontraron: ${reverses.length} mensajes reversos sin respuesta 0430`
+    `\nBuscando Reverses\nSe encontraron: ${reverses.length} mensajes reversos sin respuesta 0430`
   );
   reverses.forEach(async (reverse: { [key: string]: string | number }) => {
     let mti0420: any = await getMessageById(Number(reverse.isomessage420_id));
@@ -56,10 +55,12 @@ async function loopReverses() {
 async function sendMessage0420(mti0210: MTI0210) {
   let fields0420: { [key: string]: string } = {};
   let fields0210 = mti0210.getFields();
+  const SE_USA = 3;
+  const VALOR = 4;
   // Los parametros que se envian en el msj 0420 son similares al 0200 por lo que se copian los valores
   for (const key in fields0210) {
-    if (fields0210[key][3]) {
-      fields0420[key] = fields0210[key][4].toString();
+    if (fields0210[key][SE_USA]) {
+      fields0420[key] = fields0210[key][VALOR].toString();
     }
   }
   let mti0420 = new MTI0420(fields0420, "0420");
@@ -106,6 +107,8 @@ async function sendMessage0420(mti0210: MTI0210) {
   );
 }
 async function message0210(message: string) {
+  console.log("\nMensaje 0210 de MOVISTAR en formato ISO8583:");
+  console.log(message);
   let newFieldes: { [key: string]: string } = util_unpack_0210_0430(message);
   console.log("\nData elements de msj 0210 de Movistar: ");
   console.log(newFieldes);
@@ -149,7 +152,7 @@ async function message0210(message: string) {
       type: Number(mti0210.getMti()),
       messagedate: new Date(), // P-7 se crea en el momento en TransmissionDateTime() en archivo util_propsToFields
       messagetime: new Date(), // P-7 se crea en el momento en TransmissionDateTime() en archivo util_propsToFields
-      tracenr: Number(newFieldes.SystemsTraceAuditNumber),
+      tracenr: mti0210.getTrancenr(),
       message: mti0210.getMessage(),
     };
     await saveMessage(
@@ -164,47 +167,54 @@ async function message0210(message: string) {
     /**
      * Se busca entre las distintas conexiones que se establecieron con RCES y se envia la respuesta 0210 a la conexion correspondiente
      */
-    let clienteEncontrado = false;
-    rcesClients.forEach((client: any) => {
-      if (client.trancenr === Number(mti0210.getTrancenr())) {
-        clienteEncontrado = true;
-        client.socket.write(mti0210.getMessage(), "utf8");
-        client.socket.end();
-        console.log("\nMensaje que se envia a RCES en formato RCES");
-        console.log(mti0210.getMessage());
-      }
-    });
-    if (!clienteEncontrado) {
+    let client = rcesClients.has(mti0210.getTrancenr())
+      ? rcesClients.get(mti0210.getTrancenr())
+      : undefined;
+    if (client != undefined) {
+      client.write(mti0210.getMessage(), "utf8");
+      console.log("\nMensaje que se envia a RCES en formato RCES");
+      console.log(mti0210.getMessage());
+      rcesClients.delete(mti0210.getTrancenr());
+      client.end();
+    } else {
       console.log("\nNo se encontro cliente, se envia msj 0420 a Movistar");
       sendMessage0420(mti0210);
     }
   }
 }
 async function message0430(message: string) {
+  console.log("\nMensaje 0430 de MOVISTAR en formato ISO8583:");
+  console.log(message);
   let newFieldes: { [key: string]: string } = util_unpack_0210_0430(message);
+  console.log(newFieldes);
   let mti0430 = new MTI0430(newFieldes, "0430");
-  let reverse = await getReverseByRequestId(mti0430.getTrancenr());
-  if (reverse != undefined && reverse.isomessage430_id == null) {
-    let values = {
-      date: new Date(), // HARDCODEADO
-      time: new Date(), // HARDCODEADO
-      type: Number(mti0430.getMti()),
-      messagedate: new Date(), // HARDCODEADO
-      messagetime: new Date(), // HARDCODEADO
-      tracenr: Number(newFieldes.SystemsTraceAuditNumber),
-      message: mti0430.getMessage(),
-    };
-    let id_message0430 = await saveMessage(
-      values.date,
-      values.time,
-      values.type,
-      values.messagedate,
-      values.messagetime,
-      values.tracenr,
-      values.message
-    );
-    setIsoMessage0430(reverse.id, id_message0430);
-  }
+  getReverseByRequestId(mti0430.getTrancenr()).then(async (reverses) => {
+    if (reverses.length != 0) {
+      reverses.forEach(async (reverse: any) => {
+        if (reverse.isomessage430_id == null) {
+          let values = {
+            date: new Date(),
+            time: new Date(),
+            type: Number(mti0430.getMti()),
+            messagedate: new Date(), // P-7 se crea en el momento en TransmissionDateTime() en archivo util_propsToFields
+            messagetime: new Date(), // P-7 se crea en el momento en TransmissionDateTime() en archivo util_propsToFields
+            tracenr: mti0430.getTrancenr(),
+            message: mti0430.getMessage(),
+          };
+          let id_message0430 = await saveMessage(
+            values.date,
+            values.time,
+            values.type,
+            values.messagedate,
+            values.messagetime,
+            values.tracenr,
+            values.message
+          );
+          await setIsoMessage0430(reverse.id, id_message0430);
+        }
+      });
+    }
+  });
 }
 async function messageFromRCES(message: string): Promise<number> {
   let dataUnpack: { [key: string]: string } = util_unpack(message);
@@ -309,8 +319,6 @@ function connectMovistar() {
   socketMovistar.connect(to_MOVISTAR);
   socketMovistar.setEncoding("utf8"); // se configura socket para manejar cadena de caracteres en el buffer[]
   socketMovistar.on("data", async (message: string) => {
-    console.log("\nMensaje 0210 de MOVISTAR en formato ISO8583:");
-    console.log(message);
     let mtiMessage = message.substr(0, 4);
     switch (mtiMessage) {
       case "0210":
@@ -343,17 +351,15 @@ server.on("connection", (socket: any) => {
     console.log("\nMensaje de RCES sin formato: ");
     console.log(message, "\n");
     let id_request = await messageFromRCES(message);
-    rcesClients.push({
-      socket: socket,
-      trancenr: id_request,
-    });
+    rcesClients.set(id_request, socket);
   });
   socket.on("close", () => {
+    for (let client of rcesClients.keys()) {
+      if (socket == rcesClients.get(client)) {
+        rcesClients.delete(client);
+      }
+    }
     console.log(`\nComunicacion finalizada con RCS`);
-    rcesClients.forEach((client) => {
-      let index = rcesClients.indexOf(client);
-      rcesClients.splice(index, 1);
-    });
   });
   // Don't forget to catch error, for your own sake.
   socket.on("error", function (err: Error) {

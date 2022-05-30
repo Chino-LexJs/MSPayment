@@ -11,9 +11,7 @@
  * 0810 Respuesta de solicitud de gestion de red
  */
 
-import { getConstantValue } from "typescript";
-import { fields } from "../util/fields";
-import { merge_0200, merge_0210_0430, merge_0420 } from "../util/mergeRCES";
+import { merge_0200, merge_0210_0430, merge_0420 } from "../util/merges";
 
 export abstract class ISO8583 {
   header: string = "";

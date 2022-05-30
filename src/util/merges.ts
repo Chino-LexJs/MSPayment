@@ -59,4 +59,6 @@ export function merge_0420(
     dataElements_0210.CaptureDate, // 4 bytes
     "".padStart(10, " ") // 10 bytes
   );
+  fields.MTI[MANDATORIO] = true;
+  fields.MTI[INFO] = "0420";
 }

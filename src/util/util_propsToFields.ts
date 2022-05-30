@@ -33,16 +33,6 @@ function transactionDateTime(
   );
   return dateTime;
 }
-function amount(amountMessage: string): string {
-  if (amountMessage.length === 12) {
-    return amountMessage;
-  } else {
-    while (amountMessage.length < 12) {
-      amountMessage = "0" + amountMessage;
-    }
-    return amountMessage;
-  }
-}
 function TransmissionDateTime(): string {
   let day = new Date(),
     MM = day.getMonth().toString().padStart(2, "0"),
@@ -78,7 +68,9 @@ export function propsToFields(dataElements: { [key: string]: string }): {
   );
   let messageUnpack = {
     ProcessingCode: dataElements.PROCESSING_CODE,
-    TransactionAmount: amount(dataElements.AMOUNT.split(".").join("")),
+    TransactionAmount: dataElements.AMOUNT.split(".")
+      .join("")
+      .padStart(12, "0"),
     TransmissionDateTime: TransmissionDateTime(),
     SystemsTraceAuditNumber: dataElements.SYSTEMS_TRANCE.padStart(6, "0"),
     LocalTransactionTime: dateTime.time,
