@@ -112,6 +112,24 @@ async function message0210(message: string) {
   console.log("\nData elements de msj 0210 de Movistar: ");
   console.log(newFieldes);
   let mti0210 = new MTI0210(newFieldes, "0210");
+  let valuesMessageMovistar = {
+    date: new Date(),
+    time: new Date(),
+    type: Number(mti0210.getMti()),
+    messagedate: new Date(), // P-7 se crea en el momento en TransmissionDateTime() en archivo util_propsToFields
+    messagetime: new Date(), // P-7 se crea en el momento en TransmissionDateTime() en archivo util_propsToFields
+    tracenr: mti0210.getTrancenr(),
+    message: message,
+  };
+  await saveMessage(
+    valuesMessageMovistar.date,
+    valuesMessageMovistar.time,
+    valuesMessageMovistar.type,
+    valuesMessageMovistar.messagedate,
+    valuesMessageMovistar.messagetime,
+    valuesMessageMovistar.tracenr,
+    valuesMessageMovistar.message
+  );
   /**
    * getMessage(trancenr) busca el mensaje 0200 que se envio a Movistar
    * res es el mensaje guardado en la base de datos de tipo 0200
@@ -144,7 +162,7 @@ async function message0210(message: string) {
     // se envia msj 0420 y se genera un elemento reverso en la tabla de reversos de la DB
     sendMessage0420(mti0210);
   } else {
-    // se guarda msj 0210, se genera un msj 0210 para RCES y se envia msj a RCES
+    // se guarda msj 0210 que se envia a RCES, se genera un msj 0210 para RCES y se envia msj a RCES
     let values = {
       date: new Date(),
       time: new Date(),
@@ -187,6 +205,24 @@ async function message0430(message: string) {
   let newFieldes: { [key: string]: string } = util_unpack_0210_0430(message);
   console.log(newFieldes);
   let mti0430 = new MTI0430(newFieldes, "0430");
+  let valuesMessageMovistar = {
+    date: new Date(),
+    time: new Date(),
+    type: Number(mti0430.getMti()),
+    messagedate: new Date(), // P-7 se crea en el momento en TransmissionDateTime() en archivo util_propsToFields
+    messagetime: new Date(), // P-7 se crea en el momento en TransmissionDateTime() en archivo util_propsToFields
+    tracenr: mti0430.getTrancenr(),
+    message: message,
+  };
+  await saveMessage(
+    valuesMessageMovistar.date,
+    valuesMessageMovistar.time,
+    valuesMessageMovistar.type,
+    valuesMessageMovistar.messagedate,
+    valuesMessageMovistar.messagetime,
+    valuesMessageMovistar.tracenr,
+    valuesMessageMovistar.message
+  );
   getReverseByRequestId(mti0430.getTrancenr()).then(async (reverses) => {
     if (reverses.length != 0) {
       reverses.forEach(async (reverse: any) => {
@@ -307,6 +343,24 @@ async function messageFromRCES(message: string): Promise<number> {
     mti0200.getMessage()
   );
   socketMovistar.write(mti0200.getMessage(), "utf8");
+  let valuesMessageIso8583 = {
+    date: new Date(),
+    time: new Date(),
+    type: 200,
+    messagedate: new Date(), // P-7 se crea en el momento en TransmissionDateTime() en archivo util_propsToFields
+    messagetime: new Date(), // P-7 se crea en el momento en TransmissionDateTime() en archivo util_propsToFields
+    tracenr: id_request,
+    message: mti0200.getMessage(),
+  };
+  await saveMessage(
+    valuesMessageIso8583.date,
+    valuesMessageIso8583.time,
+    valuesMessageIso8583.type,
+    valuesMessageIso8583.messagedate,
+    valuesMessageIso8583.messagetime,
+    valuesMessageIso8583.tracenr,
+    valuesMessageIso8583.message
+  );
   return id_request;
 }
 
