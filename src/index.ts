@@ -251,7 +251,10 @@ async function message0430(message: string) {
     }
   });
 }
-async function messageFromRCES(message: string): Promise<number> {
+async function messageFromRCES(
+  message: string,
+  ipClient: string
+): Promise<number> {
   let dataUnpack: { [key: string]: string } = util_unpack(message);
   console.log("\nMensage de RCES deslozado: ");
   console.log(dataUnpack);
@@ -272,7 +275,7 @@ async function messageFromRCES(message: string): Promise<number> {
   let valuesRequest = {
     date_request: new Date(),
     time_request: new Date(),
-    ip: 12, // IP DEL CLIENTE AVERIGUAR COMO RECUPERAR DESDE SOCKET
+    ip: ipClient,
     account_id: Number(dataUnpack.ACCOUNT_ID),
     pos_id: Number(dataUnpack.POS_ID),
     pos_name: dataUnpack.POS_NAME,
@@ -284,13 +287,10 @@ async function messageFromRCES(message: string): Promise<number> {
     amount: Number(dataUnpack.AMOUNT),
     productgroup: dataUnpack.PRODUCT_GROUP,
     product_nr: Number(dataUnpack.PRODUCT_NR),
-    responsedate: new Date(), // modificar para que parametro pueda ser null en primera instancia y cuando movistar responda se llene el campo
-    responsetime: new Date(), // modificar para que parametro pueda ser null en primera instancia y cuando movistar responda se llene el campo
     responsecode: Number(dataUnpack.RESPONSE_CODE),
     authorizationnr: Number(dataUnpack.AUTORIZATION_NR),
     error: 0, // HARDCODEADO
     action: Number(dataUnpack.ACTION),
-    reverse_id: 0, // modificar para que parametro pueda ser null en primera instancia y cuando se cree el reverso se lo asocie
   };
   let id_request = await saveRequest(
     valuesRequest.date_request,
@@ -307,13 +307,10 @@ async function messageFromRCES(message: string): Promise<number> {
     valuesRequest.amount,
     valuesRequest.productgroup,
     valuesRequest.product_nr,
-    valuesRequest.responsedate,
-    valuesRequest.responsetime,
     valuesRequest.responsecode,
     valuesRequest.authorizationnr,
     valuesRequest.error,
-    valuesRequest.action,
-    valuesRequest.reverse_id
+    valuesRequest.action
   );
   let valuesMessage = {
     date: new Date(),
@@ -403,7 +400,7 @@ server.on("connection", (socket: any) => {
   socket.on("data", async (message: string) => {
     console.log("\nMensaje de RCES sin formato: ");
     console.log(message, "\n");
-    let id_request = await messageFromRCES(message);
+    let id_request = await messageFromRCES(message, socket.remoteAddress);
     rcesClients.set(id_request, socket);
   });
   socket.on("close", () => {

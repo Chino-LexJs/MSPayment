@@ -3,7 +3,7 @@ import { pool } from "./db";
 export async function saveRequest(
   date_request: Date,
   time_request: Date,
-  ip: number,
+  ip: string,
   account_id: number,
   pos_id: number,
   pos_name: string,
@@ -15,17 +15,14 @@ export async function saveRequest(
   amount: number,
   productgroup: string,
   product_nr: number,
-  responsedate: Date,
-  responsetime: Date,
   responsecode: number,
   authorizationnr: number,
   error: number,
-  action: number,
-  reverse_id: number
+  action: number
 ): Promise<any> {
   try {
     let res: any = await pool.query(
-      "INSERT INTO request (date_request, time_request, ip, account_id, pos_id, pos_name, pos_state, postimezona, posdate, postime, dnb, amount, productgroup, product_nr, responsedate, responsetime, responsecode, authorizationnr, error, action, reverse_id) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
+      "INSERT INTO request (date_request, time_request, ip, account_id, pos_id, pos_name, pos_state, postimezona, posdate, postime, dnb, amount, productgroup, product_nr, responsecode, authorizationnr, error, action) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
       [
         date_request,
         time_request,
@@ -41,13 +38,10 @@ export async function saveRequest(
         amount,
         productgroup,
         product_nr,
-        responsedate,
-        responsetime,
         responsecode,
         authorizationnr,
         error,
         action,
-        reverse_id,
       ]
     );
     return res[0].insertId;
