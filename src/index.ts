@@ -12,6 +12,7 @@ import { util_unpack, util_unpack_0210_0430 } from "./util/util_unpack";
 import { MTI0430 } from "./lib/MTI_0430";
 import { getReverseByRequestId } from "./db/getReverseById";
 import { setIsoMessage0430 } from "./db/setIsoMessage0430";
+import { setResponseDataRequest } from "./db/setResponseDataRequest";
 
 // Constantes
 const { Server, Socket } = require("net");
@@ -130,6 +131,8 @@ async function message0210(message: string) {
     valuesMessageMovistar.tracenr,
     valuesMessageMovistar.message
   );
+  let newDate = new Date();
+  await setResponseDataRequest(mti0210.getTrancenr(), newDate, newDate);
   /**
    * getMessage(trancenr) busca el mensaje 0200 que se envio a Movistar
    * res es el mensaje guardado en la base de datos de tipo 0200
