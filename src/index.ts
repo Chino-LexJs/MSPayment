@@ -27,11 +27,10 @@ const server = new Server();
 // Variables Globales
 let socketMovistar: any; // variable que contiene la conexion socket unica con Movistar
 /**
- * Arreglo que guarda las distintas conexiones sockets de RCES de la siguiente forma
- * {
- *    socket: es la conexion socket de RCES
- *    trancenr: es el id de Request de RCES (P-11 y P-37)
- * }
+ * Map que guarda las distintas conexiones sockets de RCES de la siguiente forma
+ * key: es el id de Request de RCES (P-11 y P-37)
+ * valor: conexion socket
+ * rcesClients: new Map() : key(id_request) => socket connection
  */
 let rcesClients = new Map();
 
