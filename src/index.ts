@@ -418,6 +418,11 @@ server.on("connection", (socket: any) => {
   socket.on("error", function (err: Error) {
     console.log(`Error: ${err}`);
   });
+  socket.setTimeout(55000);
+  socket.on("timeout", () => {
+    console.log("Connexion socket con RCES timeout");
+    socket.end();
+  });
 });
 
 // Start Server
