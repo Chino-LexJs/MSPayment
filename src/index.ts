@@ -23,7 +23,7 @@ const to_MOVISTAR = {
   host: "localhost",
   port: 8000,
 };
-const TIEMPO_RESPUESTA_MOVISTAR = 20;
+const TIEMPO_RESPUESTA_MOVISTAR = 55; // Tiempo limite en el que puede responder Movistar
 const server = new Server();
 
 // Variables Globales
