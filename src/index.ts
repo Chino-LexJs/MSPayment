@@ -13,6 +13,7 @@ import { MTI0430 } from "./lib/MTI_0430";
 import { getReverseByRequestId } from "./db/getReverseById";
 import { setIsoMessage0430 } from "./db/setIsoMessage0430";
 import { setResponseDataRequest } from "./db/setResponseDataRequest";
+import { setReverse_idRequest } from "./db/setReverse_idRequest";
 
 // Constantes
 const { Server, Socket } = require("net");
@@ -96,7 +97,7 @@ async function sendMessage0420(mti0210: MTI0210) {
     referencenr: 123,
     retries: 1,
   };
-  await saveReverse(
+  saveReverse(
     values.date,
     values.time,
     values.request_id,
@@ -104,7 +105,9 @@ async function sendMessage0420(mti0210: MTI0210) {
     values.responsecode,
     values.referencenr,
     values.retries
-  );
+  ).then(async (reverse_id) => {
+    await setReverse_idRequest(mti0210.getTrancenr(), reverse_id);
+  });
 }
 async function message0210(message: string) {
   console.log("\nMensaje 0210 de MOVISTAR en formato ISO8583:");
