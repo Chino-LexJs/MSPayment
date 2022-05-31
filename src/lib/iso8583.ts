@@ -11,7 +11,11 @@
  * 0810 Respuesta de solicitud de gestion de red
  */
 
-import { merge_0200, merge_0210_0430, merge_0420 } from "../util/merges";
+import {
+  merge_0200,
+  merge_0210_0430_0800_0810,
+  merge_0420,
+} from "../util/merges";
 
 export abstract class ISO8583 {
   header: string = "";
@@ -51,6 +55,7 @@ export abstract class ISO8583 {
     TransactionCurrencyCode: [49, "n", 3, false, "info"],
     TerminalData: [60, "ans", 15, false, "info"], // antes long de 19
     CardIssuerAndAuthorizer: [61, "ans", 16, false, "info"], // antes long de 22
+    NetworkManagementInformationCode: [70, "n", 3, false, "info"],
     OriginalDataElements: [90, "n", 42, false, "info"],
     ReceivingIntitutionIDCode: [100, "n", 11, false, "info"],
     AccountIdentification1: [102, "ans", 12, false, "info"], // antes long de 28
@@ -68,13 +73,19 @@ export abstract class ISO8583 {
         merge_0200(dataElements, this.fieldsIso);
         break;
       case "0210":
-        merge_0210_0430(dataElements, this.fieldsIso);
+        merge_0210_0430_0800_0810(dataElements, this.fieldsIso);
         break;
       case "0420":
         merge_0420(dataElements, this.fieldsIso);
         break;
       case "0430":
-        merge_0210_0430(dataElements, this.fieldsIso);
+        merge_0210_0430_0800_0810(dataElements, this.fieldsIso);
+        break;
+      case "0800":
+        merge_0210_0430_0800_0810(dataElements, this.fieldsIso);
+        break;
+      case "0810":
+        merge_0210_0430_0800_0810(dataElements, this.fieldsIso);
         break;
       default:
         merge_0200(dataElements, this.fieldsIso);

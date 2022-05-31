@@ -8,33 +8,39 @@ import { getMessageById } from "./db/getMessageById";
 import { MTI0200 } from "./lib/MTI_0200";
 import { MTI0210 } from "./lib/MTI_0210";
 import { MTI0420 } from "./lib/MTI_0420";
-import { util_unpack, util_unpack_0210_0430 } from "./util/util_unpack";
+import { util_unpack, util_unpack_0210_0430_0800 } from "./util/util_unpack";
 import { MTI0430 } from "./lib/MTI_0430";
 import { getReverseByRequestId } from "./db/getReverseById";
 import { setIsoMessage0430 } from "./db/setIsoMessage0430";
 import { setResponseDataRequest } from "./db/setResponseDataRequest";
 import { setReverse_idRequest } from "./db/setReverse_idRequest";
+import { MTI0800 } from "./lib/MTI_0800";
+import { TransmissionDateTime } from "./util/util_propsToFields";
+import { MTI0810 } from "./lib/MTI_0810";
 
 // Constantes
-const { Server, Socket } = require("net");
-const port = 3000;
-const host = "0.0.0.0";
-const to_MOVISTAR = {
-  host: "localhost",
-  port: 8000,
-};
-const TIEMPO_RESPUESTA_MOVISTAR = 55; // Tiempo limite en el que puede responder Movistar
-const server = new Server();
+const { Server, Socket } = require("net"),
+  port = 3000,
+  host = "0.0.0.0",
+  to_MOVISTAR = {
+    host: "localhost",
+    port: 8000,
+  },
+  TIEMPO_RESPUESTA_MOVISTAR = 55, // Tiempo (segundos) limite en el que puede responder Movistar
+  TIEMPO_LOOP_REVERSE = 30000, // Tiempo (milisegundos) para que el sistema envie reversos
+  TIEMPO_LOOP_ECHO = 60000, // Tiempo (milisegundos) para que el sistema envie echo test 0800
+  TIEMPO_CONEXION_RCES = 55000, // Tiempo (milisegundos) limite para conexion con socket RCES
+  server = new Server();
 
 // Variables Globales
-let socketMovistar: any; // variable que contiene la conexion socket unica con Movistar
-/**
- * Map que guarda las distintas conexiones sockets de RCES de la siguiente forma
- * key: es el id de Request de RCES (P-11 y P-37)
- * valor: conexion socket
- * rcesClients: new Map() : key(id_request) => socket connection
- */
-let rcesClients = new Map();
+let socketMovistar: any, // variable que contiene la conexion socket unica con Movistar
+  /**
+   * Map que guarda las distintas conexiones sockets de RCES de la siguiente forma
+   * key: es el id de Request de RCES (P-11 y P-37)
+   * valor: conexion socket
+   * rcesClients: new Map() : key(id_request) => socket connection
+   */
+  rcesClients = new Map();
 
 // Funciones
 /**
@@ -52,6 +58,64 @@ async function loopReverses() {
     socketMovistar.write(mti0420.message.toString(), "utf8");
     await addRetrie(Number(reverse.id), Number(reverse.retries) + 1);
   });
+}
+async function loopEcho() {
+  let dataElements_0800 = {
+    TransmissionDateTime: TransmissionDateTime(),
+    SystemsTraceAuditNumber: "032727",
+    NetworkManagementInformationCode: "301",
+  };
+  let mti0800 = new MTI0800(dataElements_0800, "0800");
+  let valuesMessage = {
+    date: new Date(),
+    time: new Date(),
+    type: Number(mti0800.getMti()),
+    messagedate: new Date(), // P-7 se crea en el momento en TransmissionDateTime() en archivo util_propsToFields
+    messagetime: new Date(), // P-7 se crea en el momento en TransmissionDateTime() en archivo util_propsToFields
+    tracenr: mti0800.getTrancenr(),
+    message: mti0800.getMessage(),
+  };
+  await saveMessage(
+    valuesMessage.date,
+    valuesMessage.time,
+    valuesMessage.type,
+    valuesMessage.messagedate,
+    valuesMessage.messagetime,
+    valuesMessage.tracenr,
+    valuesMessage.message
+  );
+  console.log(`\nMensaje echo 0800 a Movistar: ${mti0800.getMessage()}`);
+  socketMovistar.write(mti0800.getMessage(), "utf8");
+}
+async function sendMessage0810(mti0800: MTI0800) {
+  let dataElements_0810 = {
+    TransmissionDateTime: TransmissionDateTime(),
+    SystemsTraceAuditNumber: "032727",
+    ResponseCode: "00",
+    NetworkManagementInformationCode: "301",
+  };
+  let mti0810 = new MTI0810(dataElements_0810, "0810");
+
+  let valuesMessage = {
+    date: new Date(),
+    time: new Date(),
+    type: Number(mti0810.getMti()),
+    messagedate: new Date(), // P-7 se crea en el momento en TransmissionDateTime() en archivo util_propsToFields
+    messagetime: new Date(), // P-7 se crea en el momento en TransmissionDateTime() en archivo util_propsToFields
+    tracenr: mti0810.getTrancenr(),
+    message: mti0810.getMessage(),
+  };
+  await saveMessage(
+    valuesMessage.date,
+    valuesMessage.time,
+    valuesMessage.type,
+    valuesMessage.messagedate,
+    valuesMessage.messagetime,
+    valuesMessage.tracenr,
+    valuesMessage.message
+  );
+  console.log(`\nMensaje echo 0810 a Movistar: ${mti0800.getMessage()}`);
+  socketMovistar.write(mti0810.getMessage(), "utf8");
 }
 async function sendMessage0420(mti0210: MTI0210) {
   let fields0420: { [key: string]: string } = {};
@@ -112,7 +176,8 @@ async function sendMessage0420(mti0210: MTI0210) {
 async function message0210(message: string) {
   console.log("\nMensaje 0210 de MOVISTAR en formato ISO8583:");
   console.log(message);
-  let newFieldes: { [key: string]: string } = util_unpack_0210_0430(message);
+  let newFieldes: { [key: string]: string } =
+    util_unpack_0210_0430_0800(message);
   console.log("\nData elements de msj 0210 de Movistar: ");
   console.log(newFieldes);
   let mti0210 = new MTI0210(newFieldes, "0210");
@@ -208,7 +273,8 @@ async function message0210(message: string) {
 async function message0430(message: string) {
   console.log("\nMensaje 0430 de MOVISTAR en formato ISO8583:");
   console.log(message);
-  let newFieldes: { [key: string]: string } = util_unpack_0210_0430(message);
+  let newFieldes: { [key: string]: string } =
+    util_unpack_0210_0430_0800(message);
   console.log(newFieldes);
   let mti0430 = new MTI0430(newFieldes, "0430");
   let valuesMessageMovistar = {
@@ -256,6 +322,34 @@ async function message0430(message: string) {
       });
     }
   });
+}
+async function message0800(message: string) {
+  console.log("\nMensaje 0800 de MOVISTAR en formato ISO8583:");
+  console.log(message);
+  let newFieldes: { [key: string]: string } =
+    util_unpack_0210_0430_0800(message);
+  console.log("\nData elements de msj 0800 de Movistar: ");
+  console.log(newFieldes);
+  let mti0800 = new MTI0800(newFieldes, "0800");
+  let valuesMessageMovistar = {
+    date: new Date(),
+    time: new Date(),
+    type: Number(mti0800.getMti()),
+    messagedate: new Date(), // P-7 se crea en el momento en TransmissionDateTime() en archivo util_propsToFields
+    messagetime: new Date(), // P-7 se crea en el momento en TransmissionDateTime() en archivo util_propsToFields
+    tracenr: mti0800.getTrancenr(),
+    message: message,
+  };
+  await saveMessage(
+    valuesMessageMovistar.date,
+    valuesMessageMovistar.time,
+    valuesMessageMovistar.type,
+    valuesMessageMovistar.messagedate,
+    valuesMessageMovistar.messagetime,
+    valuesMessageMovistar.tracenr,
+    valuesMessageMovistar.message
+  );
+  sendMessage0810(mti0800);
 }
 async function messageFromRCES(
   message: string,
@@ -383,6 +477,8 @@ function connectMovistar() {
       case "0430":
         message0430(message);
         break;
+      case "0800":
+        message0800(message);
       default:
         console.log("\nTipo de mensaje (MTI) no soportado por el Servidor");
         break;
@@ -421,7 +517,7 @@ server.on("connection", (socket: any) => {
   socket.on("error", function (err: Error) {
     console.log(`Error: ${err}`);
   });
-  socket.setTimeout(55000);
+  socket.setTimeout(TIEMPO_CONEXION_RCES);
   socket.on("timeout", () => {
     console.log("Connexion socket con RCES timeout");
     socket.end();
@@ -431,6 +527,7 @@ server.on("connection", (socket: any) => {
 // Start Server
 server.listen({ port, host }, async () => {
   console.log(`Server on port: ${server.address().port}`);
-  setInterval(loopReverses, 10000);
+  setInterval(loopReverses, TIEMPO_LOOP_REVERSE);
+  setInterval(loopEcho, TIEMPO_LOOP_ECHO);
   connectMovistar();
 });

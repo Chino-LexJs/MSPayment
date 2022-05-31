@@ -28,6 +28,7 @@ let fields: {
   TransactionCurrencyCode: [49, "n", 3, false, "info"],
   TerminalData: [60, "ans", 15, false, "info"], // antes long de 19
   CardIssuerAndAuthorizer: [61, "ans", 16, false, "info"], // antes long de 22
+  NetworkManagementInformationCode: [70, "n", 3, false, "info"],
   OriginalDataElements: [90, "n", 42, false, "info"],
   ReceivingIntitutionIDCode: [100, "n", 11, false, "info"],
   AccountIdentification1: [102, "ans", 12, false, "info"], // antes long de 28
@@ -37,7 +38,7 @@ export function util_unpack(message: string): { [key: string]: string } {
   const unpack = {
     ACTION: message.substr(1, 2), // 01
     ACCOUNT_ID: message.substr(3, 6), // 000001
-    POS_ID: message.substr(9, 10), // 
+    POS_ID: message.substr(9, 10), //
     POS_NAME: message.substr(19, 22),
     POS_STATE: message.substr(41, 3),
     POS_TIME_ZONE: message.substr(44, 3), // 000
@@ -60,7 +61,7 @@ export function util_unpack(message: string): { [key: string]: string } {
  * @param message Cadena de caracteres que forman el msj 0210 o 0430 em en formato ISO 8583
  * @returns Json con formato fields que contenga los data elements enviados en el message
  */
-export function util_unpack_0210_0430(message: string): {
+export function util_unpack_0210_0430_0800(message: string): {
   [key: string]: string;
 } {
   let newFields: { [key: string]: string } = {};

@@ -33,7 +33,7 @@ function transactionDateTime(
   );
   return dateTime;
 }
-function TransmissionDateTime(): string {
+export function TransmissionDateTime(): string {
   let day = new Date(),
     MM = day.getMonth().toString().padStart(2, "0"),
     DD = day.getDate().toString().padStart(2, "0"),

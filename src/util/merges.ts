@@ -17,7 +17,7 @@ export function merge_0200(
   }
 }
 
-export function merge_0210_0430(
+export function merge_0210_0430_0800_0810(
   dataElements: { [key: string]: string },
   fields: {
     [keys: string]: (string | number | boolean)[];
