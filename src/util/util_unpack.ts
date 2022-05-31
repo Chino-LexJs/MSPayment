@@ -35,9 +35,9 @@ let fields: {
 };
 export function util_unpack(message: string): { [key: string]: string } {
   const unpack = {
-    ACTION: message.substr(3, 1), // 0
-    ACCOUNT_ID: message.substr(2, 6),
-    POS_ID: message.substr(9, 10),
+    ACTION: message.substr(1, 2), // 01
+    ACCOUNT_ID: message.substr(3, 6), // 000001
+    POS_ID: message.substr(9, 10), // 
     POS_NAME: message.substr(19, 22),
     POS_STATE: message.substr(41, 3),
     POS_TIME_ZONE: message.substr(44, 3), // 000
