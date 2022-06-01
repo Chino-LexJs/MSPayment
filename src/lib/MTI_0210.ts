@@ -3,6 +3,7 @@ import {
   numberOfDataElements,
 } from "../util/util_hexa_bin";
 import { ISO8583 } from "../lib/iso8583";
+import { getRequestById } from "../db/getRequestById";
 
 export class MTI0210 extends ISO8583 {
   then(arg0: (msj0210: any) => void) {
@@ -42,18 +43,22 @@ export class MTI0210 extends ISO8583 {
     const keys = Object.keys(this.fieldsIso);
     msg = msg.concat(
       String.fromCharCode(2),
-      this.fieldsIso.AccountIdentification1[4].toString(),
-      this.fieldsIso.CardAcceptorNameLocation[4].toString().substr(0, 10),
-      this.fieldsIso.LocalTransactionTime[4].toString(),
-      this.fieldsIso.LocalTransactionDate[4].toString().substr(8, 10),
-      this.fieldsIso.TransactionAmount[4].toString().substr(2, 10),
+      this.fieldsIso.AccountIdentification1[4].toString(), // Account (6)
+      this.fieldsIso.CardAcceptorNameLocation[4].toString().substr(0, 10), // Pos_id (10)
+      this.fieldsIso.LocalTransactionDate[4].toString(), // pos date (8)
+      this.fieldsIso.LocalTransactionTime[4].toString(), // pos time (6)
       this.fieldsIso.PosPreauthorizationChargebackData[4]
         .toString()
-        .substr(7, 1),
+        .substr(8, 10), // DNB (10)
+      this.fieldsIso.TransactionAmount[4].toString().substr(2, 10), // Amount (10)
+      this.fieldsIso.PosPreauthorizationChargebackData[4]
+        .toString()
+        .substr(7, 1), // Product group (1)
       "0000", // PRODUCT_NR no viene de MOVISTAR PREGUNTAR POR QUE?
-      this.fieldsIso.ResponseCode[4].toString(),
-      this.fieldsIso.AuthorizationIdentificationResponse[4].toString(),
-      "0123456789", // ID PREGUNTAR QUE ES
+      "2", // 2 fijo (1)
+      this.fieldsIso.ResponseCode[4].toString(), // response code (2)
+      this.fieldsIso.AuthorizationIdentificationResponse[4].toString(), // Authorization NR (6)
+      this.fieldsIso.RetrievalReferenceNumber[4].toString().padStart(10, "0"), // ID (10)
       "00", // ERROR si hay algun error se notifica mediante este parametro
       String.fromCharCode(3)
     );
@@ -66,6 +71,10 @@ export class MTI0210 extends ISO8583 {
     [keys: string]: (string | number | boolean)[];
   } {
     return this.fieldsIso;
+  }
+  addYearLocalTransactionDate(year: number) {
+    this.fieldsIso.LocalTransactionDate[4] =
+      year.toString() + this.fieldsIso.LocalTransactionDate[4];
   }
   getTrancenr(): number {
     return Number(this.fieldsIso.RetrievalReferenceNumber[4]);

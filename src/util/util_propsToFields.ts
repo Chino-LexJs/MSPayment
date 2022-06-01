@@ -35,7 +35,7 @@ function transactionDateTime(
 }
 export function TransmissionDateTime(): string {
   let day = new Date(),
-    MM = day.getMonth().toString().padStart(2, "0"),
+    MM = (day.getMonth() + 1).toString().padStart(2, "0"),
     DD = day.getDate().toString().padStart(2, "0"),
     hh = day.getHours().toString().padStart(2, "0"),
     mm = day.getMinutes().toString().padStart(2, "0"),
@@ -44,7 +44,7 @@ export function TransmissionDateTime(): string {
 }
 function SettlementDate(): string {
   let date = new Date(),
-    MM = date.getMonth().toString().padStart(2, "0"),
+    MM = (date.getMonth() + 1).toString().padStart(2, "0"),
     DD = date.getDate().toString().padStart(2, "0");
   return "".concat(MM, DD);
 }
@@ -53,8 +53,8 @@ function additionalData(
   dnb: string,
   productGroup: string
 ): string {
-  if (productNr === "0000") {
-    return "067MOVI" + productGroup + dnb + "^C".padStart(6, " ");
+  if (Number(productNr) === 0) {
+    return "067MOVI" + productGroup + dnb + "^C".padStart(8);
   } else {
     return "067MOVI" + productGroup + dnb + productNr + "^C".padStart(6, " ");
   }
@@ -83,7 +83,9 @@ export function propsToFields(dataElements: { [key: string]: string }): {
       12,
       "0"
     ),
-    CardAcceptorTerminalID: "TARE%.6d        ",
+    CardAcceptorTerminalID: ""
+      .concat("TARE", dataElements.POS_ID.slice(-6))
+      .padEnd(16),
     CardAcceptorNameLocation: "".concat(
       dataElements.POS_NAME,
       dataElements.POS_ID,
@@ -92,12 +94,12 @@ export function propsToFields(dataElements: { [key: string]: string }): {
     ),
     RetailerData: "044A00000000000           300   48400000000000",
     TransactionCurrencyCode: "484",
-    TerminalData: "012B917PRO1-%.3d",
-    CardIssuerCaterogyResponseCodeData: "013            P",
+    TerminalData: "012B917PRO1" + dataElements.POS_TIME_ZONE,
+    CardIssuerAndAuthorizer: "013            P",
     ReceivingIntitutionIDCode: "03917",
     AccountIdentification1:
       dataElements.ACCOUNT_ID.length.toString().padStart(2, "0") +
-      dataElements.ACCOUNT_ID,
+      dataElements.ACCOUNT_ID, // Posiblemente se cambie fijo a "040000"
     PosPreauthorizationChargebackData: additionalData(
       dataElements.PRODUCT_NR,
       dataElements.DNB,

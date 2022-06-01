@@ -205,14 +205,14 @@ async function message0210(message: string) {
    * getMessage(trancenr) busca el mensaje 0200 que se envio a Movistar
    * res es el mensaje guardado en la base de datos de tipo 0200
    */
-  let res: any = await getMessage(mti0210.getTrancenr());
+  let message0200: any = await getMessage(mti0210.getTrancenr());
   let jsonDate = {
-    year: new Date(res.date).getFullYear(),
-    month: new Date(res.date).getMonth(),
-    day: new Date(res.date).getDate(),
-    hour: res.time.slice(0, 2),
-    minutes: res.time.slice(3, 5),
-    seconds: res.time.slice(6),
+    year: new Date(message0200.date).getFullYear(),
+    month: new Date(message0200.date).getMonth(),
+    day: new Date(message0200.date).getDate(),
+    hour: message0200.time.slice(0, 2),
+    minutes: message0200.time.slice(3, 5),
+    seconds: message0200.time.slice(6),
   };
   /**
    * difDates contiene la diferencia de tiempo en segundos entre la hora en que se envio el msj 0200 a Movistar y la hora de respuesta 0210
@@ -234,6 +234,7 @@ async function message0210(message: string) {
     sendMessage0420(mti0210);
   } else {
     // se guarda msj 0210 que se envia a RCES, se genera un msj 0210 para RCES y se envia msj a RCES
+    mti0210.addYearLocalTransactionDate(jsonDate.year); // Se agrega el año del request almacenado en la db
     let values = {
       date: new Date(),
       time: new Date(),
@@ -411,24 +412,6 @@ async function messageFromRCES(
     valuesRequest.authorizationnr,
     valuesRequest.error,
     valuesRequest.action
-  );
-  let valuesMessage = {
-    date: new Date(),
-    time: new Date(),
-    type: 200,
-    messagedate: new Date(), // P-7 se crea en el momento en TransmissionDateTime() en archivo util_propsToFields
-    messagetime: new Date(), // P-7 se crea en el momento en TransmissionDateTime() en archivo util_propsToFields
-    tracenr: id_request,
-    message: message,
-  };
-  await saveMessage(
-    valuesMessage.date,
-    valuesMessage.time,
-    valuesMessage.type,
-    valuesMessage.messagedate,
-    valuesMessage.messagetime,
-    valuesMessage.tracenr,
-    valuesMessage.message
   );
   dataUnpack.SYSTEMS_TRANCE = id_request.toString().slice(-6); // Si el numero supera los 6 digitos P-11 solo capta hasta 6 digitos
   dataUnpack.RETRIEVAL_REFERENCE_NUMBER = id_request.toString();

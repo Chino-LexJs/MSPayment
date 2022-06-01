@@ -31,9 +31,9 @@ export class MTI0420 extends ISO8583 {
   }
   getMessage(): string {
     let msg = "";
-    msg = msg.concat(this.header, this.mti, this.getBitmap());
     this.fieldsIso.SecundaryBitmap[4] = this.getScondaryBitmap();
     this.fieldsIso.SecundaryBitmap[3] = true;
+    msg = msg.concat(this.header, this.mti, this.getBitmap());
     const keys = Object.keys(this.fieldsIso);
     for (let i = 0; i < keys.length; i++) {
       if (this.fieldsIso[keys[i]][3]) {
