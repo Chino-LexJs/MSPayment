@@ -51,7 +51,7 @@ export abstract class ISO8583 {
     ResponseCode: [39, "an", 2, false, "info"],
     CardAcceptorTerminalID: [41, "ans", 16, false, "info"],
     CardAcceptorNameLocation: [43, "ans", 40, false, "info"],
-    RetailerData: [48, "ans", 47, false, "info"], // antes long de 30
+    AdditionalData: [48, "ans", 47, false, "info"], // antes long de 30
     TransactionCurrencyCode: [49, "n", 3, false, "info"],
     TerminalData: [60, "ans", 15, false, "info"], // antes long de 19
     CardIssuerAndAuthorizer: [61, "ans", 16, false, "info"], // antes long de 22

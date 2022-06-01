@@ -24,7 +24,7 @@ let fields: {
   ResponseCode: [39, "an", 2, false, "info"],
   CardAcceptorTerminalID: [41, "ans", 16, false, "info"],
   CardAcceptorNameLocation: [43, "ans", 40, false, "info"],
-  RetailerData: [48, "ans", 47, false, "info"], // antes long de 30
+  AdditionalData: [48, "ans", 47, false, "info"], // antes long de 30
   TransactionCurrencyCode: [49, "n", 3, false, "info"],
   TerminalData: [60, "ans", 15, false, "info"], // antes long de 19
   CardIssuerAndAuthorizer: [61, "ans", 16, false, "info"], // antes long de 22
@@ -61,7 +61,7 @@ export function util_unpack(message: string): { [key: string]: string } {
  * @param message Cadena de caracteres que forman el msj 0210 o 0430 em en formato ISO 8583
  * @returns Json con formato fields que contenga los data elements enviados en el message
  */
-export function util_unpack_0210_0430_0800(message: string): {
+export function util_unpack_ISO(message: string): {
   [key: string]: string;
 } {
   let newFields: { [key: string]: string } = {};
@@ -110,7 +110,11 @@ function longitudParam(key: string, message: string, init: number): number {
       return Number(message.substr(init, 2)) + 2;
     case "Track2Data":
       return Number(message.substr(init, 2)) + 2;
-    case "CardIssuerCaterogyResponseCodeData":
+    case "AdditionalData":
+      return Number(message.substr(init, 3)) + 3;
+    case "TerminalData":
+      return Number(message.substr(init, 3)) + 3;
+    case "CardIssuerAndAuthorizer":
       return Number(message.substr(init, 3)) + 3;
     case "ReceivingIntitutionIDCode":
       return Number(message.substr(init, 2)) + 2;
@@ -118,6 +122,7 @@ function longitudParam(key: string, message: string, init: number): number {
       return Number(message.substr(init, 2)) + 2;
     case "PosPreauthorizationChargebackData":
       return Number(message.substr(init, 3)) + 3;
+
     default:
       return Number(fields[key][2]);
   }

@@ -54,7 +54,7 @@ export class MTI0210 extends ISO8583 {
       this.fieldsIso.PosPreauthorizationChargebackData[4]
         .toString()
         .substr(7, 1), // Product group (1)
-      "0000", // PRODUCT_NR no viene de MOVISTAR PREGUNTAR POR QUE?
+      this.getproduct_NR(), // PRODUCT_NR no viene de MOVISTAR PREGUNTAR POR QUE?
       "2", // 2 fijo (1)
       this.fieldsIso.ResponseCode[4].toString(), // response code (2)
       this.fieldsIso.AuthorizationIdentificationResponse[4].toString(), // Authorization NR (6)
@@ -78,5 +78,12 @@ export class MTI0210 extends ISO8583 {
   }
   getTrancenr(): number {
     return Number(this.fieldsIso.RetrievalReferenceNumber[4]);
+  }
+  private product_NR: string = "";
+  public setProduct_NR(product_NR: string) {
+    this.product_NR = product_NR;
+  }
+  public getproduct_NR(): string {
+    return this.product_NR ? this.product_NR : "0000";
   }
 }

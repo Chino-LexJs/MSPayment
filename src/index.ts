@@ -8,7 +8,7 @@ import { getMessageById } from "./db/getMessageById";
 import { MTI0200 } from "./lib/MTI_0200";
 import { MTI0210 } from "./lib/MTI_0210";
 import { MTI0420 } from "./lib/MTI_0420";
-import { util_unpack, util_unpack_0210_0430_0800 } from "./util/util_unpack";
+import { util_unpack, util_unpack_ISO } from "./util/util_unpack";
 import { MTI0430 } from "./lib/MTI_0430";
 import { getReverseByRequestId } from "./db/getReverseById";
 import { setIsoMessage0430 } from "./db/setIsoMessage0430";
@@ -86,6 +86,9 @@ async function loopEcho() {
   );
   console.log(`\nMensaje echo 0800 a Movistar: ${mti0800.getMessage()}`);
   socketMovistar.write(mti0800.getMessage(), "utf8");
+}
+function getProductNr(PosPreauthorizationChargebackData: string): string {
+  return PosPreauthorizationChargebackData.substr(24, 4);
 }
 async function sendMessage0810(mti0800: MTI0800) {
   let dataElements_0810 = {
@@ -176,8 +179,7 @@ async function sendMessage0420(mti0210: MTI0210) {
 async function message0210(message: string) {
   console.log("\nMensaje 0210 de MOVISTAR en formato ISO8583:");
   console.log(message);
-  let newFieldes: { [key: string]: string } =
-    util_unpack_0210_0430_0800(message);
+  let newFieldes: { [key: string]: string } = util_unpack_ISO(message);
   console.log("\nData elements de msj 0210 de Movistar: ");
   console.log(newFieldes);
   let mti0210 = new MTI0210(newFieldes, "0210");
@@ -235,6 +237,14 @@ async function message0210(message: string) {
   } else {
     // se guarda msj 0210 que se envia a RCES, se genera un msj 0210 para RCES y se envia msj a RCES
     mti0210.addYearLocalTransactionDate(jsonDate.year); // Se agrega el año del request almacenado en la db
+    let fields0200: { [key: string]: string } = util_unpack_ISO(
+      message0200.message.substr(12)
+    );
+    console.log("FIELDS 0200:");
+    console.log(fields0200);
+    mti0210.setProduct_NR(
+      getProductNr(fields0200.PosPreauthorizationChargebackData)
+    );
     let values = {
       date: new Date(),
       time: new Date(),
@@ -274,8 +284,7 @@ async function message0210(message: string) {
 async function message0430(message: string) {
   console.log("\nMensaje 0430 de MOVISTAR en formato ISO8583:");
   console.log(message);
-  let newFieldes: { [key: string]: string } =
-    util_unpack_0210_0430_0800(message);
+  let newFieldes: { [key: string]: string } = util_unpack_ISO(message);
   console.log(newFieldes);
   let mti0430 = new MTI0430(newFieldes, "0430");
   let valuesMessageMovistar = {
@@ -327,8 +336,7 @@ async function message0430(message: string) {
 async function message0800(message: string) {
   console.log("\nMensaje 0800 de MOVISTAR en formato ISO8583:");
   console.log(message);
-  let newFieldes: { [key: string]: string } =
-    util_unpack_0210_0430_0800(message);
+  let newFieldes: { [key: string]: string } = util_unpack_ISO(message);
   console.log("\nData elements de msj 0800 de Movistar: ");
   console.log(newFieldes);
   let mti0800 = new MTI0800(newFieldes, "0800");
@@ -419,7 +427,7 @@ async function messageFromRCES(
   console.log("\nData elements generados por el msj 0200 de RCES:");
   console.log(mti0200.getFields());
   console.log(
-    "\nMensaje 0200 en formato ISO8583 enviado a Movistar: \n",
+    "\nMensaje 0200 en formato ISO8583 enviado a Movistar:\n",
     mti0200.getMessage()
   );
   socketMovistar.write(mti0200.getMessage(), "utf8");

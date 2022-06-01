@@ -53,11 +53,9 @@ function additionalData(
   dnb: string,
   productGroup: string
 ): string {
-  if (Number(productNr) === 0) {
-    return "067MOVI" + productGroup + dnb + "^C".padStart(8);
-  } else {
-    return "067MOVI" + productGroup + dnb + productNr + "^C".padStart(6, " ");
-  }
+  let init: string = "067",
+    P_126: string = "MOVI" + productGroup + dnb + productNr.padStart(10);
+  return init + P_126.padEnd(67);
 }
 export function propsToFields(dataElements: { [key: string]: string }): {
   [key: string]: string;
@@ -88,13 +86,13 @@ export function propsToFields(dataElements: { [key: string]: string }): {
       .padEnd(16),
     CardAcceptorNameLocation: "".concat(
       dataElements.POS_NAME,
-      dataElements.POS_ID,
+      dataElements.POS_ID.padEnd(13),
       dataElements.POS_STATE,
       "MX" // POS COUNTRY
     ),
-    RetailerData: "044A00000000000           300   48400000000000",
+    AdditionalData: "044A                       300   48400000000000",
     TransactionCurrencyCode: "484",
-    TerminalData: "012B917PRO1" + dataElements.POS_TIME_ZONE,
+    TerminalData: "012B917PRO1+" + dataElements.POS_TIME_ZONE,
     CardIssuerAndAuthorizer: "013            P",
     ReceivingIntitutionIDCode: "03917",
     AccountIdentification1:
