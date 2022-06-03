@@ -1,9 +1,4 @@
-import {
-  util_hexa_bin_Bitmap,
-  numberOfDataElements,
-} from "../util/util_hexa_bin";
 import { ISO8583 } from "../lib/iso8583";
-import { getRequestById } from "../db/getRequestById";
 
 export class MTI0210 extends ISO8583 {
   then(arg0: (msj0210: any) => void) {
@@ -14,23 +9,8 @@ export class MTI0210 extends ISO8583 {
     this.header = "ISO001300055";
     this.mti = mti;
   }
-
-  private bitmap: string = "";
-  public getBitmap(): string {
-    let DEs: number[] = numberOfDataElements(this.fieldsIso); // DEs sin condicionales
-    let json_bitmap = util_hexa_bin_Bitmap(DEs);
-    this.bitmap = json_bitmap.hexaPB;
-    return this.bitmap;
-  }
-
-  private secondaryBitmap: string = "";
-  public getScondaryBitmap(): string {
-    let DEs: number[] = numberOfDataElements(this.fieldsIso); // DEs sin condicionales
-    let json_bitmap = util_hexa_bin_Bitmap(DEs);
-    this.secondaryBitmap = json_bitmap.hexaSB;
-    return this.secondaryBitmap;
-  }
   /**
+   * @override
    * El getMessage de la clase 0210 no retorna un string en formato ISO8583 como las demas clases
    * Este getMessage retorna una trama de forma ISO-0210-RCES
    * Ya que un msj 0210 de Movistar solo se retorna al sistema RCES y se almacena en la base de datos
@@ -40,7 +20,6 @@ export class MTI0210 extends ISO8583 {
     let msg = "";
     this.fieldsIso.SecundaryBitmap[4] = this.getScondaryBitmap();
     this.fieldsIso.SecundaryBitmap[3] = true;
-    const keys = Object.keys(this.fieldsIso);
     msg = msg.concat(
       String.fromCharCode(2),
       this.fieldsIso.AccountIdentification1[4].toString(), // Account (6)
@@ -67,17 +46,9 @@ export class MTI0210 extends ISO8583 {
   getMti(): string {
     return this.mti;
   }
-  getFields(): {
-    [keys: string]: (string | number | boolean)[];
-  } {
-    return this.fieldsIso;
-  }
   addYearLocalTransactionDate(year: number) {
     this.fieldsIso.LocalTransactionDate[4] =
       year.toString() + this.fieldsIso.LocalTransactionDate[4];
-  }
-  getTrancenr(): number {
-    return Number(this.fieldsIso.RetrievalReferenceNumber[4]);
   }
   private product_NR: string = "";
   public setProduct_NR(product_NR: string) {

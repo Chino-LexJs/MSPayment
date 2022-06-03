@@ -16,6 +16,10 @@ import {
   merge_0210_0430_0800_0810,
   merge_0420,
 } from "../util/merges";
+import {
+  numberOfDataElements,
+  util_hexa_bin_Bitmap,
+} from "../util/util_hexa_bin";
 
 export abstract class ISO8583 {
   header: string = "";
@@ -31,7 +35,7 @@ export abstract class ISO8583 {
    * 4: info de data element (string)
    * ]
    */
-  public fieldsIso: {
+  protected fieldsIso: {
     [keys: string]: (string | number | boolean)[];
   } = {
     MTI: [0, "n", 4, false, "info"],
@@ -92,15 +96,46 @@ export abstract class ISO8583 {
         break;
     }
   }
+  abstract getMti(): string;
+
+  private bitmap: string = "";
+  public getBitmap(): string {
+    let DEs: number[] = numberOfDataElements(this.fieldsIso);
+    let json_bitmap = util_hexa_bin_Bitmap(DEs);
+    this.bitmap = json_bitmap.hexaPB;
+    return this.bitmap;
+  }
+
+  private secondaryBitmap: string = "";
+  public getScondaryBitmap(): string {
+    let DEs: number[] = numberOfDataElements(this.fieldsIso);
+    let json_bitmap = util_hexa_bin_Bitmap(DEs);
+    this.secondaryBitmap = json_bitmap.hexaSB;
+    return this.secondaryBitmap;
+  }
   /**
    * Devuelve el mensaje en formato ISO-8583
    */
-  abstract getMessage(): string;
-
-  abstract getMti(): string;
-  //   abstract getHeader(): string;
-  //   abstract getPBitmap_Hex(): string;
-  //   abstract getPBitmao_Bin(): string;
-  //   abstract validateMessage(): Boolean;
-  //   abstract checkMTI(): Boolean;
+  getMessage(): string {
+    const SE_USA = 3;
+    let msg = "";
+    this.fieldsIso.SecundaryBitmap[4] = this.getScondaryBitmap();
+    this.fieldsIso.SecundaryBitmap[SE_USA] = true;
+    msg = msg.concat(this.header, this.mti, this.getBitmap());
+    const keys = Object.keys(this.fieldsIso);
+    for (let i = 0; i < keys.length; i++) {
+      if (this.fieldsIso[keys[i]][SE_USA]) {
+        msg = msg.concat(this.fieldsIso[keys[i]][4].toString());
+      }
+    }
+    return msg;
+  }
+  getTrancenr(): number {
+    return Number(this.fieldsIso.RetrievalReferenceNumber[4]);
+  }
+  getFields(): {
+    [keys: string]: (string | number | boolean)[];
+  } {
+    return this.fieldsIso;
+  }
 }
