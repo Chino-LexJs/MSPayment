@@ -1,4 +1,4 @@
-import { propsToFields } from "./util_propsToFields";
+import { propsToFields } from "./propsToFields";
 
 export function merge_0200(
   dataElements: { [key: string]: string },

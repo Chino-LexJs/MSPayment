@@ -9,7 +9,7 @@
     hexaSB: Bitmap secundario en hexadecimal (string de longitud de 16 caracteres)
   }
  */
-export function util_hexa_bin_Bitmap(DEs: number[]): { [key: string]: string } {
+export function hexa_bin_Bitmap(DEs: number[]): { [key: string]: string } {
   var json_bitmaps = {
     binaryPB: "",
     hexaPB: "",

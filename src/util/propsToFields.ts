@@ -33,7 +33,7 @@ function transactionDateTime(
   );
   return dateTime;
 }
-export function TransmissionDateTime(): string {
+function TransmissionDateTime(): string {
   let day = new Date(),
     MM = (day.getMonth() + 1).toString().padStart(2, "0"),
     DD = day.getDate().toString().padStart(2, "0"),
@@ -57,7 +57,7 @@ function additionalData(
     P_126: string = "MOVI" + productGroup + dnb + productNr.padStart(10);
   return init + P_126.padEnd(67);
 }
-export function propsToFields(dataElements: { [key: string]: string }): {
+function propsToFields(dataElements: { [key: string]: string }): {
   [key: string]: string;
 } {
   let dateTime = transactionDateTime(
@@ -106,3 +106,5 @@ export function propsToFields(dataElements: { [key: string]: string }): {
   };
   return messageUnpack;
 }
+
+export { propsToFields, TransmissionDateTime };

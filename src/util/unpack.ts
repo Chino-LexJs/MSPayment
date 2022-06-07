@@ -1,4 +1,4 @@
-import { hex2bin } from "../util/util_hexa_bin";
+import { hex2bin } from "./hexa_bin";
 /**
  * Variable fields es la misma (y tiene que ser la misma en formato y campos) que la de la clase iso8583 (lib)
  * NOTA:  se quiso dejar un solo archivo fields que comparta todo el server,
@@ -34,7 +34,7 @@ let fields: {
   AccountIdentification1: [102, "ans", 12, false, "info"], // antes long de 28
   PosPreauthorizationChargebackData: [126, "ans", 20, false, "info"], // long real 100, se usa 20 para pureba
 };
-export function util_unpack(message: string): { [key: string]: string } {
+export function unpack(message: string): { [key: string]: string } {
   const unpack = {
     ACTION: message.substr(1, 2), // 01
     ACCOUNT_ID: message.substr(3, 6), // 000001
@@ -61,7 +61,7 @@ export function util_unpack(message: string): { [key: string]: string } {
  * @param message Cadena de caracteres que forman el msj 0210 o 0430 em en formato ISO 8583
  * @returns Json con formato fields que contenga los data elements enviados en el message
  */
-export function util_unpack_ISO(message: string): {
+export function unpack_ISO(message: string): {
   [key: string]: string;
 } {
   let newFields: { [key: string]: string } = {};

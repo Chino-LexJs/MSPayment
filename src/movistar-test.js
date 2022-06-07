@@ -40,7 +40,7 @@ server.on("connection", (socket) => {
       if (message.substr(0, 16) === "ISO0013000550420") {
         message_0430 = "".concat(
           message_0430.substr(0, 94),
-          message.substr(128, 12),
+          message.substr(132, 12),
           message_0430.substr(106)
         );
         function sendMessage() {

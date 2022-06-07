@@ -18,8 +18,8 @@ import {
 } from "../util/merges";
 import {
   numberOfDataElements,
-  util_hexa_bin_Bitmap,
-} from "../util/util_hexa_bin";
+  hexa_bin_Bitmap,
+} from "../util/hexa_bin";
 
 export abstract class ISO8583 {
   header: string = "";
@@ -101,7 +101,7 @@ export abstract class ISO8583 {
   private bitmap: string = "";
   public getBitmap(): string {
     let DEs: number[] = numberOfDataElements(this.fieldsIso);
-    let json_bitmap = util_hexa_bin_Bitmap(DEs);
+    let json_bitmap = hexa_bin_Bitmap(DEs);
     this.bitmap = json_bitmap.hexaPB;
     return this.bitmap;
   }
@@ -109,7 +109,7 @@ export abstract class ISO8583 {
   private secondaryBitmap: string = "";
   public getScondaryBitmap(): string {
     let DEs: number[] = numberOfDataElements(this.fieldsIso);
-    let json_bitmap = util_hexa_bin_Bitmap(DEs);
+    let json_bitmap = hexa_bin_Bitmap(DEs);
     this.secondaryBitmap = json_bitmap.hexaSB;
     return this.secondaryBitmap;
   }
