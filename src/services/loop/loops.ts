@@ -1,8 +1,8 @@
-import { addRetrie, getMessageById, getReverses } from "../db";
-import { MTI0800 } from "../lib";
-import { TransmissionDateTime, unpack_ISO } from "../util";
-import { socketMovistar } from "./connectMovistar";
-import { saveMessageDataBase } from "./saveMessage";
+import { addRetrie, getMessageById, getReverses } from "../../db";
+import { MTI0800 } from "../../lib";
+import { TransmissionDateTime, unpack_ISO } from "../../util";
+import { socketMovistar } from "../movistar/connectMovistar";
+import { saveMessageDataBase } from "../../util/saveMessage";
 
 function sendMessagesReverses(reverses: any[]) {
   reverses.forEach(async (reverse: { [key: string]: string | number }) => {

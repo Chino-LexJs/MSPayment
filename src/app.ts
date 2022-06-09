@@ -1,16 +1,16 @@
-import { messageFromRCES } from "./services/messageRCES";
+import { connectMovistar } from "./services/movistar/connectMovistar";
+import { loopEcho, loopReverses } from "./services/loop/loops";
+import { messageFromRCES } from "./services/rces/messageRCES";
+import {
+  closeConnection,
+  saveConnection,
+} from "./services/rces/socketConnections";
 
 const { Server } = require("net"),
   server = new Server(),
-  TIEMPO_CONEXION_RCES = 55000; // Tiempo (milisegundos) limite para conexion con socket RCES
-
-/**
- * Map que guarda las distintas conexiones sockets de RCES de la siguiente forma
- * key: es el id de Request de RCES (P-11 y P-37)
- * valor: conexion socket
- * rcesClients: new Map() : key(id_request) => socket connection
- */
-let rcesClients = new Map();
+  TIEMPO_CONEXION_RCES = 55000, // Tiempo (milisegundos) limite para conexion con socket RCES
+  TIEMPO_LOOP_REVERSE = 30000, // Tiempo (milisegundos) para que el sistema busque y envie reversos
+  TIEMPO_LOOP_ECHO = 60000;
 
 // Configuracón del Server para distintas conexiones sockets de RCES
 server.on("connection", (socket: any) => {
@@ -22,24 +22,26 @@ server.on("connection", (socket: any) => {
     console.log("\nMensaje de RCES sin formato: ");
     console.log(message);
     let id_request = await messageFromRCES(message, socket.remoteAddress);
-    rcesClients.set(id_request, socket);
+    saveConnection(id_request, socket);
   });
   socket.on("close", () => {
-    for (let client of rcesClients.keys()) {
-      if (socket == rcesClients.get(client)) {
-        rcesClients.delete(client);
-      }
-    }
+    closeConnection(socket);
     console.log(`\nComunicacion finalizada con RCS`);
   });
   socket.on("error", function (err: Error) {
     console.log(`Error: ${err}`);
   });
-  socket.setTimeout(TIEMPO_CONEXION_RCES);
+  socket.setTimeout(TIEMPO_CONEXION_RCES); // Tiempo limite de conexión
   socket.on("timeout", () => {
     console.log("Connexion socket con RCES timeout");
     socket.end();
   });
 });
 
-export { rcesClients, server };
+async function main() {
+  setInterval(loopReverses, TIEMPO_LOOP_REVERSE);
+  setInterval(loopEcho, TIEMPO_LOOP_ECHO);
+  connectMovistar();
+}
+
+export { server, main };

@@ -1,8 +1,8 @@
-import { saveRequest } from "../db";
-import { MTI0200 } from "../lib";
-import { unpack } from "../util";
-import { socketMovistar } from "./connectMovistar";
-import { saveMessageDataBase } from "./saveMessage";
+import { saveRequest } from "../../db";
+import { MTI0200 } from "../../lib";
+import { unpack } from "../../util";
+import { socketMovistar } from "../movistar/connectMovistar";
+import { saveMessageDataBase } from "../../util/saveMessage";
 
 function posDate(date: string): Date {
   return new Date(

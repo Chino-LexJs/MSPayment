@@ -1,4 +1,3 @@
-import { rcesClients } from "../app";
 import {
   getMessage,
   getReverseByRequestId,
@@ -6,11 +5,15 @@ import {
   setIsoMessage0430,
   setResponseDataRequest,
   setReverse_idRequest,
-} from "../db";
-import { MTI0210, MTI0420, MTI0430, MTI0800, MTI0810 } from "../lib";
-import { TransmissionDateTime, unpack_ISO } from "../util";
+} from "../../db";
+import { MTI0210, MTI0420, MTI0430, MTI0800, MTI0810 } from "../../lib";
+import { TransmissionDateTime, unpack_ISO } from "../../util";
 import { socketMovistar } from "./connectMovistar";
-import { saveMessageDataBase } from "./saveMessage";
+import { saveMessageDataBase } from "../../util";
+import {
+  findConnection,
+  sendMessageConnection,
+} from "../rces/socketConnections";
 
 const TIEMPO_RESPUESTA_MOVISTAR = 55; // Tiempo (segundos) limite en el que puede responder Movistar
 
@@ -135,15 +138,10 @@ async function message0210(message: string) {
     /**
      * Se busca entre las distintas conexiones que se establecieron con RCES y se envia la respuesta 0210 a la conexion correspondiente
      */
-    let client = rcesClients.has(mti0210.getTrancenr())
-      ? rcesClients.get(mti0210.getTrancenr())
-      : undefined;
-    if (client != undefined) {
-      client.write(mti0210.getMessage(), "utf8");
+    if (findConnection(mti0210.getTrancenr())) {
+      sendMessageConnection(mti0210.getTrancenr(), mti0210.getMessage());
       console.log("\nMensaje que se envia a RCES en formato RCES");
       console.log(mti0210.getMessage());
-      rcesClients.delete(mti0210.getTrancenr());
-      client.end();
     } else {
       console.log("\nNo se encontro cliente, se envia msj 0420 a Movistar");
       sendMessage0420(mti0210);
