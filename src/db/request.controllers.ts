@@ -1,6 +1,14 @@
 import { pool } from "./db";
 
-export async function saveRequest(
+async function getRequestById(id: number): Promise<any> {
+  try {
+    let res: any = await pool.query(`SELECT * FROM request WHERE id = ${id}`);
+    return res[0];
+  } catch (error) {
+    console.log(error);
+  }
+}
+async function saveRequest(
   date_request: Date,
   time_request: Date,
   ip: string,
@@ -49,27 +57,39 @@ export async function saveRequest(
     console.log(error);
   }
 }
-/**
- * id INT AUTO_INCREMENT NOT NULL,
-    date_request date NOT NULL,
-    time_request time NOT NULL,
-    ip INT NOT NULL,
-    account_id INT NOT NULL,
-    pos_id INT NOT NULL,
-    pos_name VARCHAR(22) NOT NULL,
-    pos_state VARCHAR(3) NOT NULL,
-    postimezona INT(3) NOT NULL,
-    posdate DATE NOT NULL,
-    postime TIME NOT NULL,
-    dnb VARCHAR(10) NOT NULL,
-    amount DOUBLE NOT NULL,
-    productgroup VARCHAR(1),
-    product_nr INT(6) NOT NULL,
-    responsedate DATE NOT NULL,
-    responsetime TIME NOT NULL,
-    responsecode INT(6) NOT NULL,
-    authorizationnr INT(6) NOT NULL,
-    error INT(6) NOT NULL,
-    action INT(3) NOT NULL,
-    reverse_id INT(11),
- */
+async function setResponseDataRequest(
+  request_id: number,
+  responsedate: Date,
+  responsetime: Date
+): Promise<any> {
+  try {
+    let res: any = await pool.query(
+      `UPDATE request SET responsedate = ?, responsetime = ? WHERE id=${request_id};`,
+      [responsedate, responsetime]
+    );
+    return res[0];
+  } catch (error) {
+    console.log(error);
+  }
+}
+async function setReverse_idRequest(
+  request_id: number,
+  reverse_id: number
+): Promise<any> {
+  try {
+    let res: any = await pool.query(
+      `UPDATE request SET reverse_id = ? WHERE id=${request_id};`,
+      [reverse_id]
+    );
+    return res[0];
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export {
+  getRequestById,
+  saveRequest,
+  setResponseDataRequest,
+  setReverse_idRequest,
+};

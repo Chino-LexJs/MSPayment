@@ -1,5 +1,6 @@
 import { socketMovistar } from "../connection/movistar";
-import { addRetrie, getMessageById } from "../db";
+import { getMessageById } from "../db/message.controllers";
+import { addRetrie } from "../db/reverse.controllers";
 import { unpack_ISO } from "../util";
 
 function sendReverseMessages(reverses: any[]) {

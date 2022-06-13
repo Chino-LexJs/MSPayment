@@ -1,12 +1,14 @@
 import { findConnection, sendMessageConnection } from "../connection/rces";
+import { getMessage } from "../db/message.controllers";
 import {
-  getMessage,
+  setResponseDataRequest,
+  setReverse_idRequest,
+} from "../db/request.controllers";
+import {
   getReverseByRequestId,
   saveReverse,
   setIsoMessage0430,
-  setResponseDataRequest,
-  setReverse_idRequest,
-} from "../db";
+} from "../db/reverse.controllers";
 import { saveMessageDataBase, TransmissionDateTime, unpack_ISO } from "../util";
 import { MTI0210 } from "./MTI_0210";
 import { MTI0420 } from "./MTI_0420";

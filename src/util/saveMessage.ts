@@ -1,4 +1,4 @@
-import { saveMessage } from "../db";
+import { saveMessage } from "../db/message.controllers";
 
 export async function saveMessageDataBase(
   type: string,

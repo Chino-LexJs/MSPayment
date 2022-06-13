@@ -1,5 +1,5 @@
 import { closeConnection, saveConnection } from "../connection/rces";
-import { saveRequest } from "../db";
+import { saveRequest } from "../db/request.controllers";
 import { saveMessageDataBase, unpack } from "../util";
 import { MTI0200 } from "./MTI_0200";
 

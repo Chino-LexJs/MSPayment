@@ -1,5 +1,5 @@
 import { socketMovistar } from "../connection/movistar";
-import { getReverses } from "../db";
+import { getReverses } from "../db/reverse.controllers";
 import { MTI0800 } from "../lib";
 import { TransmissionDateTime } from "../util";
 import { saveMessageDataBase } from "../util/saveMessage";
