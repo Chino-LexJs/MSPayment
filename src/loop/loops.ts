@@ -1,4 +1,4 @@
-import { socketMovistar } from "../connection/movistar";
+import { movistar } from "../connection/movistar";
 import { getReverses } from "../db/reverse.controllers";
 import { MTI0800 } from "../lib";
 import { TransmissionDateTime } from "../util";
@@ -25,7 +25,7 @@ async function loopEcho() {
     mti0800.getMessage()
   );
   console.log(`\nMensaje echo 0800 a Movistar: ${mti0800.getMessage()}`);
-  socketMovistar.write(mti0800.getMessage(), "utf8");
+  movistar.getSocket().write(mti0800.getMessage(), "utf8");
 }
 
 export { loopEcho, loopReverses };

@@ -1,4 +1,4 @@
-import { socketMovistar } from "../connection/movistar";
+import { movistar } from "../connection/movistar";
 import { RCES } from "../lib/rcesConnection";
 
 function connectRCES(socket: any) {
@@ -6,7 +6,7 @@ function connectRCES(socket: any) {
     `New connection from ${socket.remoteAddress} : ${socket.remotePort}`
   );
   let rcesConnection: RCES = new RCES(socket);
-  rcesConnection.setSocketMovistar(socketMovistar);
+  rcesConnection.setSocketMovistar(movistar.getSocket());
 }
 
 export { connectRCES };

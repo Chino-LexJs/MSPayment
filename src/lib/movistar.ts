@@ -23,29 +23,39 @@ const to_MOVISTAR = {
 };
 
 export class Movistar {
+  private connecting: boolean;
   private socket: any;
   private tiempoRespuesta: number = 55;
   constructor() {
-    this.socket = new Socket();
+    this.connecting = false;
   }
 
-  public connect() {
-    this.socket.connect(to_MOVISTAR);
-    this.socket.setEncoding("utf8"); // se configura socket para manejar cadena de caracteres en el buffer[]
-    this.socket.on("data", (message: string) => this.onData(message));
-    this.socket.on("close", () => {
-      console.log(`\nComunicacion con MOVISTAR finalizada`);
-      this.connect(); // Siempre debe intentar conectarse a Movistar
-    });
-    this.socket.on("error", (err: Error): void => {
-      console.log(err);
-    });
+  public connect(): void {
+    if (!this.connecting) {
+      this.socket = new Socket();
+      this.socket.connect(to_MOVISTAR);
+      this.setConnecting(true);
+      this.socket.setEncoding("utf8"); // se configura socket para manejar cadena de caracteres en el buffer[]
+      this.socket.on("data", (message: string) => this.onData(message));
+      this.socket.on("close", () => {
+        console.log(`\nComunicacion con MOVISTAR finalizada`);
+        this.setConnecting(false);
+        this.socket.destroy();
+      });
+      this.socket.on("error", (err: Error): void => {
+        this.setConnecting(false);
+        this.socket.destroy();
+      });
+    }
   }
   public getSocket(): any {
     return this.socket;
   }
   private getProductNr(PosPreauthorizationChargebackData: string): string {
     return PosPreauthorizationChargebackData.substr(24, 4);
+  }
+  private setConnecting(state: boolean): void {
+    this.connecting = state;
   }
   private async sendMessage0810(mti0800: MTI0800) {
     let dataElements_0810 = {

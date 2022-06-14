@@ -1,6 +1,11 @@
 import { Movistar } from "../lib/movistar";
 
-let movistar: Movistar = new Movistar();
-let socketMovistar: any = movistar.getSocket();
+let movistar: Movistar;
+let socketMovistar: any;
+try {
+  movistar = new Movistar();
+} catch (error) {
+  console.log("ENTRAMOS ACA NO SE QUE ONDA");
+}
 
-export { socketMovistar, movistar };
+export { movistar };

@@ -1,4 +1,4 @@
-import { socketMovistar } from "../connection/movistar";
+import { movistar } from "../connection/movistar";
 import { getMessageById } from "../db/message.controllers";
 import { addRetrie } from "../db/reverse.controllers";
 import { unpack_ISO } from "../util";
@@ -9,7 +9,7 @@ function sendReverseMessages(reverses: any[]) {
     console.log("\nMensaje 0420 a Movistar:");
     console.log(mti0420.message.toString());
     console.log(unpack_ISO(mti0420.message));
-    socketMovistar.write(mti0420.message.toString(), "utf8");
+    movistar.getSocket().write(mti0420.message.toString(), "utf8");
     await addRetrie(Number(reverse.id), Number(reverse.retries) + 1);
   });
 }

@@ -13,7 +13,7 @@ server.on("connection", (socket: any) => connectRCES(socket));
 async function main() {
   setInterval(loopReverses, TIEMPO_LOOP_REVERSE);
   setInterval(loopEcho, TIEMPO_LOOP_ECHO);
-  movistar.connect();
+  setInterval(() => movistar.connect(), 1000);
 }
 
 export { server, main };
