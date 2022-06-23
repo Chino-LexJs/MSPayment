@@ -1,3 +1,7 @@
+/**
+ * Distintas funciones loops del sistema
+ * @module Loop
+ */
 import { movistar } from "../connection/movistar";
 import { getReverses } from "../db/reverse.controllers";
 import { MTI0800 } from "../lib";

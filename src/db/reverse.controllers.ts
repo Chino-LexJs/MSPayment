@@ -1,3 +1,7 @@
+/**
+ * Base de datos
+ * @module DataBase
+ */
 import { pool } from "./db";
 
 async function addRetrie(

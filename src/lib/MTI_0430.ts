@@ -1,3 +1,7 @@
+/**
+ * Clases para distintos mensajes en formato ISO 8583
+ * @module Lib
+ */
 import { MTI0420 } from "./MTI_0420";
 
 export class MTI0430 extends MTI0420 {

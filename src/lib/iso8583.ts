@@ -1,4 +1,9 @@
 /**
+ * Clases para distintos mensajes en formato ISO 8583
+ * @module Lib
+ */
+
+/**
  * Clase contenedora para mensajes ISO 8583
  * Contiene los menasjes para las llamadas:
  * 0200 Solicitud de transaccion financiera
@@ -16,10 +21,7 @@ import {
   merge_0210_0430_0800_0810,
   merge_0420,
 } from "../util/merges";
-import {
-  numberOfDataElements,
-  hexa_bin_Bitmap,
-} from "../util/hexa_bin";
+import { numberOfDataElements, hexa_bin_Bitmap } from "../util/hexa_bin";
 
 export abstract class ISO8583 {
   header: string = "";
@@ -68,8 +70,8 @@ export abstract class ISO8583 {
 
   /**
    *
-   * @param dataElements Objeto con los Data Elements correspondientes de cada sub clase
-   * @param mti Tipo de Mensaje, sirve para diferenciar el estado y comportamiento de cada sub clase
+   * @param {object} dataElements Objeto con los Data Elements correspondientes de cada sub clase
+   * @param {string} mti Tipo de Mensaje, sirve para diferenciar el estado y comportamiento de cada sub clase
    */
   constructor(dataElements: { [keys: string]: string }, mti: string) {
     switch (mti) {

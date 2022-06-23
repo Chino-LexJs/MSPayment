@@ -1,3 +1,7 @@
+/**
+ * Distintas funciones utils del sistema
+ * @module Utils
+ */
 function transactionDateTime(
   date: string,
   time: string

@@ -1,3 +1,7 @@
+/**
+ * Logica de negocio del sistema para soportar msj de RCES
+ * @module RCES
+ */
 import { movistar } from "../connection/movistar";
 import { RCES } from "../lib/rcesConnection";
 

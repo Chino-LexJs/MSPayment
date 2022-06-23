@@ -1,4 +1,9 @@
 /**
+ * Distintas funciones principales del sistema
+ * @module Server
+ */
+
+/**
  * Servidor Cliente de prueba para simular la comunicacion con RCS
  */
 

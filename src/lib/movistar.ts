@@ -1,3 +1,7 @@
+/**
+ * Clases para distintos mensajes en formato ISO 8583
+ * @module Lib
+ */
 import { findConnection, sendMessageConnection } from "../connection/rces";
 import { getMessage } from "../db/message.controllers";
 import {
@@ -22,14 +26,24 @@ const to_MOVISTAR = {
   port: 8000,
 };
 
-export class Movistar {
+/**
+ * Clase para crear Movistar
+ * Contiene la conexion socket a moviestar y el comportamiento de los msj entrantes y salientes
+ */
+class Movistar {
   private connecting: boolean;
   private socket: any;
   private tiempoRespuesta: number = 55;
+
+  /**
+   * Esta clase tiene un constructor sin parametros */
   constructor() {
     this.connecting = false;
   }
-
+  /**
+   * Establece conexion socket a Movistar
+   * @returns {void}
+   */
   public connect(): void {
     if (!this.connecting) {
       this.socket = new Socket();
@@ -48,15 +62,32 @@ export class Movistar {
       });
     }
   }
+  /**
+   * Devuelve la conexion socket a Movistar
+   * @returns {any} Socket con conexion a Movistar
+   */
   public getSocket(): any {
     return this.socket;
   }
+  /**
+   *
+   * @param {string} PosPreauthorizationChargebackData contiene Product Number, DNB y Product Group
+   * @returns {string} Product Number
+   */
   private getProductNr(PosPreauthorizationChargebackData: string): string {
     return PosPreauthorizationChargebackData.substr(24, 4);
   }
+  /**
+   * Configura el estado de conectado, se usa cuando se desconecta o se conecta la instancia a movistar
+   * @param {boolean} state estado de conectado(true) o desconectado (false)
+   */
   private setConnecting(state: boolean): void {
     this.connecting = state;
   }
+  /**
+   * Funcion que sirve para enviar msj 0810 de echo a movistar
+   * @param {MTI0810} mti0800 mensaje 0810
+   */
   private async sendMessage0810(mti0800: MTI0800) {
     let dataElements_0810 = {
       TransmissionDateTime: TransmissionDateTime(),
@@ -73,12 +104,16 @@ export class Movistar {
     console.log(`\nMensaje echo 0810 a Movistar: ${mti0800.getMessage()}`);
     this.socket.write(mti0810.getMessage(), "utf8");
   }
+  /**
+   * Funcion que sirve para enviar msj 0420 a movistar y generar un elemento reverso en la tabla de reversos de la DB
+   * @param mti0210 mensaje 0210 que se usa para el armado de msj 0420
+   */
   private async sendMessage0420(mti0210: MTI0210) {
     let fields0420: { [key: string]: string } = {};
     let fields0210 = mti0210.getFields();
     const SE_USA = 3;
     const VALOR = 4;
-    // Los parametros que se envian en el msj 0420 son similares al 0200 por lo que se copian los valores
+    // Los parametros que se envian en el msj 0420 son similares al 0210 por lo que se copian los valores
     for (const key in fields0210) {
       if (fields0210[key][SE_USA]) {
         fields0420[key] = fields0210[key][VALOR].toString();
@@ -116,7 +151,10 @@ export class Movistar {
       await setReverse_idRequest(mti0210.getTrancenr(), reverse_id);
     });
   }
-
+  /**
+   * Funcion que contiene la logica de negocios para los mensajes de tipo 0210 etrantes de Movistar
+   * @param {string} message msj 0210 en formato iso8583
+   */
   private async message0210(message: string) {
     console.log("\nMensaje 0210 de MOVISTAR en formato ISO8583:");
     console.log(message);
@@ -185,6 +223,10 @@ export class Movistar {
       }
     }
   }
+  /**
+   * Funcion que contiene la logica de negocios para los mensajes de tipo 0430 etrantes de Movistar
+   * @param {string} message msj 0430 en formato iso8583
+   */
   private async message0430(message: string) {
     console.log("\nMensaje 0430 de MOVISTAR en formato ISO8583:");
     console.log(message);
@@ -207,6 +249,10 @@ export class Movistar {
       }
     });
   }
+  /**
+   * Funcion que contiene la logica de negocios para los mensajes de tipo 0800 etrantes de Movistar
+   * @param {string} message
+   */
   private async message0800(message: string) {
     console.log("\nMensaje 0800 de MOVISTAR en formato ISO8583:");
     console.log(message);
@@ -222,14 +268,18 @@ export class Movistar {
     this.sendMessage0810(mti0800);
   }
   /**
-   * Desc: Funcion que sirve para recuperar el tipo de msj ISO8583
+   * Funcion que sirve para recuperar el tipo de msj ISO8583
    * Precondiciones: La trama message debe tener el mti en los primeros 4 caracteres
-   * @param message Mensaje ISO 8583 de Movistar
-   * @returns mti (string) type of message ej: 0200, 0210, 0430, 0800, 0810
+   * @param {string} message Mensaje ISO 8583 de Movistar
+   * @returns {string} mti type of message ej: 0200, 0210, 0430, 0800, 0810
    */
   private getMti(message: string): string {
     return message.substr(0, 4);
   }
+  /**
+   * Funcion que sirve para determinar la logica a usar dependiendo el msj entrante de Movistar
+   * @param {string} message msj de movistar en formato iso8583
+   */
   private onData(message: string) {
     let mtiMessage = this.getMti(message);
     switch (mtiMessage) {
@@ -247,3 +297,5 @@ export class Movistar {
     }
   }
 }
+
+export { Movistar };

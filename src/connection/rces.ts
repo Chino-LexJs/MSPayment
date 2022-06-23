@@ -1,4 +1,9 @@
 /**
+ * Conexiones
+ * @module Connections
+ */
+
+/**
  * Map que guarda las distintas conexiones sockets de RCES de la siguiente forma
  * key: es el id de Request de RCES (P-11 y P-37)
  * valor: conexion socket

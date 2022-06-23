@@ -1,3 +1,7 @@
+/**
+ * Base de datos
+ * @module DataBase
+ */
 import { pool } from "./db";
 
 async function getRequestById(id: number): Promise<any> {

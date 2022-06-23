@@ -1,3 +1,7 @@
+/**
+ * Clases para distintos mensajes en formato ISO 8583
+ * @module Lib
+ */
 import { closeConnection, saveConnection } from "../connection/rces";
 import { saveRequest } from "../db/request.controllers";
 import { saveMessageDataBase, unpack } from "../util";

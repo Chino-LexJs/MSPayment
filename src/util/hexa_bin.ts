@@ -1,13 +1,11 @@
 /**
+ * Distintas funciones utils del sistema
+ * @module Utils
+ */
+
+/**
  * Funcion que sirve para retornar bitmap primario y secundario, en formato hexadecimal y binario
  * @param DEs Arreglo que contiene los DEs usados ejemplo [1,3,4,7,11, ... , 126]
- * @returns Objeto JSON que contiene:
- * {
-    binaryPB: Bitmap primario en binario (string de longitud de 64 caracteres)
-    hexaPB: Bitmap primario en hexadecimal (string de longitud de 16 caracteres)
-    binarySB: Bitmap secundario en binario (string de longitud de 64 caracteres)
-    hexaSB: Bitmap secundario en hexadecimal (string de longitud de 16 caracteres)
-  }
  */
 export function hexa_bin_Bitmap(DEs: number[]): { [key: string]: string } {
   var json_bitmaps = {
@@ -92,7 +90,7 @@ export function hexa_bin_Bitmap(DEs: number[]): { [key: string]: string } {
 /**
  *
  * @param DEs Fields de la sub clase correspondiente
- * @returns arreglo de numeros con los subcampos usados en el archivo Fields ejemplo [1,3,4,7,11, ... , 126]
+ * retorna arreglo de numeros con los subcampos usados en el archivo Fields ejemplo [1,3,4,7,11, ... , 126]
  */
 export function numberOfDataElements(DEs: {
   [keys: string]: (string | number | boolean)[];

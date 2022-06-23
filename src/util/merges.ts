@@ -1,3 +1,7 @@
+/**
+ * Distintas funciones utils del sistema
+ * @module Utils
+ */
 import { propsToFields } from "./propsToFields";
 
 export function merge_0200(

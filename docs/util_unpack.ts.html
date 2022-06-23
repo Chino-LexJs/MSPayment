@@ -1,0 +1,213 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Source: util/unpack.ts | MSPayment</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/bootstrap.min.css">
+    <link type="text/css" rel="stylesheet" href="styles/prettify-jsdoc.css">
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/tui-doc.css">
+
+    
+</head>
+<body>
+<nav class="lnb" id="lnb">
+    <div class="logo" style="">
+        
+            <img src="img/toast-ui.png" width="100%" height="100%">
+        
+    </div>
+    <div class="title">
+        <h1><a href="index.html" class="link">MSPayment</a></h1>
+        
+            <span class="version">v1.0.0</span>
+        
+    </div>
+    <div class="search-container" id="search-container">
+        <input type="text" placeholder="Search">
+        <ul></ul>
+    </div>
+    
+    <div class="lnb-api hidden"><h3>Modules</h3><ul><li><a href="module-Connections.html">Connections</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="module:Connections_sub"><div class="member-type">Members</div><ul class="inner"><li><a href="module-Connections.html#~movistar">movistar</a></li><li><a href="module-Connections.html#~rcesClients">rcesClients</a></li></ul></div></li><li><a href="module-DataBase.html">DataBase</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="module:DataBase_sub"><div class="member-type">Methods</div><ul class="inner"><li><a href="module-DataBase.html#~getMessage">getMessage</a></li></ul></div></li><li><a href="module-Lib.html">Lib</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="module:Lib_sub"></div></li><li><a href="module-Loop.html">Loop</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="module:Loop_sub"></div></li><li><a href="module-RCES.html">RCES</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="module:RCES_sub"></div></li><li><a href="module-Server.html">Server</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="module:Server_sub"><div class="member-type">Members</div><ul class="inner"><li><a href="module-Server.html#~host">host</a></li><li><a href="module-Server.html#~host">host</a></li><li><a href="module-Server.html#~net">net</a></li><li><a href="module-Server.html#~port">port</a></li><li><a href="module-Server.html#~port">port</a></li><li><a href="module-Server.html#~Socket">Socket</a></li></ul><div class="member-type">Methods</div><ul class="inner"><li><a href="module-Server.html#~main">main</a></li></ul></div></li><li><a href="module-Utils.html">Utils</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="module:Utils_sub"><div class="member-type">Members</div><ul class="inner"><li><a href="module-Utils.html#~fields">fields</a></li></ul><div class="member-type">Methods</div><ul class="inner"><li><a href="module-Utils.html#.hex2bin">hex2bin</a></li><li><a href="module-Utils.html#.hexa_bin_Bitmap">hexa_bin_Bitmap</a></li><li><a href="module-Utils.html#.numberOfDataElements">numberOfDataElements</a></li><li><a href="module-Utils.html#.unpack_ISO">unpack_ISO</a></li><li><a href="module-Utils.html#~longitudParam">longitudParam</a></li></ul></div></li></ul></div><div class="lnb-api hidden"><h3>Classes</h3><ul><li><a href="module-Lib.ISO8583.html">ISO8583</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="module:Lib.ISO8583_sub"><div class="member-type">Members</div><ul class="inner"><li><a href="module-Lib.ISO8583.html#fieldsIso">fieldsIso</a></li></ul><div class="member-type">Methods</div><ul class="inner"><li><a href="module-Lib.ISO8583.html#getMessage">getMessage</a></li></ul></div></li><li><a href="module-Lib-Movistar.html">Movistar</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="module:Lib~Movistar_sub"><div class="member-type">Methods</div><ul class="inner"><li><a href="module-Lib-Movistar.html#connect">connect</a></li><li><a href="module-Lib-Movistar.html#connect">connect</a></li><li><a href="module-Lib-Movistar.html#getMti">getMti</a></li><li><a href="module-Lib-Movistar.html#getProductNr">getProductNr</a></li><li><a href="module-Lib-Movistar.html#getSocket">getSocket</a></li><li><a href="module-Lib-Movistar.html#getSocket">getSocket</a></li><li><a href="module-Lib-Movistar.html#message0210">message0210</a></li><li><a href="module-Lib-Movistar.html#message0430">message0430</a></li><li><a href="module-Lib-Movistar.html#message0800">message0800</a></li><li><a href="module-Lib-Movistar.html#onData">onData</a></li><li><a href="module-Lib-Movistar.html#sendMessage0420">sendMessage0420</a></li><li><a href="module-Lib-Movistar.html#sendMessage0810">sendMessage0810</a></li><li><a href="module-Lib-Movistar.html#setConnecting">setConnecting</a></li></ul></div></li><li><a href="module-Lib-Movistar_Movistar.html">Movistar</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="module:Lib~Movistar#Movistar_sub"></div></li></ul></div><div class="lnb-api hidden"><h3>Global</h3><ul><li><a href="global.html#Utils">Utils</a></li></ul></div>
+</nav>
+<div id="resizer"></div>
+
+<div class="main" id="main">
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * Distintas funciones utils del sistema
+ * @module Utils
+ */
+import { hex2bin } from "./hexa_bin";
+/**
+ * Variable fields es la misma (y tiene que ser la misma en formato y campos) que la de la clase iso8583 (lib)
+ * NOTA:  se quiso dejar un solo archivo fields que comparta todo el server,
+ *        pero JS pasa variables complejas como referencia y no como valor
+ */
+let fields: {
+  [keys: string]: (string | number | boolean)[];
+} = {
+  MTI: [0, "n", 4, false, "info"],
+  SecundaryBitmap: [1, "an", 16, false, "info"],
+  ProcessingCode: [3, "n", 6, false, "info"], // recarga code: “650500”
+  TransactionAmount: [4, "n", 12, false, "info"],
+  TransmissionDateTime: [7, "n", 10, false, "info"],
+  SystemsTraceAuditNumber: [11, "n", 6, false, "info"],
+  LocalTransactionTime: [12, "n", 6, false, "info"],
+  LocalTransactionDate: [13, "n", 4, false, "info"],
+  SettlementDate: [15, "n", 4, false, "info"],
+  CaptureDate: [17, "n", 4, false, "info"],
+  AcquiringInstitutionIdentificationCode: [32, "n", 11, false, "info"], // Este campo debe der asignado por Telefónica Movistar Valor fijo del campo “03XXX”
+  Track2Data: [35, "ans", 37, false, "info"],
+  RetrievalReferenceNumber: [37, "arn", 12, false, "info"],
+  AuthorizationIdentificationResponse: [38, "an", 6, false, "info"],
+  ResponseCode: [39, "an", 2, false, "info"],
+  CardAcceptorTerminalID: [41, "ans", 16, false, "info"],
+  CardAcceptorNameLocation: [43, "ans", 40, false, "info"],
+  AdditionalData: [48, "ans", 47, false, "info"], // antes long de 30
+  TransactionCurrencyCode: [49, "n", 3, false, "info"],
+  TerminalData: [60, "ans", 15, false, "info"], // antes long de 19
+  CardIssuerAndAuthorizer: [61, "ans", 16, false, "info"], // antes long de 22
+  NetworkManagementInformationCode: [70, "n", 3, false, "info"],
+  OriginalDataElements: [90, "n", 42, false, "info"],
+  ReceivingIntitutionIDCode: [100, "n", 11, false, "info"],
+  AccountIdentification1: [102, "ans", 12, false, "info"], // antes long de 28
+  PosPreauthorizationChargebackData: [126, "ans", 20, false, "info"], // long real 100, se usa 20 para pureba
+};
+export function unpack(message: string): { [key: string]: string } {
+  const unpack = {
+    ACTION: message.substr(1, 2), // 01
+    ACCOUNT_ID: message.substr(3, 6), // 000001
+    POS_ID: message.substr(9, 10), //
+    POS_NAME: message.substr(19, 22),
+    POS_STATE: message.substr(41, 3),
+    POS_TIME_ZONE: message.substr(44, 3), // 000
+    POS_DATE: message.substr(47, 8),
+    POS_TIME: message.substr(55, 6),
+    DNB: message.substr(61, 10),
+    PROCESSING_CODE: message.substr(71, 6),
+    AMOUNT: message.substr(77, 10),
+    PRODUCT_GROUP: message.substr(87, 1),
+    PRODUCT_NR: message.substr(88, 4),
+    RESPONSE_CODE: "99",
+    AUTORIZATION_NR: "-1",
+  };
+
+  return unpack;
+}
+
+/**
+ * Funcion que sirve para desempaquetar los msj 0210 y 0430 de Movistar
+ * @param message Cadena de caracteres que forman el msj 0210 o 0430 em en formato ISO 8583
+ * @returns Json con formato fields que contenga los data elements enviados en el message
+ */
+export function unpack_ISO(message: string): {
+  [key: string]: string;
+} {
+  let newFields: { [key: string]: string } = {};
+  newFields.MTI = message.substr(0, 4);
+  let primaryBitmap = message.substr(4, 16);
+  let arrayOfCampos = []; // arreglo de numeros para almacenar los subcampos de los data elements  ej: [1,3,4, ... 126]
+  let primaryBitmapBinary = hex2bin(primaryBitmap);
+  for (let i = 0; i &lt; primaryBitmapBinary.length; i++) {
+    if (primaryBitmapBinary[i] === "1") {
+      arrayOfCampos.push(i + 1);
+    }
+  }
+  // P-1 Secondary Bit Map
+  if (primaryBitmapBinary[0] === "1") {
+    let secondaryBitmapBinary = hex2bin(message.substr(20, 16));
+    for (let i = 0; i &lt; secondaryBitmapBinary.length; i++) {
+      if (secondaryBitmapBinary[i] === "1") {
+        arrayOfCampos.push(i + 65);
+      }
+    }
+  }
+  let init = 20; // inicio de los data elements del message
+  const SUB_CAMPO_DATA_ELEMENT = 0; // sub campo numerico ej: P-1 => 1, P-3 => 3
+  for (const key in fields) {
+    if (arrayOfCampos.includes(Number(fields[key][SUB_CAMPO_DATA_ELEMENT]))) {
+      let longitud: number = longitudParam(key, message, init);
+      newFields[key] = message.substr(init, Number(longitud));
+      init += Number(longitud);
+    }
+  }
+  return newFields;
+}
+
+/**
+ *  Definir longitud del data element en en el mensaje 0210 y 0430 de movistar, ya que
+ *  algunos parametros tienen longitud variable dada por los primeros carateres
+ *  del data element
+ * @param key Nombre de data element en Fields
+ * @param message Mensaje 0210 o 0430 de Movistar
+ * @param init Inicio del data element en message
+ * @returns Longitud del data element en nessage
+ */
+function longitudParam(key: string, message: string, init: number): number {
+  switch (key) {
+    case "AcquiringInstitutionIdentificationCode":
+      return Number(message.substr(init, 2)) + 2;
+    case "Track2Data":
+      return Number(message.substr(init, 2)) + 2;
+    case "AdditionalData":
+      return Number(message.substr(init, 3)) + 3;
+    case "TerminalData":
+      return Number(message.substr(init, 3)) + 3;
+    case "CardIssuerAndAuthorizer":
+      return Number(message.substr(init, 3)) + 3;
+    case "ReceivingIntitutionIDCode":
+      return Number(message.substr(init, 2)) + 2;
+    case "AccountIdentification1":
+      return Number(message.substr(init, 2)) + 2;
+    case "PosPreauthorizationChargebackData":
+      return Number(message.substr(init, 3)) + 3;
+
+    default:
+      return Number(fields[key][2]);
+  }
+}
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<footer>
+    <img class="logo" src="img/toast-ui.png" style="">
+    <div class="footer-text">NHN Entertainment. Frontend Development Lab</div>
+</footer>
+<script>prettyPrint();</script>
+<script src="scripts/jquery.min.js"></script>
+<script src="scripts/tui-doc.js"></script>
+<script src="scripts/linenumber.js"></script>
+
+    <script>
+        var id = '_sub'.replace(/"/g, '_');
+        var selectedApi = document.getElementById(id); // do not use jquery selector
+        var $selectedApi = $(selectedApi);
+
+        $selectedApi.removeClass('hidden');
+        $selectedApi.parent().find('.glyphicon').removeClass('glyphicon-plus').addClass('glyphicon-minus');
+        showLnbApi();
+    </script>
+
+</body>
+</html>

@@ -1,11 +1,23 @@
 /**
+ * Distintas funciones principales del sistema
+ * @module Server
+ */
+
+/**
  * Servidor Server de prueba para simular la comunicacion con MOVISTAR
  */
 
 const Socket = require("net").Socket,
   { Server } = require("net");
-
+/**
+ * Numero de puerto del server para Moistar
+ * @type {number}
+ */
 const port = 8000;
+/**
+ * Host del servidor de movistar
+ * @type {string}
+ */
 const host = "0.0.0.0";
 
 const server = new Server();

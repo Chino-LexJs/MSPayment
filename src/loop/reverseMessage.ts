@@ -1,3 +1,7 @@
+/**
+ * Distintas funciones loops del sistema
+ * @module Loop
+ */
 import { movistar } from "../connection/movistar";
 import { getMessageById } from "../db/message.controllers";
 import { addRetrie } from "../db/reverse.controllers";

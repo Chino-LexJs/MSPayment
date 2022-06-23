@@ -1,0 +1,28 @@
+{
+  "plugins": ["plugins/markdown", "typescript"],
+  "source": {
+    "include": ["src", "README.md", "package.json"],
+    "includePattern": "\\.(jsx|js|ts|tsx)$",
+    "excludePattern": "(^|\\/|\\\\)_"
+  },
+  "typescript": {
+    "moduleRoot": "test"
+  },
+  "templates": {
+    "cleverLinks": false,
+    "monospaceLinks": false,
+    "name": "MSPayment",
+    "useCollapsibles": true
+  },
+  "opts": {
+    "encoding": "utf8",
+    "readme": "./README.md",
+    "destination": "docs/",
+    "recurse": true,
+    "verbose": true,
+    "template": "node_modules/tui-jsdoc-template",
+    "theme_opts": {
+      "default_theme": "dark"
+    }
+  }
+}

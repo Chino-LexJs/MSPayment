@@ -1,0 +1,223 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Source: lib/rcesConnection.ts | MSPayment</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/bootstrap.min.css">
+    <link type="text/css" rel="stylesheet" href="styles/prettify-jsdoc.css">
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/tui-doc.css">
+
+    
+</head>
+<body>
+<nav class="lnb" id="lnb">
+    <div class="logo" style="">
+        
+            <img src="img/toast-ui.png" width="100%" height="100%">
+        
+    </div>
+    <div class="title">
+        <h1><a href="index.html" class="link">MSPayment</a></h1>
+        
+            <span class="version">v1.0.0</span>
+        
+    </div>
+    <div class="search-container" id="search-container">
+        <input type="text" placeholder="Search">
+        <ul></ul>
+    </div>
+    
+    <div class="lnb-api hidden"><h3>Modules</h3><ul><li><a href="module-Connections.html">Connections</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="module:Connections_sub"><div class="member-type">Members</div><ul class="inner"><li><a href="module-Connections.html#~movistar">movistar</a></li><li><a href="module-Connections.html#~rcesClients">rcesClients</a></li></ul></div></li><li><a href="module-DataBase.html">DataBase</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="module:DataBase_sub"><div class="member-type">Methods</div><ul class="inner"><li><a href="module-DataBase.html#~getMessage">getMessage</a></li></ul></div></li><li><a href="module-Lib.html">Lib</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="module:Lib_sub"></div></li><li><a href="module-Loop.html">Loop</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="module:Loop_sub"></div></li><li><a href="module-RCES.html">RCES</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="module:RCES_sub"></div></li><li><a href="module-Server.html">Server</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="module:Server_sub"><div class="member-type">Members</div><ul class="inner"><li><a href="module-Server.html#~host">host</a></li><li><a href="module-Server.html#~host">host</a></li><li><a href="module-Server.html#~net">net</a></li><li><a href="module-Server.html#~port">port</a></li><li><a href="module-Server.html#~port">port</a></li><li><a href="module-Server.html#~Socket">Socket</a></li></ul><div class="member-type">Methods</div><ul class="inner"><li><a href="module-Server.html#~main">main</a></li></ul></div></li><li><a href="module-Utils.html">Utils</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="module:Utils_sub"><div class="member-type">Members</div><ul class="inner"><li><a href="module-Utils.html#~fields">fields</a></li></ul><div class="member-type">Methods</div><ul class="inner"><li><a href="module-Utils.html#.hex2bin">hex2bin</a></li><li><a href="module-Utils.html#.hexa_bin_Bitmap">hexa_bin_Bitmap</a></li><li><a href="module-Utils.html#.numberOfDataElements">numberOfDataElements</a></li><li><a href="module-Utils.html#.unpack_ISO">unpack_ISO</a></li><li><a href="module-Utils.html#~longitudParam">longitudParam</a></li></ul></div></li></ul></div><div class="lnb-api hidden"><h3>Classes</h3><ul><li><a href="module-Lib.ISO8583.html">ISO8583</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="module:Lib.ISO8583_sub"><div class="member-type">Members</div><ul class="inner"><li><a href="module-Lib.ISO8583.html#fieldsIso">fieldsIso</a></li></ul><div class="member-type">Methods</div><ul class="inner"><li><a href="module-Lib.ISO8583.html#getMessage">getMessage</a></li></ul></div></li><li><a href="module-Lib-Movistar.html">Movistar</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="module:Lib~Movistar_sub"><div class="member-type">Methods</div><ul class="inner"><li><a href="module-Lib-Movistar.html#connect">connect</a></li><li><a href="module-Lib-Movistar.html#connect">connect</a></li><li><a href="module-Lib-Movistar.html#getMti">getMti</a></li><li><a href="module-Lib-Movistar.html#getProductNr">getProductNr</a></li><li><a href="module-Lib-Movistar.html#getSocket">getSocket</a></li><li><a href="module-Lib-Movistar.html#getSocket">getSocket</a></li><li><a href="module-Lib-Movistar.html#message0210">message0210</a></li><li><a href="module-Lib-Movistar.html#message0430">message0430</a></li><li><a href="module-Lib-Movistar.html#message0800">message0800</a></li><li><a href="module-Lib-Movistar.html#onData">onData</a></li><li><a href="module-Lib-Movistar.html#sendMessage0420">sendMessage0420</a></li><li><a href="module-Lib-Movistar.html#sendMessage0810">sendMessage0810</a></li><li><a href="module-Lib-Movistar.html#setConnecting">setConnecting</a></li></ul></div></li><li><a href="module-Lib-Movistar_Movistar.html">Movistar</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="module:Lib~Movistar#Movistar_sub"></div></li></ul></div><div class="lnb-api hidden"><h3>Global</h3><ul><li><a href="global.html#Utils">Utils</a></li></ul></div>
+</nav>
+<div id="resizer"></div>
+
+<div class="main" id="main">
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * Clases para distintos mensajes en formato ISO 8583
+ * @module Lib
+ */
+import { closeConnection, saveConnection } from "../connection/rces";
+import { saveRequest } from "../db/request.controllers";
+import { saveMessageDataBase, unpack } from "../util";
+import { MTI0200 } from "./MTI_0200";
+
+export class RCES {
+  private socket: any;
+  private socketMovistar: any;
+  private TIEMPO_CONEXION_RCES: number = 55000;
+
+  constructor(socket: any) {
+    this.socket = socket;
+    this.socket.setEncoding("utf8"); // se configura socket para manejar cadena de caracteres en el buffer[]
+    this.socket.on("data", async (message: string) => {
+      console.log("\nMensaje de RCES sin formato: ");
+      console.log(message);
+      let id_request = await this.messageFromRCES(
+        message,
+        this.socket.remoteAddress
+      );
+      saveConnection(id_request, socket);
+    });
+    this.socket.on("close", () => {
+      closeConnection(this.socket);
+      console.log(`\nComunicacion finalizada con RCS`);
+    });
+    this.socket.on("error", function (err: Error) {
+      console.log(`Error: ${err}`);
+    });
+    this.socket.setTimeout(this.TIEMPO_CONEXION_RCES); // Tiempo limite de conexión
+    this.socket.on("timeout", () => {
+      console.log("Connexion socket con RCES timeout");
+      this.socket.end();
+    });
+  }
+
+  public getSocket(): any {
+    return this.socket;
+  }
+  public setSocketMovistar(socket: any) {
+    this.socketMovistar = socket;
+  }
+  private async messageFromRCES(
+    message: string,
+    ipClient: string
+  ): Promise&lt;number> {
+    let dataUnpack: { [key: string]: string } = unpack(message);
+    console.log("\nMensage de RCES deslozado: ");
+    console.log(dataUnpack);
+    let id_request = await this.saveRequestMessage(dataUnpack, ipClient);
+    this.addIdRquest(dataUnpack, id_request);
+    let mti0200 = new MTI0200(dataUnpack, "0200");
+    console.log("\nData elements generados por el msj 0200 de RCES:");
+    console.log(mti0200.getFields());
+    console.log(
+      "\nMensaje 0200 en formato ISO8583 enviado a Movistar:\n",
+      mti0200.getMessage()
+    );
+    this.socketMovistar.write(mti0200.getMessage(), "utf8");
+    await saveMessageDataBase(
+      mti0200.getMti(),
+      mti0200.getTrancenr(),
+      mti0200.getMessage()
+    );
+    return id_request;
+  }
+  private posDate(date: string): Date {
+    return new Date(
+      Number(date.substr(0, 4)),
+      Number(date.substr(4, 2)),
+      Number(date.substr(6))
+    );
+  }
+  private posTime(date: string, time: string): Date {
+    return new Date(
+      Number(date.substr(0, 4)),
+      Number(date.substr(4, 2)),
+      Number(date.substr(6)),
+      Number(time.substr(0, 2)),
+      Number(time.substr(2, 2)),
+      Number(time.substr(4))
+    );
+  }
+  private async saveRequestMessage(
+    dataUnpack: { [key: string]: string },
+    ipClient: string
+  ): Promise&lt;any> {
+    let posdate = this.posDate(dataUnpack.POS_DATE);
+    let postime = this.posTime(dataUnpack.POS_DATE, dataUnpack.POS_TIME);
+    let valuesRequest = {
+      date_request: new Date(),
+      time_request: new Date(),
+      ip: ipClient,
+      account_id: Number(dataUnpack.ACCOUNT_ID),
+      pos_id: Number(dataUnpack.POS_ID),
+      pos_name: dataUnpack.POS_NAME,
+      pos_state: dataUnpack.POS_STATE,
+      postimezona: Number(dataUnpack.POS_TIME_ZONE),
+      posdate,
+      postime,
+      dnb: dataUnpack.DNB,
+      amount: Number(dataUnpack.AMOUNT),
+      productgroup: dataUnpack.PRODUCT_GROUP,
+      product_nr: Number(dataUnpack.PRODUCT_NR),
+      responsecode: Number(dataUnpack.RESPONSE_CODE),
+      authorizationnr: Number(dataUnpack.AUTORIZATION_NR),
+      error: 0, // HARDCODEADO
+      action: Number(dataUnpack.ACTION),
+    };
+    let id_request = await saveRequest(
+      valuesRequest.date_request,
+      valuesRequest.time_request,
+      valuesRequest.ip,
+      valuesRequest.account_id,
+      valuesRequest.pos_id,
+      valuesRequest.pos_name,
+      valuesRequest.pos_state,
+      valuesRequest.postimezona,
+      valuesRequest.posdate,
+      valuesRequest.postime,
+      valuesRequest.dnb,
+      valuesRequest.amount,
+      valuesRequest.productgroup,
+      valuesRequest.product_nr,
+      valuesRequest.responsecode,
+      valuesRequest.authorizationnr,
+      valuesRequest.error,
+      valuesRequest.action
+    );
+    return id_request;
+  }
+  private addIdRquest(
+    dataUnpack: { [key: string]: string },
+    id_request: string
+  ) {
+    dataUnpack.SYSTEMS_TRANCE = id_request.toString().slice(-6); // Si el numero supera los 6 digitos P-11 solo capta hasta 6 digitos
+    dataUnpack.RETRIEVAL_REFERENCE_NUMBER = id_request.toString();
+  }
+}
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<footer>
+    <img class="logo" src="img/toast-ui.png" style="">
+    <div class="footer-text">NHN Entertainment. Frontend Development Lab</div>
+</footer>
+<script>prettyPrint();</script>
+<script src="scripts/jquery.min.js"></script>
+<script src="scripts/tui-doc.js"></script>
+<script src="scripts/linenumber.js"></script>
+
+    <script>
+        var id = '_sub'.replace(/"/g, '_');
+        var selectedApi = document.getElementById(id); // do not use jquery selector
+        var $selectedApi = $(selectedApi);
+
+        $selectedApi.removeClass('hidden');
+        $selectedApi.parent().find('.glyphicon').removeClass('glyphicon-plus').addClass('glyphicon-minus');
+        showLnbApi();
+    </script>
+
+</body>
+</html>

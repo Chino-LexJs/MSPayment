@@ -1,3 +1,7 @@
+/**
+ * Distintas funciones utils del sistema
+ * @module Utils
+ */
 import { saveMessage } from "../db/message.controllers";
 
 export async function saveMessageDataBase(

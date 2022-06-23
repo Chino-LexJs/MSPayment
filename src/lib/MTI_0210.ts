@@ -1,3 +1,7 @@
+/**
+ * Clases para distintos mensajes en formato ISO 8583
+ * @module Lib
+ */
 import { ISO8583 } from "../lib/iso8583";
 
 export class MTI0210 extends ISO8583 {
@@ -10,7 +14,6 @@ export class MTI0210 extends ISO8583 {
     this.mti = mti;
   }
   /**
-   * @override
    * El getMessage de la clase 0210 no retorna un string en formato ISO8583 como las demas clases
    * Este getMessage retorna una trama de forma ISO-0210-RCES
    * Ya que un msj 0210 de Movistar solo se retorna al sistema RCES y se almacena en la base de datos

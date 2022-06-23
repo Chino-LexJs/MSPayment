@@ -1,3 +1,7 @@
+/**
+ * Distintas funciones utils del sistema
+ * @module Utils
+ */
 import { hex2bin } from "./hexa_bin";
 /**
  * Variable fields es la misma (y tiene que ser la misma en formato y campos) que la de la clase iso8583 (lib)
