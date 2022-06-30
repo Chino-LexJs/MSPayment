@@ -28,17 +28,33 @@ const to_MOVISTAR = {
 
 /**
  * Clase para crear Movistar
+ * Se usa patron Singleton
  * Contiene la conexion socket a moviestar y el comportamiento de los msj entrantes y salientes
  */
 class Movistar {
   private connecting: boolean;
   private socket: any;
   private tiempoRespuesta: number = 55;
+  private static instance: Movistar;
 
   /**
-   * Esta clase tiene un constructor sin parametros */
-  constructor() {
+   * The Singleton's constructor should always be private to prevent direct
+   * construction calls with the `new` operator.
+   */
+  private constructor() {
     this.connecting = false;
+  }
+  /**
+   * The static method that controls the access to the singleton instance.
+   *
+   * This implementation let you subclass the Singleton class while keeping
+   * just one instance of each subclass around.
+   */
+  public static getInstance(): Movistar {
+    if (!Movistar.instance) {
+      Movistar.instance = new Movistar();
+    }
+    return Movistar.instance;
   }
   /**
    * Establece conexion socket a Movistar

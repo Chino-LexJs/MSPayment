@@ -2,8 +2,13 @@
  * Logica de negocio del sistema para soportar msj de RCES
  * @module RCES
  */
-import { movistar } from "../connection/movistar";
+import { Movistar } from "../lib/movistar";
 import { RCES } from "../lib/rcesConnection";
+
+/**
+ * Instance de Movistar (Singleton)
+ */
+let movistar = Movistar.getInstance();
 
 function connectRCES(socket: any) {
   console.log(

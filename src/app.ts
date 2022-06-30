@@ -2,10 +2,14 @@
  * Distintas funciones principales del sistema
  * @module Server
  */
-
-import { movistar } from "./connection/movistar";
 import { connectRCES } from "./rces/rces";
 import { loopEcho, loopReverses } from "./loop/loops";
+import { Movistar } from "./lib/movistar";
+
+/**
+ * Instance de Movistar (Singleton)
+ */
+let movistar = Movistar.getInstance();
 
 const { Server } = require("net"),
   server = new Server(),

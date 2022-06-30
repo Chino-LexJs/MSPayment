@@ -2,10 +2,15 @@
  * Distintas funciones loops del sistema
  * @module Loop
  */
-import { movistar } from "../connection/movistar";
 import { getMessageById } from "../db/message.controllers";
 import { addRetrie } from "../db/reverse.controllers";
+import { Movistar } from "../lib/movistar";
 import { unpack_ISO } from "../util";
+
+/**
+ * Instance de Movistar (Singleton)
+ */
+let movistar = Movistar.getInstance();
 
 function sendReverseMessages(reverses: any[]) {
   reverses.forEach(async (reverse: { [key: string]: string | number }) => {

@@ -2,12 +2,17 @@
  * Distintas funciones loops del sistema
  * @module Loop
  */
-import { movistar } from "../connection/movistar";
 import { getReverses } from "../db/reverse.controllers";
 import { MTI0800 } from "../lib";
+import { Movistar } from "../lib/movistar";
 import { TransmissionDateTime } from "../util";
 import { saveMessageDataBase } from "../util/saveMessage";
 import { sendReverseMessages } from "./reverseMessage";
+
+/**
+ * Instance de Movistar (Singleton)
+ */
+let movistar = Movistar.getInstance();
 
 async function loopReverses() {
   let reverses = await getReverses(); // mensajes reversos con isomessage430_id IS NULL [{reverse1}, {reverse2}...]
