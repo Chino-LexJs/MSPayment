@@ -1,6 +1,10 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.MTI0200 = void 0;
+/**
+ * Clases para distintos mensajes en formato ISO 8583
+ * @module Lib
+ */
 const iso8583_1 = require("../lib/iso8583");
 class MTI0200 extends iso8583_1.ISO8583 {
     then(arg0) {

@@ -3,6 +3,8 @@
  * @module Utils
  */
 
+import { Field } from "../lib/strategy/fields";
+
 /**
  * Funcion que sirve para retornar bitmap primario y secundario, en formato hexadecimal y binario
  * @param DEs Arreglo que contiene los DEs usados ejemplo [1,3,4,7,11, ... , 126]
@@ -92,15 +94,13 @@ export function hexa_bin_Bitmap(DEs: number[]): { [key: string]: string } {
  * @param DEs Fields de la sub clase correspondiente
  * retorna arreglo de numeros con los subcampos usados en el archivo Fields ejemplo [1,3,4,7,11, ... , 126]
  */
-export function numberOfDataElements(DEs: {
-  [keys: string]: (string | number | boolean)[];
-}): number[] {
-  const SE_USA = 3, // ubicacion de elemento booleano del archivo fields
-    NUMERO_SUBCAMPO = 0; // numero del subcampor data element
+export function numberOfDataElements(DEs: { [keys: string]: Field }): number[] {
+  const VALUE = "value", // ubicacion de elemento booleano del archivo fields
+    SUBCAMPO = "subcampo"; // numero del subcampor data element
   let arrayOfNumbers: number[] = [];
   for (let key in DEs) {
-    if (DEs[key][SE_USA]) {
-      arrayOfNumbers.push(Number(DEs[key][NUMERO_SUBCAMPO]));
+    if (DEs[key][VALUE]) {
+      arrayOfNumbers.push(Number(DEs[key][SUBCAMPO]));
     }
   }
   return arrayOfNumbers;

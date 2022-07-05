@@ -2,10 +2,11 @@
  * Clases para distintos mensajes en formato ISO 8583
  * @module Lib
  */
+import { MTI0200 } from "./strategy/0200";
+import { ISO8583 } from "./strategy/8583";
 import { closeConnection, saveConnection } from "../connection/rces";
 import { saveRequest } from "../db/request.controllers";
 import { saveMessageDataBase, unpack } from "../util";
-import { MTI0200 } from "./MTI_0200";
 
 export class RCES {
   private socket: any;
@@ -53,13 +54,12 @@ export class RCES {
     console.log(dataUnpack);
     let id_request = await this.saveRequestMessage(dataUnpack, ipClient);
     this.addIdRquest(dataUnpack, id_request);
-    let mti0200 = new MTI0200(dataUnpack, "0200");
+    let mti0200 = new ISO8583(new MTI0200());
+    mti0200.setFields(dataUnpack, "0200");
     console.log("\nData elements generados por el msj 0200 de RCES:");
     console.log(mti0200.getFields());
-    console.log(
-      "\nMensaje 0200 en formato ISO8583 enviado a Movistar:\n",
-      mti0200.getMessage()
-    );
+    console.log("\nMensaje 0200 en formato ISO8583 enviado a Movistar:");
+    console.log(mti0200.getMessage());
     this.socketMovistar.write(mti0200.getMessage(), "utf8");
     await saveMessageDataBase(
       mti0200.getMti(),

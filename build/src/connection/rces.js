@@ -1,4 +1,8 @@
 "use strict";
+/**
+ * Conexiones
+ * @module Connections
+ */
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.rcesClients = exports.sendMessageConnection = exports.findConnection = exports.closeConnection = exports.saveConnection = void 0;
 /**

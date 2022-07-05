@@ -1,6 +1,10 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.MTI0210 = void 0;
+/**
+ * Clases para distintos mensajes en formato ISO 8583
+ * @module Lib
+ */
 const iso8583_1 = require("../lib/iso8583");
 class MTI0210 extends iso8583_1.ISO8583 {
     constructor(dataElements, mti) {
@@ -13,7 +17,6 @@ class MTI0210 extends iso8583_1.ISO8583 {
         throw new Error("Method not implemented.");
     }
     /**
-     * @override
      * El getMessage de la clase 0210 no retorna un string en formato ISO8583 como las demas clases
      * Este getMessage retorna una trama de forma ISO-0210-RCES
      * Ya que un msj 0210 de Movistar solo se retorna al sistema RCES y se almacena en la base de datos

@@ -1,4 +1,8 @@
 "use strict";
+/**
+ * Conexiones
+ * @module DataBase
+ */
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.pool = void 0;
 require("dotenv").config();

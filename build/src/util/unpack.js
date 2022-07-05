@@ -1,6 +1,10 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.unpack_ISO = exports.unpack = void 0;
+/**
+ * Distintas funciones utils del sistema
+ * @module Utils
+ */
 const hexa_bin_1 = require("./hexa_bin");
 /**
  * Variable fields es la misma (y tiene que ser la misma en formato y campos) que la de la clase iso8583 (lib)

@@ -10,17 +10,25 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.sendReverseMessages = void 0;
-const movistar_1 = require("../connection/movistar");
+/**
+ * Distintas funciones loops del sistema
+ * @module Loop
+ */
 const message_controllers_1 = require("../db/message.controllers");
 const reverse_controllers_1 = require("../db/reverse.controllers");
+const movistar_1 = require("../lib/movistar");
 const util_1 = require("../util");
+/**
+ * Instance de Movistar (Singleton)
+ */
+let movistar = movistar_1.Movistar.getInstance();
 function sendReverseMessages(reverses) {
     reverses.forEach((reverse) => __awaiter(this, void 0, void 0, function* () {
         let mti0420 = yield (0, message_controllers_1.getMessageById)(Number(reverse.isomessage420_id));
         console.log("\nMensaje 0420 a Movistar:");
         console.log(mti0420.message.toString());
         console.log((0, util_1.unpack_ISO)(mti0420.message));
-        movistar_1.movistar.getSocket().write(mti0420.message.toString(), "utf8");
+        movistar.getSocket().write(mti0420.message.toString(), "utf8");
         yield (0, reverse_controllers_1.addRetrie)(Number(reverse.id), Number(reverse.retries) + 1);
     }));
 }

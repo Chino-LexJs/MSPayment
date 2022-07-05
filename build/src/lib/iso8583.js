@@ -1,5 +1,11 @@
 "use strict";
 /**
+ * Clases para distintos mensajes en formato ISO 8583
+ * @module Lib
+ */
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.ISO8583 = void 0;
+/**
  * Clase contenedora para mensajes ISO 8583
  * Contiene los menasjes para las llamadas:
  * 0200 Solicitud de transaccion financiera
@@ -11,15 +17,13 @@
  * 0800 Solicitud de gestion de red
  * 0810 Respuesta de solicitud de gestion de red
  */
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.ISO8583 = void 0;
 const merges_1 = require("../util/merges");
 const hexa_bin_1 = require("../util/hexa_bin");
 class ISO8583 {
     /**
      *
-     * @param dataElements Objeto con los Data Elements correspondientes de cada sub clase
-     * @param mti Tipo de Mensaje, sirve para diferenciar el estado y comportamiento de cada sub clase
+     * @param {object} dataElements Objeto con los Data Elements correspondientes de cada sub clase
+     * @param {string} mti Tipo de Mensaje, sirve para diferenciar el estado y comportamiento de cada sub clase
      */
     constructor(dataElements, mti) {
         this.header = "";

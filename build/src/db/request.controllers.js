@@ -10,6 +10,10 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.setReverse_idRequest = exports.setResponseDataRequest = exports.saveRequest = exports.getRequestById = void 0;
+/**
+ * Base de datos
+ * @module DataBase
+ */
 const db_1 = require("./db");
 function getRequestById(id) {
     return __awaiter(this, void 0, void 0, function* () {

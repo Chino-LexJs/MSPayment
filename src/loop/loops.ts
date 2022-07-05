@@ -3,8 +3,9 @@
  * @module Loop
  */
 import { getReverses } from "../db/reverse.controllers";
-import { MTI0800 } from "../lib";
 import { Movistar } from "../lib/movistar";
+import { MTI0800 } from "../lib/strategy/0800";
+import { ISO8583 } from "../lib/strategy/8583";
 import { TransmissionDateTime } from "../util";
 import { saveMessageDataBase } from "../util/saveMessage";
 import { sendReverseMessages } from "./reverseMessage";
@@ -27,7 +28,8 @@ async function loopEcho() {
     SystemsTraceAuditNumber: "032727",
     NetworkManagementInformationCode: "301",
   };
-  let mti0800 = new MTI0800(dataElements_0800, "0800");
+  let mti0800 = new ISO8583(new MTI0800());
+  mti0800.setFields(dataElements_0800, "0800");
   await saveMessageDataBase(
     mti0800.getMti(),
     mti0800.getSystemTraceAuditNumber(),

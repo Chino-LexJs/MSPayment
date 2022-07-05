@@ -10,6 +10,10 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.saveMessageDataBase = void 0;
+/**
+ * Distintas funciones utils del sistema
+ * @module Utils
+ */
 const message_controllers_1 = require("../db/message.controllers");
 function saveMessageDataBase(type, trancenr, message) {
     return __awaiter(this, void 0, void 0, function* () {

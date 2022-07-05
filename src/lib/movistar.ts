@@ -14,11 +14,12 @@ import {
   setIsoMessage0430,
 } from "../db/reverse.controllers";
 import { saveMessageDataBase, TransmissionDateTime, unpack_ISO } from "../util";
-import { MTI0210 } from "./MTI_0210";
-import { MTI0420 } from "./MTI_0420";
-import { MTI0430 } from "./MTI_0430";
-import { MTI0800 } from "./MTI_0800";
-import { MTI0810 } from "./MTI_0810";
+import { MTI0430 } from "./strategy/0430";
+import { MTI0210 } from "./strategy/0210";
+import { MTI0420 } from "./strategy/0420";
+import { MTI0800 } from "./strategy/0800";
+import { MTI0810 } from "./strategy/0810";
+import { ISO8583 } from "./strategy/8583";
 
 const { Socket } = require("net");
 const to_MOVISTAR = {
@@ -102,40 +103,41 @@ class Movistar {
   }
   /**
    * Funcion que sirve para enviar msj 0810 de echo a movistar
-   * @param {MTI0810} mti0800 mensaje 0810
    */
-  private async sendMessage0810(mti0800: MTI0800) {
+  private async sendMessage0810() {
     let dataElements_0810 = {
       TransmissionDateTime: TransmissionDateTime(),
-      SystemsTraceAuditNumber: "032727",
+      SystemsTraceAuditNumber: "032727", // HARDCODEADO?
       ResponseCode: "00",
       NetworkManagementInformationCode: "301",
     };
-    let mti0810 = new MTI0810(dataElements_0810, "0810");
+    let mti0810 = new ISO8583(new MTI0810());
+    mti0810.setFields(dataElements_0810, "0810");
     await saveMessageDataBase(
       mti0810.getMti(),
       mti0810.getSystemTraceAuditNumber(),
       mti0810.getMessage()
     );
-    console.log(`\nMensaje echo 0810 a Movistar: ${mti0800.getMessage()}`);
+    console.log(`\nMensaje echo 0810 a Movistar: ${mti0810.getMessage()}`);
     this.socket.write(mti0810.getMessage(), "utf8");
   }
   /**
    * Funcion que sirve para enviar msj 0420 a movistar y generar un elemento reverso en la tabla de reversos de la DB
-   * @param mti0210 mensaje 0210 que se usa para el armado de msj 0420
+   * @param {ISO8583} mti0210 mensaje 0210 que se usa para el armado de msj 0420
    */
-  private async sendMessage0420(mti0210: MTI0210) {
+  private async sendMessage0420(mti0210: ISO8583) {
     let fields0420: { [key: string]: string } = {};
     let fields0210 = mti0210.getFields();
-    const SE_USA = 3;
-    const VALOR = 4;
+    const MANDATORIO = "mandatorio";
+    const VALUE = "value";
     // Los parametros que se envian en el msj 0420 son similares al 0210 por lo que se copian los valores
     for (const key in fields0210) {
-      if (fields0210[key][SE_USA]) {
-        fields0420[key] = fields0210[key][VALOR].toString();
+      if (fields0210[key][MANDATORIO]) {
+        fields0420[key] = fields0210[key][VALUE].toString();
       }
     }
-    let mti0420 = new MTI0420(fields0420, "0420");
+    let mti0420 = new ISO8583(new MTI0420());
+    mti0420.setFields(fields0420, "0420");
     console.log("\nMensaje 0420 a Movistar en formato ISO8583:");
     console.log(mti0420.getMessage());
     console.log("\nData elements usados en el msj 0420 a Movistar: ");
@@ -177,7 +179,8 @@ class Movistar {
     let newFieldes: { [key: string]: string } = unpack_ISO(message);
     console.log("\nData elements de msj 0210 de Movistar: ");
     console.log(newFieldes);
-    let mti0210 = new MTI0210(newFieldes, "0210");
+    let mti0210 = new ISO8583(new MTI0210());
+    mti0210.setFields(newFieldes, "0210");
     await saveMessageDataBase(mti0210.getMti(), mti0210.getTrancenr(), message);
     let newDate = new Date();
     await setResponseDataRequest(mti0210.getTrancenr(), newDate, newDate);
@@ -224,15 +227,15 @@ class Movistar {
       await saveMessageDataBase(
         mti0210.getMti(),
         mti0210.getTrancenr(),
-        mti0210.getMessage()
+        mti0210.getMessage0210()
       );
       /**
        * Se busca entre las distintas conexiones que se establecieron con RCES y se envia la respuesta 0210 a la conexion correspondiente
        */
       if (findConnection(mti0210.getTrancenr())) {
-        sendMessageConnection(mti0210.getTrancenr(), mti0210.getMessage());
+        sendMessageConnection(mti0210.getTrancenr(), mti0210.getMessage0210());
         console.log("\nMensaje que se envia a RCES en formato RCES");
-        console.log(mti0210.getMessage());
+        console.log(mti0210.getMessage0210());
       } else {
         console.log("\nNo se encontro cliente, se envia msj 0420 a Movistar");
         this.sendMessage0420(mti0210);
@@ -248,7 +251,8 @@ class Movistar {
     console.log(message);
     let newFieldes: { [key: string]: string } = unpack_ISO(message);
     console.log(newFieldes);
-    let mti0430 = new MTI0430(newFieldes, "0430");
+    let mti0430 = new ISO8583(new MTI0430());
+    mti0430.setFields(newFieldes, "0430");
     await saveMessageDataBase(mti0430.getMti(), mti0430.getTrancenr(), message);
     getReverseByRequestId(mti0430.getTrancenr()).then(async (reverses) => {
       if (reverses.length != 0) {
@@ -275,13 +279,14 @@ class Movistar {
     let newFieldes: { [key: string]: string } = unpack_ISO(message);
     console.log("\nData elements de msj 0800 de Movistar: ");
     console.log(newFieldes);
-    let mti0800 = new MTI0800(newFieldes, "0800");
+    let mti0800 = new ISO8583(new MTI0800());
+    mti0800.setFields(newFieldes, "0800");
     await saveMessageDataBase(
       mti0800.getMti(),
       mti0800.getSystemTraceAuditNumber(),
       message
     );
-    this.sendMessage0810(mti0800);
+    this.sendMessage0810();
   }
   /**
    * Funcion que sirve para recuperar el tipo de msj ISO8583

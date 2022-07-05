@@ -1,6 +1,10 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.TransmissionDateTime = exports.propsToFields = void 0;
+/**
+ * Distintas funciones utils del sistema
+ * @module Utils
+ */
 function transactionDateTime(date, time) {
     let dateTime = {
         date: "",

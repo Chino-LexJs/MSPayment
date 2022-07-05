@@ -10,10 +10,15 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.RCES = void 0;
+/**
+ * Clases para distintos mensajes en formato ISO 8583
+ * @module Lib
+ */
+const _0200_1 = require("./strategy/0200");
+const _8583_1 = require("./strategy/8583");
 const rces_1 = require("../connection/rces");
 const request_controllers_1 = require("../db/request.controllers");
 const util_1 = require("../util");
-const MTI_0200_1 = require("./MTI_0200");
 class RCES {
     constructor(socket) {
         this.TIEMPO_CONEXION_RCES = 55000;
@@ -51,10 +56,12 @@ class RCES {
             console.log(dataUnpack);
             let id_request = yield this.saveRequestMessage(dataUnpack, ipClient);
             this.addIdRquest(dataUnpack, id_request);
-            let mti0200 = new MTI_0200_1.MTI0200(dataUnpack, "0200");
+            let mti0200 = new _8583_1.ISO8583(new _0200_1.MTI0200());
+            mti0200.setFields(dataUnpack, "0200");
             console.log("\nData elements generados por el msj 0200 de RCES:");
             console.log(mti0200.getFields());
-            console.log("\nMensaje 0200 en formato ISO8583 enviado a Movistar:\n", mti0200.getMessage());
+            console.log("\nMensaje 0200 en formato ISO8583 enviado a Movistar:");
+            console.log(mti0200.getMessage());
             this.socketMovistar.write(mti0200.getMessage(), "utf8");
             yield (0, util_1.saveMessageDataBase)(mti0200.getMti(), mti0200.getTrancenr(), mti0200.getMessage());
             return id_request;

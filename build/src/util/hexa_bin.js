@@ -1,16 +1,13 @@
 "use strict";
+/**
+ * Distintas funciones utils del sistema
+ * @module Utils
+ */
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.hex2bin = exports.numberOfDataElements = exports.hexa_bin_Bitmap = void 0;
 /**
  * Funcion que sirve para retornar bitmap primario y secundario, en formato hexadecimal y binario
  * @param DEs Arreglo que contiene los DEs usados ejemplo [1,3,4,7,11, ... , 126]
- * @returns Objeto JSON que contiene:
- * {
-    binaryPB: Bitmap primario en binario (string de longitud de 64 caracteres)
-    hexaPB: Bitmap primario en hexadecimal (string de longitud de 16 caracteres)
-    binarySB: Bitmap secundario en binario (string de longitud de 64 caracteres)
-    hexaSB: Bitmap secundario en hexadecimal (string de longitud de 16 caracteres)
-  }
  */
 function hexa_bin_Bitmap(DEs) {
     var json_bitmaps = {
@@ -88,15 +85,15 @@ exports.hexa_bin_Bitmap = hexa_bin_Bitmap;
 /**
  *
  * @param DEs Fields de la sub clase correspondiente
- * @returns arreglo de numeros con los subcampos usados en el archivo Fields ejemplo [1,3,4,7,11, ... , 126]
+ * retorna arreglo de numeros con los subcampos usados en el archivo Fields ejemplo [1,3,4,7,11, ... , 126]
  */
 function numberOfDataElements(DEs) {
-    const SE_USA = 3, // ubicacion de elemento booleano del archivo fields
-    NUMERO_SUBCAMPO = 0; // numero del subcampor data element
+    const VALUE = "value", // ubicacion de elemento booleano del archivo fields
+    SUBCAMPO = "subcampo"; // numero del subcampor data element
     let arrayOfNumbers = [];
     for (let key in DEs) {
-        if (DEs[key][SE_USA]) {
-            arrayOfNumbers.push(Number(DEs[key][NUMERO_SUBCAMPO]));
+        if (DEs[key][VALUE]) {
+            arrayOfNumbers.push(Number(DEs[key][SUBCAMPO]));
         }
     }
     return arrayOfNumbers;
