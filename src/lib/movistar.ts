@@ -1,6 +1,7 @@
 /**
- * Clases para distintos mensajes en formato ISO 8583
- * @module Lib
+ * Clases para distintos mensajes en formato ISO 8583 de Movistar
+ * @module Movistar
+ * @class Movistar
  */
 import { findConnection, sendMessageConnection } from "../connection/rces";
 import { getMessage } from "../db/message.controllers";
@@ -28,8 +29,9 @@ const to_MOVISTAR = {
 };
 
 /**
- * Clase para crear Movistar
- * Se usa patron Singleton
+ * @module Movistar
+ * @classdesc Esta clase esta diseñada con el patron Singleton, sirve para ser la conexion con Movistar
+ * @clase
  * Contiene la conexion socket a moviestar y el comportamiento de los msj entrantes y salientes
  */
 class Movistar {
@@ -39,17 +41,18 @@ class Movistar {
   private static instance: Movistar;
 
   /**
-   * The Singleton's constructor should always be private to prevent direct
-   * construction calls with the `new` operator.
+   * @module Movistar
+   * @constructor The Singleton's constructor should always be private to prevent direct
+   * @hideconstructor
    */
   private constructor() {
     this.connecting = false;
   }
   /**
-   * The static method that controls the access to the singleton instance.
-   *
-   * This implementation let you subclass the Singleton class while keeping
-   * just one instance of each subclass around.
+   * @module Movistar
+   * @function getInstance
+   * @desc Static method that controls the access to the singleton instance.
+   * @return {Movistar} unica instancia de movistar
    */
   public static getInstance(): Movistar {
     if (!Movistar.instance) {
@@ -58,10 +61,12 @@ class Movistar {
     return Movistar.instance;
   }
   /**
-   * Establece conexion socket a Movistar
-   * @returns {void}
+   * @module Movistar
+   * @function connect
+   * @description Establece conexion socket a Movistar
+   * @desc Se conecta mediante socket a Movistar si la conexion esta cerrada
    */
-  public connect(): void {
+  public connect() {
     if (!this.connecting) {
       this.socket = new Socket();
       this.socket.connect(to_MOVISTAR);
@@ -80,97 +85,71 @@ class Movistar {
     }
   }
   /**
-   * Devuelve la conexion socket a Movistar
+   * @module Movistar
+   * @function getSocket
+   * @desc Devuelve la conexion socket a Movistar
    * @returns {any} Socket con conexion a Movistar
    */
   public getSocket(): any {
     return this.socket;
   }
   /**
-   *
-   * @param {string} PosPreauthorizationChargebackData contiene Product Number, DNB y Product Group
+   * @module Movistar
+   * @function getProductNr
+   * @desc Devuelve el valor de Product Number
+   * @param {string} PosPreauthorizationChargebackData String que contiene Product Number, DNB y Product Group
    * @returns {string} Product Number
    */
   private getProductNr(PosPreauthorizationChargebackData: string): string {
     return PosPreauthorizationChargebackData.substr(24, 4);
   }
   /**
-   * Configura el estado de conectado, se usa cuando se desconecta o se conecta la instancia a movistar
+   * @module Movistar
+   * @function setConnecting
+   * @desc Dependiendo el valor que se envia por parametro, se modifica el estado conectado de la instancia
    * @param {boolean} state estado de conectado(true) o desconectado (false)
    */
   private setConnecting(state: boolean): void {
     this.connecting = state;
   }
   /**
-   * Funcion que sirve para enviar msj 0810 de echo a movistar
+   * @module Movistar
+   * @function getMti
+   * @desc La trama message debe tener el mti en los primeros 4 caracteres
+   * @borrows substr
+   * @param {string} message Mensaje ISO 8583 de Movistar
+   * @returns {string} mti type of message ej: 0200, 0210, 0430, 0800, 0810
    */
-  private async sendMessage0810() {
-    let dataElements_0810 = {
-      TransmissionDateTime: TransmissionDateTime(),
-      SystemsTraceAuditNumber: "032727", // HARDCODEADO?
-      ResponseCode: "00",
-      NetworkManagementInformationCode: "301",
-    };
-    let mti0810 = new ISO8583(new MTI0810());
-    mti0810.setFields(dataElements_0810, "0810");
-    await saveMessageDataBase(
-      mti0810.getMti(),
-      mti0810.getSystemTraceAuditNumber(),
-      mti0810.getMessage()
-    );
-    console.log(`\nMensaje echo 0810 a Movistar: ${mti0810.getMessage()}`);
-    this.socket.write(mti0810.getMessage(), "utf8");
+  private getMti(message: string): string {
+    return message.substr(0, 4);
   }
   /**
-   * Funcion que sirve para enviar msj 0420 a movistar y generar un elemento reverso en la tabla de reversos de la DB
-   * @param {ISO8583} mti0210 mensaje 0210 que se usa para el armado de msj 0420
+   * @module Movistar
+   * @function onData
+   * @desc Recibe msj en formato sio 8583 y determina que manejador usar segun su mti
+   * @param {string} message msj de movistar en formato iso8583
    */
-  private async sendMessage0420(mti0210: ISO8583) {
-    let fields0420: { [key: string]: string } = {};
-    let fields0210 = mti0210.getFields();
-    const MANDATORIO = "mandatorio";
-    const VALUE = "value";
-    // Los parametros que se envian en el msj 0420 son similares al 0210 por lo que se copian los valores
-    for (const key in fields0210) {
-      if (fields0210[key][MANDATORIO]) {
-        fields0420[key] = fields0210[key][VALUE].toString();
-      }
+  private onData(message: string) {
+    let mtiMessage = this.getMti(message);
+    switch (mtiMessage) {
+      case "0210":
+        this.message0210(message);
+        break;
+      case "0430":
+        this.message0430(message);
+        break;
+      case "0800":
+        this.message0800(message);
+      default:
+        console.log("\nTipo de mensaje (MTI) no soportado por el Servidor");
+        break;
     }
-    let mti0420 = new ISO8583(new MTI0420());
-    mti0420.setFields(fields0420, "0420");
-    console.log("\nMensaje 0420 a Movistar en formato ISO8583:");
-    console.log(mti0420.getMessage());
-    console.log("\nData elements usados en el msj 0420 a Movistar: ");
-    console.log(mti0420.getFields());
-    this.socket.write(mti0420.getMessage(), "utf8");
-    let id_mti0420 = await saveMessageDataBase(
-      mti0420.getMti(),
-      mti0420.getTrancenr(),
-      mti0420.getMessage()
-    );
-    let values = {
-      date: new Date(),
-      time: new Date(),
-      request_id: mti0210.getTrancenr(),
-      isomessage420_id: id_mti0420,
-      responsecode: mti0420.getResponseCode(),
-      referencenr: 123,
-      retries: 1,
-    };
-    saveReverse(
-      values.date,
-      values.time,
-      values.request_id,
-      values.isomessage420_id,
-      values.responsecode,
-      values.referencenr,
-      values.retries
-    ).then(async (reverse_id) => {
-      await setReverse_idRequest(mti0210.getTrancenr(), reverse_id);
-    });
   }
   /**
-   * Funcion que contiene la logica de negocios para los mensajes de tipo 0210 etrantes de Movistar
+   * @module Movistar
+   * @function message0210
+   * @desc Administra los msj entrantes de Movistar, si la diferencia en segundos entre el tiempo que se envio el msj 0200 y el msj 0210 de respuesta es mayor a 55 se envia msj 0420 a Movistar, sino se envia respuesta 0210 en formato RCES a RCES
+   * @borrows unpack_ISO, ISO8583, MTI0210, saveMessageDataBase, setResponseDataRequest, getMessage, sendMessage0420
    * @param {string} message msj 0210 en formato iso8583
    */
   private async message0210(message: string) {
@@ -243,7 +222,60 @@ class Movistar {
     }
   }
   /**
-   * Funcion que contiene la logica de negocios para los mensajes de tipo 0430 etrantes de Movistar
+   * @module Movistar
+   * @function sendMessage0420
+   * @param {ISO8583} mti0210 mensaje 0210 que se usa para el armado de msj 0420
+   * @borrows ISO8583, MTI0420, saveMessageDataBase, saveReverse
+   */
+  private async sendMessage0420(mti0210: ISO8583) {
+    let fields0420: { [key: string]: string } = {};
+    let fields0210 = mti0210.getFields();
+    const MANDATORIO = "mandatorio";
+    const VALUE = "value";
+    // Los parametros que se envian en el msj 0420 son similares al 0210 por lo que se copian los valores
+    for (const key in fields0210) {
+      if (fields0210[key][MANDATORIO]) {
+        fields0420[key] = fields0210[key][VALUE].toString();
+      }
+    }
+    let mti0420 = new ISO8583(new MTI0420());
+    mti0420.setFields(fields0420, "0420");
+    console.log("\nMensaje 0420 a Movistar en formato ISO8583:");
+    console.log(mti0420.getMessage());
+    console.log("\nData elements usados en el msj 0420 a Movistar: ");
+    console.log(mti0420.getFields());
+    this.socket.write(mti0420.getMessage(), "utf8");
+    let id_mti0420 = await saveMessageDataBase(
+      mti0420.getMti(),
+      mti0420.getTrancenr(),
+      mti0420.getMessage()
+    );
+    let values = {
+      date: new Date(),
+      time: new Date(),
+      request_id: mti0210.getTrancenr(),
+      isomessage420_id: id_mti0420,
+      responsecode: mti0420.getResponseCode(),
+      referencenr: 123,
+      retries: 1,
+    };
+    saveReverse(
+      values.date,
+      values.time,
+      values.request_id,
+      values.isomessage420_id,
+      values.responsecode,
+      values.referencenr,
+      values.retries
+    ).then(async (reverse_id) => {
+      await setReverse_idRequest(mti0210.getTrancenr(), reverse_id);
+    });
+  }
+  /**
+   * @module Movistar
+   * @function message0430
+   * @desc Recibe los msj 0430 en formato iso8583 de movistar, los guarda en la base de datos y a todos los msj reversos en la base de datos con trance number igual al msj 0430 se vinculan con dicho msj 0430
+   * @borrows unpack_ISO, ISO8583, MTI0430, saveMessageDataBase, getReverseByRequestId, setIsoMessage0430
    * @param {string} message msj 0430 en formato iso8583
    */
   private async message0430(message: string) {
@@ -270,7 +302,10 @@ class Movistar {
     });
   }
   /**
-   * Funcion que contiene la logica de negocios para los mensajes de tipo 0800 etrantes de Movistar
+   * @module Movistar
+   * @function message0800
+   * @desc Guarda msj 0800 de movistar en formato iso8583 en base de datos y envia respuesta 0810 a movistar en formato iso8583
+   * @borrows unpack_ISO, ISO8583, MTI0800, saveMessageDataBase, sendMessage0810
    * @param {string} message
    */
   private async message0800(message: string) {
@@ -289,33 +324,27 @@ class Movistar {
     this.sendMessage0810();
   }
   /**
-   * Funcion que sirve para recuperar el tipo de msj ISO8583
-   * Precondiciones: La trama message debe tener el mti en los primeros 4 caracteres
-   * @param {string} message Mensaje ISO 8583 de Movistar
-   * @returns {string} mti type of message ej: 0200, 0210, 0430, 0800, 0810
+   * @function sendMessage0810
+   * @desc Guarda msj 0810 en la base de datos y envia msj 0810 en formato iso8583 de respuesta a Movistar
+   * @borrows ISO8583, MTI0810, saveMessageDataBase
+   * @todo Los campos data elements enviados en el msj echo siempre estan hardcodeados, aclarar esto
    */
-  private getMti(message: string): string {
-    return message.substr(0, 4);
-  }
-  /**
-   * Funcion que sirve para determinar la logica a usar dependiendo el msj entrante de Movistar
-   * @param {string} message msj de movistar en formato iso8583
-   */
-  private onData(message: string) {
-    let mtiMessage = this.getMti(message);
-    switch (mtiMessage) {
-      case "0210":
-        this.message0210(message);
-        break;
-      case "0430":
-        this.message0430(message);
-        break;
-      case "0800":
-        this.message0800(message);
-      default:
-        console.log("\nTipo de mensaje (MTI) no soportado por el Servidor");
-        break;
-    }
+  private async sendMessage0810() {
+    let dataElements_0810 = {
+      TransmissionDateTime: TransmissionDateTime(),
+      SystemsTraceAuditNumber: "032727", // HARDCODEADO?
+      ResponseCode: "00",
+      NetworkManagementInformationCode: "301",
+    };
+    let mti0810 = new ISO8583(new MTI0810());
+    mti0810.setFields(dataElements_0810, "0810");
+    await saveMessageDataBase(
+      mti0810.getMti(),
+      mti0810.getSystemTraceAuditNumber(),
+      mti0810.getMessage()
+    );
+    console.log(`\nMensaje echo 0810 a Movistar: ${mti0810.getMessage()}`);
+    this.socket.write(mti0810.getMessage(), "utf8");
   }
 }
 

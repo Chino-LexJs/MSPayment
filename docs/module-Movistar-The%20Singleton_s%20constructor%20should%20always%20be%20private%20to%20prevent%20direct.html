@@ -1,10 +1,8 @@
-
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Source: db/db.ts | MSPayment</title>
+    <title>Class: The Singleton's constructor should always be private to prevent direct | MSPayment</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -45,31 +43,131 @@
 
 
 
+
+<section>
+
+<header>
     
-    <section>
-        <article>
-            <pre class="prettyprint source linenums"><code>/**
- * Conexiones
- * @module DataBase
- */
+        <h2><span class="attribs"><span class="type-signature"></span></span>
+            <span class="ancestors"><a href="module-Movistar.html">Movistar</a>~</span>The Singleton's constructor should always be private to prevent direct</h2>
+        
+    
+</header>
 
-require("dotenv").config();
-const { DB_USER, DB_PASSWORD, DB_HOST, DB_NAME, DB_PORT } = process.env;
-import { createPool } from "mysql2/promise";
+<article>
+    
+        <div class="container-overview">
+        
+            
 
-// create the connection to database
-const pool = createPool({
-  host: DB_HOST,
-  user: DB_USER,
-  password: DB_PASSWORD,
-  port: 3306,
-  database: DB_NAME,
-});
+<dt>
+    
+        <h4 class="name" id="The Singleton's constructor should always be private to prevent direct">
+            
+                The Singleton's constructor should always be private to prevent direct
+                
+            
+            <div class="container-source members">
+                <code><a href="lib_movistar.ts.html">lib/movistar.ts</a></code>,
+                <code><a href="lib_movistar.ts.html#line34">line 34</a></code>
+            </div>
+            
+        </h4>
 
-export { pool };
-</code></pre>
-        </article>
-    </section>
+        
+    
+</dt>
+<dd>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+
+</dd>
+
+        
+        </div>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</article>
+
+</section>
 
 
 
@@ -86,7 +184,7 @@ export { pool };
 <script src="scripts/linenumber.js"></script>
 
     <script>
-        var id = '_sub'.replace(/"/g, '_');
+        var id = 'module:Movistar~The Singleton's constructor should always be private to prevent direct_sub'.replace(/"/g, '_');
         var selectedApi = document.getElementById(id); // do not use jquery selector
         var $selectedApi = $(selectedApi);
 

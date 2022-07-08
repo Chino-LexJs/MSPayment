@@ -1,6 +1,7 @@
 /**
- * Clases para distintos mensajes en formato ISO 8583
- * @module Lib
+ * Clase para manejar los msj entrantes y salientes de RCES
+ * @module RCES
+ * @class RRCES
  */
 import { MTI0200 } from "./strategy/0200";
 import { ISO8583 } from "./strategy/8583";
@@ -8,11 +9,36 @@ import { closeConnection, saveConnection } from "../connection/rces";
 import { saveRequest } from "../db/request.controllers";
 import { saveMessageDataBase, unpack } from "../util";
 
+/**
+ * @module RCES
+ * @classdesc Esta clase esta diseñada para contener el manejador de msj para RCES mediante sockets
+ * @clase
+ */
 export class RCES {
+  /**
+   * @module RCES
+   * @desc Propiedad que contendra la conexion socket para recibir y enviar msj
+   * @type {any}
+   */
   private socket: any;
+  /**
+   * @module RCES
+   * @desc Propiedad que contendra la conexion socket para enviar msj a Movistar
+   * @type {any}
+   */
   private socketMovistar: any;
+  /**
+   * @module RCES
+   * @desc Se establecio un limite de tiempo para la conexion socket de 55 segundos
+   * @type {number}
+   */
   private TIEMPO_CONEXION_RCES: number = 55000;
 
+  /**
+   * @module RCES
+   * @constructor
+   * @param {any} socket socket de la conexion que se establecio para recibir msj
+   */
   constructor(socket: any) {
     this.socket = socket;
     this.socket.setEncoding("utf8"); // se configura socket para manejar cadena de caracteres en el buffer[]
@@ -38,13 +64,32 @@ export class RCES {
       this.socket.end();
     });
   }
-
+  /**
+   * @module RCES
+   * @function getSocket
+   * @desc devuelde el socket que contiene la conexion con RCES
+   * @return {any} socket con conexion a RCES
+   */
   public getSocket(): any {
     return this.socket;
   }
+  /**
+   * @module RCES
+   * @function setSocketMovistar
+   * @desc configura la conexion socket a Movistar para el envio de msj
+   * @param {any} socket socket que contiene la conexion a Movistar
+   */
   public setSocketMovistar(socket: any) {
     this.socketMovistar = socket;
   }
+  /**
+   * @module RCES
+   * @function messageFromRCES
+   * @desc Manejador para msj de RCES, este proceso es asincronico ya que guarda msj en la base de datos
+   * @param {string}  message Mensaje enviado de RCES en formato RCES
+   * @param {string} ipClient Ip del dispositivo donde enviaron el msj
+   * @returns {Promise<number>}
+   */
   private async messageFromRCES(
     message: string,
     ipClient: string
@@ -68,6 +113,13 @@ export class RCES {
     );
     return id_request;
   }
+  /**
+   * @module RCES
+   * @function posDate
+   * @desc Recibe una fecha del Posnet en formato de cadena de caracteres y devuelve la fecha en formato Date
+   * @param {string} date fecha en formato de cadena de caracteres
+   * @returns {Date} fecha en formato Date
+   */
   private posDate(date: string): Date {
     return new Date(
       Number(date.substr(0, 4)),
@@ -75,6 +127,15 @@ export class RCES {
       Number(date.substr(6))
     );
   }
+
+  /**
+   * @module RCES
+   * @function posDate
+   * @desc recibe fecha y tiempo en formato de cadena de caracteres y devuelve una fecha y tiempo en formato Date
+   * @param {string} date fecha en formato de cadena de caracteres
+   * @param {string} time tiempo en formato de cadena de caracteres
+   * @returns {Date} fecha y tiempo en formato Date
+   */
   private posTime(date: string, time: string): Date {
     return new Date(
       Number(date.substr(0, 4)),
@@ -85,10 +146,19 @@ export class RCES {
       Number(time.substr(4))
     );
   }
+  /**
+   * @module RCES
+   * @function saveRequestMessage
+   * @desc Almacena el msj de solicitud de RCES en la base de datos, y devuelve el id del elemento almacenado
+   * @param dataUnpack elementos del msj de RCES desempaquetado en formato objeto
+   * @param ipClient ip del cliente en formato de cadena de caracteres
+   * @returns {Promie<number>} id del elemento request almacenado en la base de datos
+   * @see messageFromRCES
+   */
   private async saveRequestMessage(
     dataUnpack: { [key: string]: string },
     ipClient: string
-  ): Promise<any> {
+  ): Promise<number> {
     let posdate = this.posDate(dataUnpack.POS_DATE);
     let postime = this.posTime(dataUnpack.POS_DATE, dataUnpack.POS_TIME);
     let valuesRequest = {
@@ -133,9 +203,16 @@ export class RCES {
     );
     return id_request;
   }
+  /**
+   * @module RCES
+   * @function addIdRquest
+   * @desc agrega el elemento SYSTEMS_TRANCE con 6 digitos del id de la solicitud y RETRIEVAL_REFERENCE_NUMBER con la longitud exacta del id de la solicitud que se almaceno en la base de datos
+   * @param {object} dataUnpack elementos del msj de RCES en formato objeto
+   * @param {number} id_request id del msj de solicitud o request almacenado en la base de datos
+   */
   private addIdRquest(
     dataUnpack: { [key: string]: string },
-    id_request: string
+    id_request: number
   ) {
     dataUnpack.SYSTEMS_TRANCE = id_request.toString().slice(-6); // Si el numero supera los 6 digitos P-11 solo capta hasta 6 digitos
     dataUnpack.RETRIEVAL_REFERENCE_NUMBER = id_request.toString();

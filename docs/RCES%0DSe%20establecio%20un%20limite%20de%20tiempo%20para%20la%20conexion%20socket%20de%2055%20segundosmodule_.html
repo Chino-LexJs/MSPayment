@@ -1,0 +1,1545 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Module: RCESSe establecio un limite de tiempo para la conexion socket de 55 segundos | MSPayment</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/bootstrap.min.css">
+    <link type="text/css" rel="stylesheet" href="styles/prettify-jsdoc.css">
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/tui-doc.css">
+
+    
+</head>
+<body>
+<nav class="lnb" id="lnb">
+    <div class="logo" style="">
+        
+            <img src="img/toast-ui.png" width="100%" height="100%">
+        
+    </div>
+    <div class="title">
+        <h1><a href="index.html" class="link">MSPayment</a></h1>
+        
+            <span class="version">v1.0.0</span>
+        
+    </div>
+    <div class="search-container" id="search-container">
+        <input type="text" placeholder="Search">
+        <ul></ul>
+    </div>
+    
+    <div class="lnb-api hidden"><h3>Modules</h3><ul><li><a href="module-Connections.html">Connections</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="module:Connections_sub"><div class="member-type">Members</div><ul class="inner"><li><a href="module-Connections.html#~rcesClients">rcesClients</a></li></ul></div></li><li><a href="module-DataBase.html">DataBase</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="module:DataBase_sub"><div class="member-type">Methods</div><ul class="inner"><li><a href="module-DataBase.html#~getMessage">getMessage</a></li></ul></div></li><li><a href="module-Loop.html">Loop</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="module:Loop_sub"><div class="member-type">Members</div><ul class="inner"><li><a href="module-Loop.html#~movistar">movistar</a></li><li><a href="module-Loop.html#~movistar">movistar</a></li></ul></div></li><li><a href="module-Movistar.html">Movistar</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="module:Movistar_sub"><div class="member-type">Methods</div><ul class="inner"><li><a href="module-Movistar.html#~connect">connect</a></li><li><a href="module-Movistar.html#~connect">connect</a></li><li><a href="module-Movistar.html#~getInstance">getInstance</a></li><li><a href="module-Movistar.html#~getInstance">getInstance</a></li><li><a href="module-Movistar.html#~getMti">getMti</a></li><li><a href="module-Movistar.html#~getProductNr">getProductNr</a></li><li><a href="module-Movistar.html#~getSocket">getSocket</a></li><li><a href="module-Movistar.html#~getSocket">getSocket</a></li><li><a href="module-Movistar.html#~message0210">message0210</a></li><li><a href="module-Movistar.html#~message0430">message0430</a></li><li><a href="module-Movistar.html#~message0800">message0800</a></li><li><a href="module-Movistar.html#~onData">onData</a></li><li><a href="module-Movistar.html#~sendMessage0420">sendMessage0420</a></li><li><a href="module-Movistar.html#~sendMessage0810">sendMessage0810</a></li><li><a href="module-Movistar.html#~setConnecting">setConnecting</a></li></ul></div></li><li><a href="module-RCES.html">RCES</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="module:RCES_sub"><div class="member-type">Members</div><ul class="inner"><li><a href="module-RCES.html#~movistar">movistar</a></li></ul></div></li><li><a href="module-Server.html">Server</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="module:Server_sub"><div class="member-type">Members</div><ul class="inner"><li><a href="module-Server.html#~host">host</a></li><li><a href="module-Server.html#~host">host</a></li><li><a href="module-Server.html#~movistar">movistar</a></li><li><a href="module-Server.html#~net">net</a></li><li><a href="module-Server.html#~port">port</a></li><li><a href="module-Server.html#~port">port</a></li><li><a href="module-Server.html#~Socket">Socket</a></li></ul><div class="member-type">Methods</div><ul class="inner"><li><a href="module-Server.html#~main">main</a></li></ul></div></li><li><a href="module-Utils.html">Utils</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="module:Utils_sub"><div class="member-type">Members</div><ul class="inner"><li><a href="module-Utils.html#~fields">fields</a></li></ul><div class="member-type">Methods</div><ul class="inner"><li><a href="module-Utils.html#.unpack_ISO">unpack_ISO</a></li><li><a href="module-Utils.html#~longitudParam">longitudParam</a></li></ul></div></li><li><a href="RCES%250DPropiedad%2520que%2520contendra%2520la%2520conexion%2520socket%2520para%2520enviar%2520msj%2520a%2520Movistarmodule_.html">RCESPropiedad que contendra la conexion socket para enviar msj a Movistar</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="RCESPropiedad que contendra la conexion socket para enviar msj a Movistarmodule:_sub"></div></li><li><a href="RCES%250DPropiedad%2520que%2520contendra%2520la%2520conexion%2520socket%2520para%2520recibir%2520y%2520enviar%2520msjmodule_.html">RCESPropiedad que contendra la conexion socket para recibir y enviar msj</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="RCESPropiedad que contendra la conexion socket para recibir y enviar msjmodule:_sub"></div></li><li><a href="RCES%250DSe%2520establecio%2520un%2520limite%2520de%2520tiempo%2520para%2520la%2520conexion%2520socket%2520de%252055%2520segundosmodule_.html">RCESSe establecio un limite de tiempo para la conexion socket de 55 segundos</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="RCESSe establecio un limite de tiempo para la conexion socket de 55 segundosmodule:_sub"><div class="member-type">Methods</div><ul class="inner"><li><a href="RCES%25250DSe%252520establecio%252520un%252520limite%252520de%252520tiempo%252520para%252520la%252520conexion%252520socket%252520de%25252055%252520segundosmodule_.html#~addIdRquest">addIdRquest</a></li><li><a href="RCES%25250DSe%252520establecio%252520un%252520limite%252520de%252520tiempo%252520para%252520la%252520conexion%252520socket%252520de%25252055%252520segundosmodule_.html#~getSocket">getSocket</a></li><li><a href="RCES%25250DSe%252520establecio%252520un%252520limite%252520de%252520tiempo%252520para%252520la%252520conexion%252520socket%252520de%25252055%252520segundosmodule_.html#~getSocket">getSocket</a></li><li><a href="RCES%25250DSe%252520establecio%252520un%252520limite%252520de%252520tiempo%252520para%252520la%252520conexion%252520socket%252520de%25252055%252520segundosmodule_.html#~messageFromRCES">messageFromRCES</a></li><li><a href="RCES%25250DSe%252520establecio%252520un%252520limite%252520de%252520tiempo%252520para%252520la%252520conexion%252520socket%252520de%25252055%252520segundosmodule_.html#~posDate">posDate</a></li><li><a href="RCES%25250DSe%252520establecio%252520un%252520limite%252520de%252520tiempo%252520para%252520la%252520conexion%252520socket%252520de%25252055%252520segundosmodule_.html#~posDate">posDate</a></li><li><a href="RCES%25250DSe%252520establecio%252520un%252520limite%252520de%252520tiempo%252520para%252520la%252520conexion%252520socket%252520de%25252055%252520segundosmodule_.html#~saveRequestMessage">saveRequestMessage</a></li><li><a href="RCES%25250DSe%252520establecio%252520un%252520limite%252520de%252520tiempo%252520para%252520la%252520conexion%252520socket%252520de%25252055%252520segundosmodule_.html#~setSocketMovistar">setSocketMovistar</a></li><li><a href="RCES%25250DSe%252520establecio%252520un%252520limite%252520de%252520tiempo%252520para%252520la%252520conexion%252520socket%252520de%25252055%252520segundosmodule_.html#~setSocketMovistar">setSocketMovistar</a></li></ul></div></li></ul></div><div class="lnb-api hidden"><h3>Classes</h3><ul><li><a href="ISO8583_ISO8583.html">ISO8583</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="ISO8583#ISO8583_sub"></div></li><li><a href="ISO8583_mti.html">mti</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="ISO8583#mti_sub"></div></li><li><a href="module-Movistar-The%2520Singleton_s%2520constructor%2520should%2520always%2520be%2520private%2520to%2520prevent%2520direct.html">The Singleton's constructor should always be private to prevent direct</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="module:Movistar~The Singleton's constructor should always be private to prevent direct_sub"></div></li><li><a href="Movistar.html">Movistar</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="Movistar_sub"></div></li><li><a href="RCES%25250DSe%252520establecio%252520un%252520limite%252520de%252520tiempo%252520para%252520la%252520conexion%252520socket%252520de%25252055%252520segundosmodule_-RCES.html">RCES</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="RCESSe establecio un limite de tiempo para la conexion socket de 55 segundosmodule:~RCES_sub"></div></li><li><a href="RRCES.html">RRCES</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="RRCES_sub"></div></li></ul></div><div class="lnb-api hidden"><h3>Global</h3><ul><li><a href="global.html#hex2bin">hex2bin</a></li><li><a href="global.html#hexa_bin_Bitmap">hexa_bin_Bitmap</a></li><li><a href="global.html#numberOfDataElements">numberOfDataElements</a></li><li><a href="global.html#Utils">Utils</a></li></ul></div>
+</nav>
+<div id="resizer"></div>
+
+<div class="main" id="main">
+    
+
+
+
+
+<section>
+
+<header>
+    
+</header>
+
+<article>
+    
+        <div class="container-overview">
+        
+            
+
+            
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+            
+        
+        </div>
+    
+
+    
+
+    
+
+    
+            <h3 class="subsection-title">Classes</h3>
+            
+
+<dl>
+    
+        <dt>
+            <h4 class="name">
+                <a href="RCES%25250DSe%252520establecio%252520un%252520limite%252520de%252520tiempo%252520para%252520la%252520conexion%252520socket%252520de%25252055%252520segundosmodule_-RCES.html">RCES</a>
+                <div class="container-source members">
+                    <code><a href="RCES%25250DSe%252520establecio%252520un%252520limite%252520de%252520tiempo%252520para%252520la%252520conexion%252520socket%252520de%25252055%252520segundosmodule_-RCES.html">RCESSe establecio un limite de tiempo para la conexion socket de 55 segundosmodule:~RCES</a></code>
+                </div>
+            </h4>
+        </dt>
+        
+    
+        <dt>
+            <h4 class="name">
+                <a href="RCES%25250DSe%252520establecio%252520un%252520limite%252520de%252520tiempo%252520para%252520la%252520conexion%252520socket%252520de%25252055%252520segundosmodule_-RCES.html">RCES</a>
+                <div class="container-source members">
+                    <code><a href="RCES%25250DSe%252520establecio%252520un%252520limite%252520de%252520tiempo%252520para%252520la%252520conexion%252520socket%252520de%25252055%252520segundosmodule_-RCES.html">RCESSe establecio un limite de tiempo para la conexion socket de 55 segundosmodule:~RCES</a></code>
+                </div>
+            </h4>
+        </dt>
+        
+    
+</dl>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <h3 class="subsection-title">Methods</h3>
+
+        <dl>
+                
+
+<dt>
+    
+        <h4 class="name" id="~addIdRquest">
+            
+                <span class="type-signature"><span class="icon green">inner</span> </span>addIdRquest<span class="signature">(dataUnpack, id_request)</span><span class="type-signature"></span>
+                
+            
+            <div class="container-source members">
+                <code><a href="lib_rcesConnection.ts.html">lib/rcesConnection.ts</a></code>,
+                <code><a href="lib_rcesConnection.ts.html#line161">line 161</a></code>
+            </div>
+            
+        </h4>
+
+        
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>agrega el elemento SYSTEMS_TRANCE con 6 digitos del id de la solicitud y RETRIEVAL_REFERENCE_NUMBER con la longitud exacta del id de la solicitud que se almaceno en la base de datos</p>
+    </div>
+    
+
+    
+
+    
+
+    
+
+    
+    <div class="container-params">
+        <h5>Parameters:</h5>
+        
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>dataUnpack</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>elementos del msj de RCES en formato objeto</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>id_request</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>id del msj de solicitud o request almacenado en la base de datos</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    </div>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+
+</dd>
+
+            
+                
+
+<dt>
+    
+        <h4 class="name" id="~getSocket">
+            
+                <span class="type-signature"><span class="icon green">inner</span> </span>getSocket<span class="signature">()</span><span class="type-signature"> &rarr; {any}</span>
+                
+            
+            <div class="container-source members">
+                <code><a href="lib_rcesConnection.ts.html">lib/rcesConnection.ts</a></code>,
+                <code><a href="lib_rcesConnection.ts.html#line63">line 63</a></code>
+            </div>
+            
+        </h4>
+
+        
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>devuelde el socket que contiene la conexion con RCES</p>
+    </div>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <div class="container-returns">
+        <h5>Returns:</h5>
+        
+                
+
+
+
+<span class="param-type">any</span>
+
+
+
+
+
+- <p>socket con conexion a RCES</p>
+
+
+
+
+            
+    </div>
+    
+
+    
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+
+</dd>
+
+            
+                
+
+<dt>
+    
+        <h4 class="name" id="~getSocket">
+            
+                <span class="type-signature"><span class="icon green">inner</span> </span>getSocket<span class="signature">()</span><span class="type-signature"> &rarr; {any}</span>
+                
+            
+            <div class="container-source members">
+                <code><a href="lib_rcesConnection.ts.html">lib/rcesConnection.ts</a></code>,
+                <code><a href="lib_rcesConnection.ts.html#line212">line 212</a></code>
+            </div>
+            
+        </h4>
+
+        
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>devuelde el socket que contiene la conexion con RCES</p>
+    </div>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <div class="container-returns">
+        <h5>Returns:</h5>
+        
+                
+
+
+
+<span class="param-type">any</span>
+
+
+
+
+
+- <p>socket con conexion a RCES</p>
+
+
+
+
+            
+    </div>
+    
+
+    
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+
+</dd>
+
+            
+                
+
+<dt>
+    
+        <h4 class="name" id="~messageFromRCES">
+            
+                <span class="type-signature"><span class="icon green">inner</span> </span>messageFromRCES<span class="signature">(message, ipClient)</span><span class="type-signature"> &rarr; {Promise.&lt;number>}</span>
+                
+            
+            <div class="container-source members">
+                <code><a href="lib_rcesConnection.ts.html">lib/rcesConnection.ts</a></code>,
+                <code><a href="lib_rcesConnection.ts.html#line81">line 81</a></code>
+            </div>
+            
+        </h4>
+
+        
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>Manejador para msj de RCES, este proceso es asincronico ya que guarda msj en la base de datos</p>
+    </div>
+    
+
+    
+
+    
+
+    
+
+    
+    <div class="container-params">
+        <h5>Parameters:</h5>
+        
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>message</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Mensaje enviado de RCES en formato RCES</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>ipClient</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Ip del dispositivo donde enviaron el msj</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    </div>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <div class="container-returns">
+        <h5>Returns:</h5>
+        
+                
+
+
+
+<span class="param-type">Promise.&lt;number></span>
+
+
+
+
+
+
+
+
+            
+    </div>
+    
+
+    
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+
+</dd>
+
+            
+                
+
+<dt>
+    
+        <h4 class="name" id="~posDate">
+            
+                <span class="type-signature"><span class="icon green">inner</span> </span>posDate<span class="signature">(date)</span><span class="type-signature"> &rarr; {Date}</span>
+                
+            
+            <div class="container-source members">
+                <code><a href="lib_rcesConnection.ts.html">lib/rcesConnection.ts</a></code>,
+                <code><a href="lib_rcesConnection.ts.html#line105">line 105</a></code>
+            </div>
+            
+        </h4>
+
+        
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>Recibe una fecha del Posnet en formato de cadena de caracteres y devuelve la fecha en formato Date</p>
+    </div>
+    
+
+    
+
+    
+
+    
+
+    
+    <div class="container-params">
+        <h5>Parameters:</h5>
+        
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>date</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>fecha en formato de cadena de caracteres</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    </div>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <div class="container-returns">
+        <h5>Returns:</h5>
+        
+                
+
+
+
+<span class="param-type">Date</span>
+
+
+
+
+
+- <p>fecha en formato Date</p>
+
+
+
+
+            
+    </div>
+    
+
+    
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+
+</dd>
+
+            
+                
+
+<dt>
+    
+        <h4 class="name" id="~posDate">
+            
+                <span class="type-signature"><span class="icon green">inner</span> </span>posDate<span class="signature">(date, time)</span><span class="type-signature"> &rarr; {Date}</span>
+                
+            
+            <div class="container-source members">
+                <code><a href="lib_rcesConnection.ts.html">lib/rcesConnection.ts</a></code>,
+                <code><a href="lib_rcesConnection.ts.html#line115">line 115</a></code>
+            </div>
+            
+        </h4>
+
+        
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>recibe fecha y tiempo en formato de cadena de caracteres y devuelve una fecha y tiempo en formato Date</p>
+    </div>
+    
+
+    
+
+    
+
+    
+
+    
+    <div class="container-params">
+        <h5>Parameters:</h5>
+        
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>date</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>fecha en formato de cadena de caracteres</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>time</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>tiempo en formato de cadena de caracteres</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    </div>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <div class="container-returns">
+        <h5>Returns:</h5>
+        
+                
+
+
+
+<span class="param-type">Date</span>
+
+
+
+
+
+- <p>fecha y tiempo en formato Date</p>
+
+
+
+
+            
+    </div>
+    
+
+    
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+
+</dd>
+
+            
+                
+
+<dt>
+    
+        <h4 class="name" id="~saveRequestMessage">
+            
+                <span class="type-signature"><span class="icon green">inner</span> </span>saveRequestMessage<span class="signature">(dataUnpack, ipClient)</span><span class="type-signature"> &rarr; {Promie.&lt;number>}</span>
+                
+            
+            <div class="container-source members">
+                <code><a href="lib_rcesConnection.ts.html">lib/rcesConnection.ts</a></code>,
+                <code><a href="lib_rcesConnection.ts.html#line126">line 126</a></code>
+            </div>
+            
+        </h4>
+
+        
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>Almacena el msj de solicitud de RCES en la base de datos, y devuelve el id del elemento almacenado</p>
+    </div>
+    
+
+    
+
+    
+
+    
+
+    
+    <div class="container-params">
+        <h5>Parameters:</h5>
+        
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>dataUnpack</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>elementos del msj de RCES desempaquetado en formato objeto</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>ipClient</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>ip del cliente en formato de cadena de caracteres</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    </div>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <div class="container-returns">
+        <h5>Returns:</h5>
+        
+                
+
+
+
+<span class="param-type">Promie.&lt;number></span>
+
+
+
+
+
+- <p>id del elemento request almacenado en la base de datos</p>
+
+
+
+
+            
+    </div>
+    
+
+    
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-see">See:</dt>
+    <dd class="tag-see">
+        <ul>
+            <li>messageFromRCES</li>
+        </ul>
+    </dd>
+    
+
+    
+</dl>
+
+
+    
+
+</dd>
+
+            
+                
+
+<dt>
+    
+        <h4 class="name" id="~setSocketMovistar">
+            
+                <span class="type-signature"><span class="icon green">inner</span> </span>setSocketMovistar<span class="signature">(socket)</span><span class="type-signature"></span>
+                
+            
+            <div class="container-source members">
+                <code><a href="lib_rcesConnection.ts.html">lib/rcesConnection.ts</a></code>,
+                <code><a href="lib_rcesConnection.ts.html#line72">line 72</a></code>
+            </div>
+            
+        </h4>
+
+        
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>configura la conexion socket a Movistar para el envio de msj</p>
+    </div>
+    
+
+    
+
+    
+
+    
+
+    
+    <div class="container-params">
+        <h5>Parameters:</h5>
+        
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>socket</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">any</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>socket que contiene la conexion a Movistar</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    </div>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+
+</dd>
+
+            
+                
+
+<dt>
+    
+        <h4 class="name" id="~setSocketMovistar">
+            
+                <span class="type-signature"><span class="icon green">inner</span> </span>setSocketMovistar<span class="signature">(socket)</span><span class="type-signature"></span>
+                
+            
+            <div class="container-source members">
+                <code><a href="lib_rcesConnection.ts.html">lib/rcesConnection.ts</a></code>,
+                <code><a href="lib_rcesConnection.ts.html#line221">line 221</a></code>
+            </div>
+            
+        </h4>
+
+        
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>configura la conexion socket a Movistar para el envio de msj</p>
+    </div>
+    
+
+    
+
+    
+
+    
+
+    
+    <div class="container-params">
+        <h5>Parameters:</h5>
+        
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>socket</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">any</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>socket que contiene la conexion a Movistar</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    </div>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+
+</dd>
+
+            </dl>
+    
+
+    
+
+    
+</article>
+
+</section>
+
+
+
+
+</div>
+
+<footer>
+    <img class="logo" src="img/toast-ui.png" style="">
+    <div class="footer-text">NHN Entertainment. Frontend Development Lab</div>
+</footer>
+<script>prettyPrint();</script>
+<script src="scripts/jquery.min.js"></script>
+<script src="scripts/tui-doc.js"></script>
+<script src="scripts/linenumber.js"></script>
+
+    <script>
+        var id = 'RCESSe establecio un limite de tiempo para la conexion socket de 55 segundosmodule:_sub'.replace(/"/g, '_');
+        var selectedApi = document.getElementById(id); // do not use jquery selector
+        var $selectedApi = $(selectedApi);
+
+        $selectedApi.removeClass('hidden');
+        $selectedApi.parent().find('.glyphicon').removeClass('glyphicon-plus').addClass('glyphicon-minus');
+        showLnbApi();
+    </script>
+
+</body>
+</html>
