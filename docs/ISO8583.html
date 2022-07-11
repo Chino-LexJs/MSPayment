@@ -1,10 +1,8 @@
-
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Source: index.ts | MSPayment</title>
+    <title>Class: ISO8583 | MSPayment</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -45,35 +43,264 @@
 
 
 
-    
-    <section>
-        <article>
-            <pre class="prettyprint source linenums"><code>/**
- * Distintas funciones principales del sistema
- * @module Server
- */
-import { main, server } from "./app";
-/**
- * Numero de puerto del server
- * @type {number}
- */
-const port: number = 3000,
-  /**
-   * Host del servidor
-   * @type {string}
-   */
-  host: string = "0.0.0.0";
 
-/**
- * Inicia el servidor
- */
-server.listen({ port, host }, async () => {
-  console.log(`Server on port: ${server.address().port}`);
-  main();
-});
-</code></pre>
-        </article>
-    </section>
+<section>
+
+<header>
+    
+        <h2><span class="attribs"><span class="type-signature"></span></span>ISO8583<span class="signature">()</span><span class="type-signature"></span></h2>
+        
+    
+</header>
+
+<article>
+    
+        <div class="container-overview">
+        
+            
+
+<dt>
+    
+        <h4 class="name" id="ISO8583">
+            
+                new <span class="type-signature"></span>ISO8583<span class="signature">()</span><span class="type-signature"></span>
+                
+            
+            <div class="container-source members">
+                <code><a href="lib_strategy_8583.ts.html">lib/strategy/8583.ts</a></code>,
+                <code><a href="lib_strategy_8583.ts.html#line2">line 2</a></code>
+            </div>
+            
+        </h4>
+
+        
+    
+</dt>
+<dd>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+
+</dd>
+
+        
+        </div>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</article>
+
+</section>
+
+
+
+
+
+
+
+<section>
+
+<header>
+    
+        <h2><span class="attribs"><span class="type-signature"></span></span>ISO8583<span class="signature">()</span><span class="type-signature"></span></h2>
+        
+            <div class="class-description"><p>The Context maintains a reference to one of the Strategy
+objects. The Context does not know the concrete class of a strategy. It
+should work with all strategies via the Strategy interface.</p></div>
+        
+    
+</header>
+
+<article>
+    
+        <div class="container-overview">
+        
+            
+
+<dt>
+    
+        <h4 class="name" id="ISO8583">
+            
+                new <span class="type-signature"></span>ISO8583<span class="signature">()</span><span class="type-signature"></span>
+                
+            
+            <div class="container-source members">
+                <code><a href="lib_strategy_8583.ts.html">lib/strategy/8583.ts</a></code>,
+                <code><a href="lib_strategy_8583.ts.html#line10">line 10</a></code>
+            </div>
+            
+        </h4>
+
+        
+    
+</dt>
+<dd>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+
+</dd>
+
+        
+        </div>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</article>
+
+</section>
 
 
 
@@ -90,7 +317,7 @@ server.listen({ port, host }, async () => {
 <script src="scripts/linenumber.js"></script>
 
     <script>
-        var id = '_sub'.replace(/"/g, '_');
+        var id = 'ISO8583_sub'.replace(/"/g, '_');
         var selectedApi = document.getElementById(id); // do not use jquery selector
         var $selectedApi = $(selectedApi);
 

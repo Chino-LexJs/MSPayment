@@ -4,7 +4,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Source: index.ts | MSPayment</title>
+    <title>Source: lib/strategy/0810.ts | MSPayment</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -49,28 +49,54 @@
     <section>
         <article>
             <pre class="prettyprint source linenums"><code>/**
- * Distintas funciones principales del sistema
- * @module Server
+ * @module Strategy
+ * Clase para manejar los msj iso 0810
+ * @class MTI0810
  */
-import { main, server } from "./app";
+import { MTI } from "./MTI";
 /**
- * Numero de puerto del server
- * @type {number}
+ * @class MTI0810
+ * @classdesc clase para abstraer msj de tipo 0810
  */
-const port: number = 3000,
+export class MTI0810 implements MTI {
   /**
-   * Host del servidor
+   * @desc tipo de mensaje
    * @type {string}
    */
-  host: string = "0.0.0.0";
-
-/**
- * Inicia el servidor
- */
-server.listen({ port, host }, async () => {
-  console.log(`Server on port: ${server.address().port}`);
-  main();
-});
+  private mti: string = "0810";
+  /**
+   * @desc header particular de la clase
+   * @type {string}
+   */
+  private header: string = "ISO001300055";
+  /**
+   * @function getHeaderMessage
+   * @desc devuelve el header para el msj
+   * @param {string} bitmap bit map primario
+   * @returns {string}
+   */
+  public getHeaderMessage(bitmap: string): string {
+    let msg = "";
+    msg = msg.concat(this.getHeader(), this.getMti(), bitmap);
+    return msg;
+  }
+  /**
+   * @function getMti
+   * @desc devuelve el tipo de msj
+   * @returns {string}
+   */
+  getMti(): string {
+    return this.mti;
+  }
+  /**
+   * @function getHeader
+   * @desc devuelve solo el header
+   * @returns {string}
+   */
+  getHeader(): string {
+    return this.header;
+  }
+}
 </code></pre>
         </article>
     </section>

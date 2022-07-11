@@ -6,9 +6,11 @@
 import { pool } from "./db";
 
 /**
- *
- * @param tracenr es el System Trace Audit Number (P-11) y Retrieval Reference Number (P-37)
- * @returns Devuelve el mensaje de la base de datos con el trancenr = {trancenr} enviado por parametro
+ * @module DataBase
+ * @function getMessage
+ * @desc devuelve el mensaje guardado en la base de datos segun el trace number enviado por parametro
+ * @param {number} tracenr es el System Trace Audit Number (P-11) y Retrieval Reference Number (P-37)
+ * @returns {Promise<any>}
  */
 async function getMessage(tracenr: number): Promise<any> {
   try {
@@ -20,6 +22,13 @@ async function getMessage(tracenr: number): Promise<any> {
     console.log(error);
   }
 }
+/**
+ * @module DataBase
+ * @function getMessageById
+ * @desc devuelve el mensaje guardado en la base de datos segun el id por parametro
+ * @param {number} id id del mensaje almacenado en la base de datos
+ * @returns {Promise<any>}
+ */
 async function getMessageById(id: number): Promise<any> {
   try {
     let res: any = await pool.query(`SELECT * FROM message WHERE id = ${id}`);
@@ -28,6 +37,19 @@ async function getMessageById(id: number): Promise<any> {
     console.log(error);
   }
 }
+/**
+ * @module DataBase
+ * @function saveMessage
+ * @desc almacena un mesaje en la base de datos dado los parametros
+ * @param {Date} date
+ * @param {Date} time
+ * @param {number} type
+ * @param {Date} messagedate
+ * @param {Date} messagetime
+ * @param {number} tracenr
+ * @param {string} message
+ * @returns {Promise<any>}
+ */
 async function saveMessage(
   date: Date,
   time: Date,

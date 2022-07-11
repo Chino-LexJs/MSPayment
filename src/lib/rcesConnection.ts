@@ -1,7 +1,7 @@
 /**
  * Clase para manejar los msj entrantes y salientes de RCES
  * @module RCES
- * @class RRCES
+ * @class RCES
  */
 import { MTI0200 } from "./strategy/0200";
 import { ISO8583 } from "./strategy/8583";
@@ -11,8 +11,8 @@ import { saveMessageDataBase, unpack } from "../util";
 
 /**
  * @module RCES
+ * @class RCES
  * @classdesc Esta clase esta diseñada para contener el manejador de msj para RCES mediante sockets
- * @clase
  */
 export class RCES {
   /**

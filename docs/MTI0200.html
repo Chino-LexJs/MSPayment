@@ -1,10 +1,8 @@
-
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Source: index.ts | MSPayment</title>
+    <title>Class: MTI0200 | MSPayment</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -45,35 +43,294 @@
 
 
 
-    
-    <section>
-        <article>
-            <pre class="prettyprint source linenums"><code>/**
- * Distintas funciones principales del sistema
- * @module Server
- */
-import { main, server } from "./app";
-/**
- * Numero de puerto del server
- * @type {number}
- */
-const port: number = 3000,
-  /**
-   * Host del servidor
-   * @type {string}
-   */
-  host: string = "0.0.0.0";
 
-/**
- * Inicia el servidor
- */
-server.listen({ port, host }, async () => {
-  console.log(`Server on port: ${server.address().port}`);
-  main();
-});
-</code></pre>
-        </article>
-    </section>
+<section>
+
+<header>
+    
+        <h2><span class="attribs"><span class="type-signature"></span></span>MTI0200<span class="signature">()</span><span class="type-signature"></span></h2>
+        
+            <div class="class-description"><p>clase para abstraer msj de tipo 0200</p></div>
+        
+    
+</header>
+
+<article>
+    
+        <div class="container-overview">
+        
+            
+
+<dt>
+    
+        <h4 class="name" id="MTI0200">
+            
+                new <span class="type-signature"></span>MTI0200<span class="signature">()</span><span class="type-signature"></span>
+                
+            
+            <div class="container-source members">
+                <code><a href="lib_strategy_0200.ts.html">lib/strategy/0200.ts</a></code>,
+                <code><a href="lib_strategy_0200.ts.html#line2">line 2</a></code>
+            </div>
+            
+        </h4>
+
+        
+    
+</dt>
+<dd>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+
+</dd>
+
+        
+        </div>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <h3 class="subsection-title">Members</h3>
+
+        <dl>
+            
+
+<dt>
+<h4 class="name" id="header">
+    <span class="type-signature"></span>header<span class="type-signature"> :string</span>
+    
+    <div class="container-source members">
+        <code><a href="lib_strategy_0200.ts.html">lib/strategy/0200.ts</a></code>,
+        <code><a href="lib_strategy_0200.ts.html#line16">line 16</a></code>
+    </div>
+    
+</h4>
+
+
+</dt>
+<dd>
+    
+    <div class="description">
+        <p>header particular de la clase</p>
+    </div>
+    
+
+    <!--
+    
+        <h5>Type:</h5>
+        <ul>
+            <li>
+                
+<span class="param-type">string</span>
+
+
+            </li>
+        </ul>
+    
+    -->
+
+    
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+
+    
+</dd>
+
+        
+            
+
+<dt>
+<h4 class="name" id="mti">
+    <span class="type-signature"></span>mti<span class="type-signature"> :string</span>
+    
+    <div class="container-source members">
+        <code><a href="lib_strategy_0200.ts.html">lib/strategy/0200.ts</a></code>,
+        <code><a href="lib_strategy_0200.ts.html#line11">line 11</a></code>
+    </div>
+    
+</h4>
+
+
+</dt>
+<dd>
+    
+    <div class="description">
+        <p>tipo de mensaje</p>
+    </div>
+    
+
+    <!--
+    
+        <h5>Type:</h5>
+        <ul>
+            <li>
+                
+<span class="param-type">string</span>
+
+
+            </li>
+        </ul>
+    
+    -->
+
+    
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+
+    
+</dd>
+
+        </dl>
+    
+
+    
+
+    
+
+    
+</article>
+
+</section>
 
 
 
@@ -90,7 +347,7 @@ server.listen({ port, host }, async () => {
 <script src="scripts/linenumber.js"></script>
 
     <script>
-        var id = '_sub'.replace(/"/g, '_');
+        var id = 'MTI0200_sub'.replace(/"/g, '_');
         var selectedApi = document.getElementById(id); // do not use jquery selector
         var $selectedApi = $(selectedApi);
 

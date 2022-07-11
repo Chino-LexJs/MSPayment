@@ -1,3 +1,8 @@
+/**
+ * @module Strategy
+ * Clase para manejar los msj entrantes y salientes de RCES
+ * @class ISO8583
+ */
 import { hexa_bin_Bitmap, numberOfDataElements } from "../../util/hexa_bin";
 import { merge } from "../../util/merges";
 import { Field } from "./fields";
@@ -5,13 +10,18 @@ import { MTI } from "./MTI";
 
 export class ISO8583 {
   /**
-   * @class
-   * The Context maintains a reference to one of the Strategy
+   * @module Strategy
+   * @class ISO8583
+   * @classdesc The Context maintains a reference to one of the Strategy
    * objects. The Context does not know the concrete class of a strategy. It
    * should work with all strategies via the Strategy interface.
    */
   private mti: MTI;
-
+  /**
+   * @module Strategy
+   * @desc contiene los data elements ordenados en un objeto
+   * @type {object}
+   */
   protected fieldsIso: {
     [keys: string]: Field;
   } = {
@@ -200,6 +210,8 @@ export class ISO8583 {
   };
 
   /**
+   * @module Strategy
+   * @constructor
    * Usually, the Context accepts a mti through the constructor, but also
    * provides a setter to change it at runtime.
    */
@@ -208,39 +220,84 @@ export class ISO8583 {
   }
 
   /**
-   * Usually, the Context allows replacing a mti object at runtime.
+   * @module Strategy
+   * @function setMti
+   * @desc Usually, the Context allows replacing a mti object at runtime.
    */
   public setMti(mti: MTI) {
     this.mti = mti;
   }
+  /**
+   * @module Strategy
+   * @function setFields
+   * @desc setea los data elements del mensaje
+   * @param {object} dataElements data elements del msj
+   * @param { string } mti tipo de mensaje
+   */
   public setFields(dataElements: { [key: string]: string }, mti: string) {
     merge(mti, dataElements, this.fieldsIso);
   }
+  /**
+   * @module Strategy
+   * @function getFields
+   * @desc Devuelve los data elements ordenados en un objeto
+   * @returns {object} data elements en formato objeto
+   */
   getFields(): {
     [keys: string]: Field;
   } {
     return this.fieldsIso;
   }
+  /**
+   * @module Strategy
+   * @desc bit map primario
+   * @type {string}
+   */
   private bitmap: string = "";
+  /**
+   * @module Strategy
+   * @function getBitmap
+   * @desc devuelve el bitmap primario en formato de cadena de caracteres
+   * @returns {string}
+   */
   public getBitmap(): string {
     let DEs: number[] = numberOfDataElements(this.fieldsIso);
     let json_bitmap = hexa_bin_Bitmap(DEs);
     this.bitmap = json_bitmap.hexaPB;
     return this.bitmap;
   }
+  /**
+   * @module Strategy
+   * @desc bit map secundario
+   * @type {string}
+   */
   private secondaryBitmap: string = "";
+  /**
+   * @module Strategy
+   * @function getScondaryBitmap
+   * @desc devuelve el bitmap secundario en formato de cadena de caracteres
+   * @returns {string}
+   */
   public getScondaryBitmap(): string {
     let DEs: number[] = numberOfDataElements(this.fieldsIso);
     let json_bitmap = hexa_bin_Bitmap(DEs);
     this.secondaryBitmap = json_bitmap.hexaSB;
     return this.secondaryBitmap;
   }
+  /**
+   * @module Strategy
+   * @function getTrancenr
+   * @desc devuelve el retrieval reference number usado para el id de tablas en la base de datos
+   * @returns {number}
+   */
   getTrancenr(): number {
     return Number(this.fieldsIso["RetrievalReferenceNumber"]["value"]);
   }
   /**
-   * The Context delegates some work to the mti object instead of
-   * implementing multiple versions of the algorithm on its own.
+   * @module Strategy
+   * @function getMessage
+   * @desc devuelve el mensaje en formato iso8583
+   * @returns {string}
    */
   public getMessage(): string {
     let msg = "";
@@ -255,6 +312,12 @@ export class ISO8583 {
     }
     return msg;
   }
+  /**
+   * @module Strategy
+   * @function getMessage0210
+   * @desc devuelve el mensaje de tipo 0210 para RCES
+   * @returns {string}
+   */
   public getMessage0210(): string {
     let msg = "";
     msg = msg.concat(
@@ -284,23 +347,64 @@ export class ISO8583 {
     );
     return msg;
   }
+  /**
+   * @module Strategy
+   * @desc product namber usado para referenciar mensajes
+   * @type {string}
+   */
   private product_NR: string = "";
+  /**
+   * @module Strategy
+   * @function setProduct_NR
+   * @desc recibe el product number en formato de cadena de caracteres para configurarlo en la instancia
+   * @param {string} product_NR
+   */
   public setProduct_NR(product_NR: string) {
     this.product_NR = product_NR;
   }
+  /**
+   * @module Strategy
+   * @function getproduct_NR
+   * @desc devuelve el product number seteado previamente
+   * @returns {string}
+   */
   public getproduct_NR(): string {
     return this.product_NR ? this.product_NR : "0000";
   }
+  /**
+   * @module Strategy
+   * @function getResponseCode
+   * @desc devuelve el response code de los data elements
+   * @returns {number}
+   */
   getResponseCode(): number {
     return Number(this.fieldsIso["ResponseCode"]["value"]);
   }
+  /**
+   * @module Strategy
+   * @function addYearLocalTransactionDate
+   * @desc setea el valor de local transaction date para agregarle el año
+   * @param {number} year
+   */
   addYearLocalTransactionDate(year: number) {
     this.fieldsIso.LocalTransactionDate["value"] =
       year.toString() + this.fieldsIso.LocalTransactionDate["value"];
   }
+  /**
+   * @module Strategy
+   * @function getSystemTraceAuditNumber
+   * @desc devuelve el system trace audit number de los data elements
+   * @returns {number}
+   */
   getSystemTraceAuditNumber(): number {
     return Number(this.fieldsIso["SystemsTraceAuditNumber"]["value"]);
   }
+  /**
+   * @module Strategy
+   * @function getMti
+   * @desc devuelve el tipo de mensaje
+   * @returns {string}
+   */
   public getMti(): string {
     return this.mti.getMti();
   }
